@@ -1,0 +1,96 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "private": true,
+  "description": "团长助手",
+  "templateInfo": {
+    "name": "default",
+    "typescript": true,
+    "css": "none"
+  },
+  "scripts": {
+    "build:weapp": "taro build --type weapp",
+    "dev:weapp": "npm run build:weapp -- --watch",
+    "lint": "eslint src",
+    "fix": "eslint src --fix",
+    "lint-staged": "lint-staged"
+  },
+  "browserslist": [
+    "last 3 versions",
+    "Android >= 4.1",
+    "ios >= 8"
+  ],
+  "author": "小洋粉",
+  "dependencies": {
+    "@antmjs/vantui": "^2.4.0",
+    "@babel/runtime": "^7.20.7",
+    "@psdk/cpcl": "^0.2.52",
+    "@psdk/device-ble-taro": "^0.2.52",
+    "@psdk/device-bluetooth-traits": "^0.2.52",
+    "@psdk/frame-father": "^0.2.52",
+    "@psdk/frame-ota": "^0.2.52",
+    "@tarojs/components": "3.6.0",
+    "@tarojs/helper": "3.6.0",
+    "@tarojs/plugin-framework-react": "3.6.0",
+    "@tarojs/plugin-platform-alipay": "3.6.0",
+    "@tarojs/plugin-platform-h5": "3.6.0",
+    "@tarojs/plugin-platform-jd": "3.6.0",
+    "@tarojs/plugin-platform-qq": "3.6.0",
+    "@tarojs/plugin-platform-swan": "3.6.0",
+    "@tarojs/plugin-platform-tt": "3.6.0",
+    "@tarojs/plugin-platform-weapp": "3.6.0",
+    "@tarojs/react": "3.6.0",
+    "@tarojs/runtime": "3.6.0",
+    "@tarojs/shared": "3.6.0",
+    "@tarojs/taro": "3.6.0",
+    "address-parse": "^1.2.19",
+    "await-to-js": "^3.0.0",
+    "classnames": "^2.3.2",
+    "crypto-js": "^4.1.1",
+    "date-fns": "^2.29.3",
+    "lodash": "^4.17.21",
+    "query-string": "^8.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "validate": "^5.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.7",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
+    "@tarojs/cli": "^3.6.0",
+    "@tarojs/webpack5-runner": "3.6.0",
+    "@types/crypto-js": "^4.1.1",
+    "@types/react": "^18.0.26",
+    "@types/webpack-env": "^1.18.0",
+    "@typescript-eslint/eslint-plugin": "^5.48.1",
+    "@typescript-eslint/parser": "^5.48.1",
+    "babel-plugin-import": "^1.13.5",
+    "babel-preset-taro": "3.6.0",
+    "eslint": "^8.32.0",
+    "eslint-config-standard-with-typescript": "^27.0.1",
+    "eslint-config-taro": "3.6.0",
+    "eslint-plugin-import": "^2.27.4",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "lint-staged": "^13.1.0",
+    "react-refresh": "^0.14.0",
+    "stylelint": "^14.16.1",
+    "taro-plugin-compiler-optimization": "^1.0.4",
+    "terser-webpack-plugin": "^5.3.6",
+    "thread-loader": "^3.0.4",
+    "typescript": "^4.9.4",
+    "webpack": "5.75.0"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "echo 🌿🌿🌿🌿🌿",
+      "eslint"
+    ]
+  },
+  "engines": {
+    "node": "16.19.0",
+    "npm": "8.19.3"
+  }
+}

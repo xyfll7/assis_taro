@@ -1,0 +1,43 @@
+{
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "editor.suggestSelection": "recentlyUsed",
+  "editor.quickSuggestions": {
+    "comments": "on",
+    "strings": "on",
+    "other": "on",
+  },
+  "workbench.editorAssociations": {
+    "*.md": "default"
+  },
+  "editor.fontSize": 14,
+  "editor.lineHeight": 19,
+  "editor.formatOnSave": true,
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "workbench.iconTheme": "vscode-icons",
+  "files.autoSave": "onFocusChange",
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "window.commandCenter": true,
+  "explorer.confirmDelete": false,
+  "hediet.vscode-drawio.resizeImages": null,
+  "javascript.format.semicolons": "insert",
+  "typescript.format.semicolons": "insert",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "html.completion.attributeDefaultValue": "singlequotes",
+}

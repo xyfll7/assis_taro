@@ -1,0 +1,13 @@
+{
+  "name": "a__adocs_cloud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "latest",
+    "superagent": "^8.0.6",
+    "query-string": "^7.1.3"
+  }
+}

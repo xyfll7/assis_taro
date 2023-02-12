@@ -1,0 +1,34 @@
+{
+  "miniprogramRoot": "client/dist/",
+  "cloudfunctionRoot": "cloud/dist/",
+  "projectname": "assis_taro",
+  "description": "团长助手",
+  "appid": "wxc6ff511796ec714a",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "enhance": false,
+    "compileHotReLoad": false,
+    "postcss": false,
+    "minified": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "condition": false
+  },
+  "compileType": "miniprogram",
+  "libVersion": "2.29.2",
+  "srcMiniprogramRoot": "client/dist/",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "condition": {},
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  },
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
+}

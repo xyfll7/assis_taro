@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "openapi": [
+      "openapi.logistics.cancelOrder",
+      "openapi.logistics.getAllDelivery",
+      "openapi.logistics.bindAccount",
+      "openapi.logistics.getPath",
+      "openapi.logistics.getOrder",
+      "openapi.logistics.addOrder",
+      "openapi.logistics.getQuota",
+      "openapi.logistics.getAllAccount"
+    ]
+  }
+}

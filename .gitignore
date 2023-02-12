@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+node_modules_/
+node_modules__/
+dist/
+func_dist/
+.swc/
+

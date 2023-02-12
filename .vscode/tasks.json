@@ -1,0 +1,74 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "dev:weapp",
+      "path": "client",
+      "problemMatcher": [],
+      "label": "start-up",
+      "detail": "npm run build:weapp -- --watch"
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": [],
+      "label": "npm: start",
+      "detail": "node ./run.js"
+    },
+    {
+      "type": "npm",
+      "script": "build:weapp",
+      "path": "client",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "npm: build:weapp - client",
+      "detail": "taro build --type weapp"
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "path": "cloud",
+      "group": "test",
+      "problemMatcher": [],
+      "label": "npm: test - cloud",
+      "detail": "node ./TEST/test.mjs"
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "docs",
+      "problemMatcher": [],
+      "label": "npm: dev - docs",
+      "detail": "vite"
+    },
+    {
+      "type": "npm",
+      "script": "cz",
+      "problemMatcher": [],
+      "label": "npm: cz",
+      "detail": "cz && git push"
+    },
+    {
+      "type": "npm",
+      "script": "czz",
+      "problemMatcher": [],
+      "label": "npm: czz",
+      "detail": "git add . && cz && git push"
+    },
+    {
+      "type": "npm",
+      "script": "amend",
+      "problemMatcher": [],
+      "label": "npm: amend",
+      "detail": "git commit --amend --no-edit && git push -f"
+    },
+    {
+      "type": "npm",
+      "script": "amendd",
+      "problemMatcher": [],
+      "label": "npm: amendd",
+      "detail": "git add . && git commit --amend --no-edit && git push -f"
+    }
+  ]
+}

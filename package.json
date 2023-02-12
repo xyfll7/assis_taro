@@ -1,0 +1,38 @@
+{
+  "name": "assis_taro",
+  "version": "1.0.30",
+  "scripts": {
+    "start": "node ./run.mjs",
+    "cz": "cz && git push",
+    "czz": "git add . && cz && git push",
+    "amend": "git commit --amend --no-edit && git push -f",
+    "amendd": "git add . && git commit --amend --no-edit && git push -f",
+    "less": "lessc  ./client/src/app.less ./client/src/app.css && lessc  ./docs/src/App.less ./docs/src/App.css",
+    "release": "release-it",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.2",
+    "@commitlint/config-conventional": "^17.4.2",
+    "chalk": "^5.2.0",
+    "commitizen": "^4.2.6",
+    "concurrently": "^7.6.0",
+    "git-cz": "^4.9.0",
+    "husky": "^8.0.3",
+    "inquirer": "^9.1.4",
+    "miniprogram-ci": "^1.9.5",
+    "release-it": "^15.6.0",
+    "shelljs": "^0.8.5",
+    "superagent": "^8.0.9",
+    "yargs": "^17.6.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "git-cz"
+    }
+  },
+  "engines": {
+    "node": "16.19.0",
+    "npm": "8.19.3"
+  }
+}

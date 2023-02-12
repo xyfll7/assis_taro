@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "formulahendry.auto-close-tag",
+    "streetsidesoftware.code-spell-checker",
+    "pranaygp.vscode-css-peek",
+    "editorconfig.editorconfig",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "zignd.html-css-class-completion",
+    "xabikos.javascriptsnippets",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "vscode-icons-team.vscode-icons",
+    "yzhang.markdown-all-in-one",
+    "dsznajder.es7-react-js-snippets",
+    "hediet.vscode-drawio",
+    "steoates.autoimport"
+  ]
+}
