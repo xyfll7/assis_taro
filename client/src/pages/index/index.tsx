@@ -16,7 +16,7 @@ import getEnv from "../../utils/env";
 
 definePageConfig({ enableShareAppMessage: true, backgroundColor: "#ffffff", navigationStyle: "custom", disableScroll: true });
 const Index = () => {
-  const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({ isOrderNotice: true, isGetOnce: true });
+  const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({ isOrderNotice: true, isGetOrderNoticeOnce: true });
   useHook_getQuota_number(minutesToMilliseconds(60));
   return (
     <View>

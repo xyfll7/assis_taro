@@ -41,7 +41,7 @@ const Index_user_express = () => {
     };
   });
 
-  const [selfInfo_S] = useHook_selfInfo_show({});
+  const [selfInfo_S] = useHook_selfInfo_show({ isRefreshSelfInfo_SEveryTime: true });
   const [expressForm, setExpressForm] = useState<Product_Express>(utils_deep(___init_product_express()));
   const refAddress = useRef<RefAddress>(null);
   const onSetExpressForm = (mantype: AddressManType, data: AddressInfo) => {

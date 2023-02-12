@@ -115,14 +115,18 @@ const Index_user_orders = () => {
                               return;
                             }
                             setOrders(orders?.filter((ee) => res0._id != ee._id)!);
-                            //打印订单
-                            Taro.showLoading({ title: "打印中...", mask: true });
-                            const print_res = await Api_printer_printExpress({ ...res0 });
-                            if (print_res.code === 200) {
-                              Taro.showToast({ title: `打印成功，订单移入"已付款"`, icon: "none" });
-                            } else {
-                              Taro.showToast({ title: `打印失败，请联系团长`, icon: "none" });
+                            // 用户支付完成以后如果没有电子面单号也不能打印面单
+                            if (res0.waybillId) {
+                              //打印订单
+                              Taro.showLoading({ title: "打印中...", mask: true });
+                              const [err1] = await to(Api_printer_printExpress({ ...res0 }));
+                              if (err1) {
+                                Taro.showToast({ title: `打印失败，请联系团长`, icon: "none" });
+                              } else {
+                                Taro.showToast({ title: `打印成功，订单移入"已付款"`, icon: "none" });
+                              }
                             }
+
                           }}>
                           <Image className='mr6' style='width: 1rem; height: 1rem;transform: scale(1.2);' src={wexinpay}></Image>
                           支付

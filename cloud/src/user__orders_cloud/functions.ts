@@ -144,8 +144,8 @@ export async function getOrderList_cloud(event: Events<OrderList_Query, string>)
     ]);
 
     const res = <cloud.DB.IQuerySingleResult>await db.collection("orders")
-      .orderBy('weight', 'desc')
       .orderBy('timestamp_update', 'desc')
+      .orderBy('weight', 'desc')
       .where(_params)
       .get();
     if (res.errMsg == "collection.get:ok") {

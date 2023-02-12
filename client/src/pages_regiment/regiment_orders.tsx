@@ -57,17 +57,14 @@ const Index_regiment_orders = () => {
     }
   })());
   const [orders, setOrders] = useState<Product_Express[] | null>(null);
-  const [selfInfo_S] = useHook_selfInfo_show({});
+  const [selfInfo_S] = useHook_selfInfo_show({ isRefreshSelfInfo_SEveryTime: true });
   const time_limit = useHook_getTimeLimit(selfInfo_S?.print_time_limit?.limit_time!);
 
   const [order, setOrder] = useState<Product_Express | null>(null);
   const [show, setShow] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [qrCode, setQrCode] = useState<boolean>(false);
-  useEffect(() => {
-    selfInfo_S !== null && getOrderList___();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selfInfo_S]);
+
   useEffect(() => {
     selfInfo_S !== null && getOrderList___(searchValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -440,8 +437,10 @@ const OrderExpressCard: FC<{
                   success: async (e) => {
                     if (e.confirm) {
                       if (res4.waybillId) {
+                        // 有电子面单号，直接打印
                         utils_print_express(res4, selfInfo_S!);
                       } else {
+                        // 没有电子面单号，获取面单号后再打印
                         const [err5, res5] = await to(utils_get_electronic_face_sheet(selfInfo_S!, order));
                         if (!err5) {
                           utils_print_express(res5, selfInfo_S!);
@@ -495,8 +494,14 @@ const OrderExpressCard: FC<{
 
           {!time_limit ?
             (order.waybillId ?
-              <View className='cccgreen pl10 pbt6 oo' hoverClass='bccbacktab' onClick={() => utils_print_express(order, selfInfo_S!)}>
-                打印
+              <View className='cccgreen pl10 pbt6 oo' hoverClass='bccbacktab'
+                onClick={async () => {
+                  const [err0, res0] = await to(utils_print_express(order, selfInfo_S!));
+                  if (!err0) {
+                    onClick_setOrders(res0, "UPDATE");
+                  }
+                }}>
+                打印{order.print_times}次
               </View> :
               <View className='cccgreen pl10 pbt6 oo' hoverClass='bccbacktab' onClick={async () => {
                 const [err0, res0] = await to(utils_get_electronic_face_sheet(selfInfo_S!, order));
@@ -506,7 +511,10 @@ const OrderExpressCard: FC<{
               }}>
                 获取电子面单
               </View>
-            ) : <View className='cccprice'>暂不可打印</View>
+            ) : <View className='dy'>
+              <View className='mr4 cccplh'>已打印{order.print_times}次</View>
+              <View className='cccprice'>暂不可打印</View>
+            </View>
           }
         </View>
       )}

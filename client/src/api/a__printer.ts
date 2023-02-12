@@ -1,8 +1,8 @@
 import { wx_cloud_callFunctions } from "./wx_cloud_callFunctions";
 
-export async function Api_printer_printExpress(params: Product_Express): Promise<PrintRes> {
+export async function Api_printer_printExpress(params: Product_Express): Promise<Product_Express> {
   try {
-    const res = await wx_cloud_callFunctions<PrintRes>({
+    const res = await wx_cloud_callFunctions<Product_Express>({
       name: "a__printer_cloud",
       data: {
         func: "printExpress_cloud",

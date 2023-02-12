@@ -8,12 +8,16 @@ import { utils_urlToObj, utils_get_time_limit } from "./utils";
 import { Api_logistics_getQuota } from "../api/a__logistics";
 
 
-export function useHook_selfInfo_show({ isOrderNotice = false, isGetOnce = false }: { isOrderNotice?: boolean; isGetOnce?: boolean; }): [BaseUserInfo | null, React.Dispatch<BaseUserInfo | null>] {
+export function useHook_selfInfo_show({
+  isOrderNotice = false,
+  isGetOrderNoticeOnce = false,
+  isRefreshSelfInfo_SEveryTime = false,
+}: { isOrderNotice?: boolean; isGetOrderNoticeOnce?: boolean; isRefreshSelfInfo_SEveryTime?: boolean; }): [BaseUserInfo | null, React.Dispatch<BaseUserInfo | null>] {
   const [selfInfo_S, setSelfInfo_S] = useSelfInfo();
   const [, setOrders_S] = useOrdersNotice();
   useDidShow(async () => {
     let _selfInfo: BaseUserInfo;
-    if (!selfInfo_S) {
+    if (isRefreshSelfInfo_SEveryTime || !selfInfo_S) {
       _selfInfo = await Api_users_getSelfInfo();
       if (_selfInfo.regiment_replica_is && _selfInfo.regiment_replica_regiment_OPENID === _selfInfo.regiment_OPENID) {
         _selfInfo = {
@@ -43,8 +47,9 @@ export function useHook_selfInfo_show({ isOrderNotice = false, isGetOnce = false
     }
   });
   useEffect(() => {
+    // 普通用户接受订单更新通知
     // 不需要在每次onShow时获取订单通知的时候，只执行一遍订单通知
-    isGetOnce && selfInfo_S && selfInfo_S.regiment_is !== 1 && get_order_list___(selfInfo_S);
+    isGetOrderNoticeOnce && selfInfo_S && selfInfo_S.regiment_is !== 1 && get_order_list___(selfInfo_S);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selfInfo_S]);
   const get_order_list___ = async (selfInfo: BaseUserInfo) => {

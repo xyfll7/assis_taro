@@ -55,15 +55,17 @@ export async function utils_print_express(_order: Product_Express, selfInfo_S: B
   const [err0, printer] = await to(utils_get_printer(selfInfo_S));
   if (err0) {
     Taro.showToast({ title: err0.message, icon: "none" });
-    return;
+    throw err0;
   }
   //打印订单
   Taro.showLoading({ title: "打印中...", mask: true });
-  const print_res = await Api_printer_printExpress({ ..._order, printer });
-  if (print_res.code === 200) {
-    Taro.showToast({ title: `打印成功`, icon: "none" });
+  const [err1, res1] = await to(Api_printer_printExpress({ ..._order, printer }));
+  if (err1) {
+    Taro.showToast({ title: "打印出错，请重试", icon: "none" });
+    throw err1;
   } else {
-    Taro.showToast({ title: print_res.message, icon: "none" });
+    Taro.showToast({ title: `打印任务提交成功`, icon: "none" });
+    return res1;
   }
 }
 //#endregion

@@ -13,14 +13,24 @@ const _ = db.command;
 
 export async function printExpress_cloud(
   event: Events<Product_Express>
-): Promise<Result<PrintRes>> {
-  const res0 = await ___print_express(event);
-  // const res1 = await ___order_update(event)
-  return {
-    code: Code.SUCCESS,
-    message: "打印成功",
-    data: res0,
-  };
+): Promise<Result<Product_Express>> {
+  try {
+    const res0 = await ___print_express(event);
+    const res1 = await ___order_update(event);
+    return {
+      code: Code.SUCCESS,
+      message: "打印成功",
+      data: res1,
+      res: res0
+    };
+  } catch (err) {
+    const errr = err as Error;
+    return {
+      code: Code.SERVER_ERROR,
+      message: errr.message,
+    };
+  }
+
 }
 
 
@@ -51,19 +61,23 @@ async function ___print_express(
         "User-Agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36",
       });
-    return result.body;
+    if (result?.body?.code == 200 && result?.body?.success) {
+      return result.body as PrintRes;
+    } else {
+      throw new Error("打印任务提交失败");
+    }
   } catch (err: any) {
-    return err;
+    throw new Error(`未知错误，${err.errMsg}`);
   }
 }
 
 async function ___order_update(
   event: Events<Product_Express>
-): Promise<Result<Product_Express>> {
+): Promise<Product_Express> {
   try {
     const { data } = event;
+    data.print_times += 1;
     data.timestamp_print = Date.now();
-    data.print_times;
     let res = <cloud.DB.IUpdateResult>await db
       .collection("orders")
       .doc(data._id!)
@@ -73,26 +87,13 @@ async function ___order_update(
           print_times: _.inc(1),
         },
       });
-    if (res.errMsg === "collection.update:ok" && res.stats.updated === 1) {
-      return {
-        code: Code.SUCCESS,
-        message: res.errMsg,
-        data: { ...data },
-        res,
-      };
+    if (res.errMsg === "document.update:ok" && res.stats.updated === 1) {
+      return data;
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res,
-      };
+      throw new Error(`订单更新失败，${res.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err,
-    };
+    throw new Error(`未知错误，${err.errMsg}`);
   }
 }
 

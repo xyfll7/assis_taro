@@ -120,7 +120,7 @@ async function runner_inquirer() {
       case __UPL:
         ___build_miniprogram();
         console.log(chalk.green(`${__UPL}中...`));
-        await ___upload("上传体验版");
+        await ___upload(`小洋粉_onMac_${(new Date()).toLocaleString()}`);
         break;
       case __DEV:
         console.log(chalk.green(`${__DEV}中...`));
@@ -227,24 +227,6 @@ function runner_yargs() {
       handler: async () => {
         console.log(chalk.green(`${__STATIC_PRO}中...`));
         await ___uploadStaticStorage("pro");
-      }
-    })
-    .command({
-      command: "cloud",
-      aliases: ["cloud"],
-      desc: __GIT_ACTIONS_CLOUD,
-      handler: async () => {
-        console.log(chalk.green(`${__GIT_ACTIONS_CLOUD}中...`));
-        await git_actions("cloud");
-      }
-    })
-    .command({
-      command: "client",
-      aliases: ["client"],
-      desc: __GIT_ACTIONS_CLIENT,
-      handler: async () => {
-        console.log(chalk.green(`${__GIT_ACTIONS_CLIENT}中...`));
-        await git_actions("client");
       }
     })
     .strictCommands()

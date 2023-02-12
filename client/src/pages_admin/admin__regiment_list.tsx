@@ -76,7 +76,7 @@ const RegimentReconciliationINCOM: FC<{
   onClick_setRegimentList: (param: BaseUserInfo) => void;
 }> = ({ regiment, onClick_setRegiment, onClick_setRegimentList }) => {
   const [logistics, setLogistics] = useState<Logistics_Account[] | null>(null);
-  const [date, setDate] = useState<string>(format(subDays(new Date(), -1), "yyyy-MM-dd"));
+  const [date, setDate] = useState<string>(format(subDays(new Date(), 0), "yyyy-MM-dd"));
   const [time, setTime] = useState<string>("14:30:00");
   return (
     <>
