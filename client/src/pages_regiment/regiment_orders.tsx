@@ -411,14 +411,27 @@ const OrderExpressCard: FC<{
             className='pbt6 prl10 oo bccyellow dxy'
             hoverClass='bccyellowtab'
             onClick={async () => {
+              let _order = order;
+              // 支付前检查 是否已经解除时间限制 是否有电子面单号
+
+              if (!time_limit && !order.waybillId) { // 没有时间限制 也没有 面单号
+                const [err4, res4] = await to(utils_get_electronic_face_sheet(selfInfo_S!, order));
+                if (err4) {
+                  Taro.showToast({ title: err4.message, icon: "none" });
+                  return;
+                } else {
+                  _order = res4;
+                }
+              }
+
               //微信支付 - 必然有重量 - 必然有面单号
-              const [err4, res4] = await to(utils_wx_pay(order));
-              if (err4) {
-                Taro.showToast({ title: err4.message, icon: "none" });
+              const [err5, res5] = await to(utils_wx_pay(_order));
+              if (err5) {
+                Taro.showToast({ title: err5.message, icon: "none" });
                 return;
               }
 
-              onClick_setOrders(res4, "DELETE");
+              onClick_setOrders(res5, "DELETE");
               Taro.hideLoading();
               if (time_limit) {
                 Taro.showModal({
@@ -436,17 +449,10 @@ const OrderExpressCard: FC<{
                   cancelText: "稍后打印",
                   success: async (e) => {
                     if (e.confirm) {
-                      if (res4.waybillId) {
+                      if (res5.waybillId) {
                         // 有电子面单号，直接打印
-                        utils_print_express(res4, selfInfo_S!);
-                      } else {
-                        // 没有电子面单号，获取面单号后再打印
-                        const [err5, res5] = await to(utils_get_electronic_face_sheet(selfInfo_S!, order));
-                        if (!err5) {
-                          utils_print_express(res5, selfInfo_S!);
-                        }
+                        utils_print_express(res5, selfInfo_S!);
                       }
-
                     }
                   }
                 });
