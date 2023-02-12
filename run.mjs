@@ -291,7 +291,7 @@ async function ___compile_all(arg0) {
     });
     shell.exit();
   }, (fail) => {
-    console.log("编译失败");
+    console.log("编译失败", fail);
     shell.exit();
   });
 
