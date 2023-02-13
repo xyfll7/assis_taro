@@ -2,16 +2,14 @@ import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-
 export function IMarkdown() {
   const [markdown, setMarkdown] = useState<string | null>(null);
   useEffect(() => {
     (async () => {
-      const res0 = await fetch("https://raw.githubusercontent.com/xyfll7/assis_taro/master/README.md");
+      const res0 = await fetch("/README.md");
       const res1 = await res0.text();
       setMarkdown(res1);
     })();
-
   }, []);
 
   return <div className='m10 ds '>
