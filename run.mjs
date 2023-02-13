@@ -30,7 +30,7 @@ const packageConfig = JSON.parse(
 const filename = fileURLToPath(import.meta.url); // 这里不能声明__filename,因为已经有内部的__filename了，重复声明会报错
 const __dirname = path.dirname(filename);
 
-//#region 配置
+//#region 配置 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
 const github = "github";
 const pat = "pat";
 const cfg = {
@@ -42,7 +42,7 @@ const cfg = {
   dev_env: "cloud1-8gfby1gac203c61c", // 云开发-测试环境id // cSpell:ignore gfby
   pro_env: "production-8g1eglqz3d606693", // 云开发-生产环境id // cSpell:ignore eglqz
   pro_env: "production-8g1eglqz3d606693", // 云开发-生产环境id // cSpell:ignore eglqz
-  git_token: `${github}_${pat}_11AGW563A03BAULkJ9NUsD_r1qHLJ91JNlIlC5a07abfN3x1Rf5vPUelDzryfQiMTx4EAKKH45exu9nJ8H`, // 云开发-生产环境id // cSpell:ignore eglqz
+  git_token: `${github}_${pat}_11AGW563A0u2lyW7DLMfiz_eRHC9t34thjaZsCSQN8uN1J5Qe7ecwPKKkY5Ly8RaL55BXMZD4CFeORZ1Fh`, // 云开发-生产环境id // cSpell:ignore eglqz
 };
 //#endregion
 
@@ -404,7 +404,8 @@ async function git_actions(event_type) {
     console.log(chalk.yellow(event_type), chalk.green(`启动部署...`));
     if (event_type.includes("docs") || event_type === "cloud") {
       console.log(chalk.blue("https://github.com/xyfll7/assis_taro/actions"));
-      console.log(chalk.blue("https://git.xxassis.cc"));
+      console.log(chalk.blue("https://dev.xxassis.cc"));
+      console.log(chalk.blue("https://pro.xxassis.cc"));
     }
     if (event_type === "client") {
       console.log(chalk.blue("https://github.com/xyfll7/assis_taro"));
