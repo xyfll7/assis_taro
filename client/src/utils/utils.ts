@@ -48,7 +48,6 @@ export async function utils_get_electronic_face_sheet(selfInfo_S: BaseUserInfo, 
 
 //#endregion
 
-
 //#region 打印快递订单
 export async function utils_print_express(_order: Product_Express, selfInfo_S: BaseUserInfo) {
   //选择打印机
@@ -69,7 +68,6 @@ export async function utils_print_express(_order: Product_Express, selfInfo_S: B
   }
 }
 //#endregion
-
 
 //#region 获取超时时间
 export function utils_get_time_limit(end_time?: string) {
@@ -401,21 +399,6 @@ export function utils_duplicates(arr: any[]) {
     }
   });
   return temp;
-}
-//#endregion
-
-//#region 计算快递订单总价  // 1公斤6元、2公斤7元、3公斤8元 4公斤*2.5元
-export function utils_calc_express_totalFee(weight: number): number {
-  switch (weight) {
-    case 1:
-      return 6 * 100;
-    case 2:
-      return 7 * 100;
-    case 3:
-      return 8 * 100;
-    default:
-      return weight * 2.5 * 100;
-  }
 }
 //#endregion
 

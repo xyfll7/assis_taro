@@ -26,3 +26,14 @@ export async function Api_tasks_createQRCode(param: { page: string, scene: strin
   });
   return res;
 }
+
+export async function Api_tasks_getPrice(param: Product_Express) {
+  const res = await wx_cloud_callFunctions<Product_Express>({
+    name: "a__tasks_cloud",
+    data: {
+      func: "getPrice_cloud",
+      data: { ...param }
+    }
+  });
+  return res;
+}

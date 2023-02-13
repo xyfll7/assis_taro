@@ -68,3 +68,26 @@ export async function createQRCode_cloud(event: Events<{ page: string, scene: st
 
 }
 
+export async function getPrice_cloud(event: Events<Product_Express>) {
+  return {
+    code: Code.SUCCESS,
+    message: "价格计算成功",
+    data: { ...event.data, xx: "kkk", totalFee: 600 } as Product_Express,
+  };
+}
+
+
+//#region 计算快递订单总价  // 1公斤6元、2公斤7元、3公斤8元 4公斤*2.5元
+export function utils_calc_express_totalFee(weight: number): number {
+  switch (weight) {
+    case 1:
+      return 6 * 100;
+    case 2:
+      return 7 * 100;
+    case 3:
+      return 8 * 100;
+    default:
+      return weight * 2.5 * 100;
+  }
+}
+//#endregion

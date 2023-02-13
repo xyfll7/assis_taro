@@ -6,15 +6,17 @@ import { View, Navigator, Input, RootPortal, Image, Textarea, Label, Button } fr
 import Taro, { useShareAppMessage } from "@tarojs/taro";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Api_orders_addOrder } from "../api/user__orders";
+import { Api_tasks_getPrice } from '../api/a__tasks';
 import { useOrdersNotice } from "../store/OrdersNoticeProvider";
 import { useHook_getTimeLimit, useHook_selfInfo_show } from "../utils/useHooks";
 import { Api_local_reachable } from "../api/aa__local";
+
 import wexinpay from "../image/wexinpay.svg";
 
 import getEnv from "../utils/env";
 import { PayStatus } from "../a_config";
 import share_logo from "../image/share_logo.jpeg";
-import { utils_calc_express_totalFee, utils_deep, utils_generate_order, utils_get_logistics, utils_print_express, utils_validate_express, utils_wx_pay } from "../utils/utils";
+import { utils_deep, utils_generate_order, utils_get_logistics, utils_print_express, utils_validate_express, utils_wx_pay } from "../utils/utils";
 
 import ComPrintNotice from '../components/ComPrintNotice';
 import ComAvatar from "../components/ComAvatar";
@@ -22,6 +24,7 @@ import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import ComAddress, { RefAddress } from "../components/ComAddress";
 import ComLoading from "../components/ComLoading";
+import ComWeightPrice from "../components/ComWeightPrice";
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true });
 const Index_user_express = () => {
@@ -126,7 +129,18 @@ const Index_user_express = () => {
             {/* 收件人信息 */}
             <ExpressRecMan setExpressForm={setExpressForm} selfInfo_S={selfInfo_S} onGoToAddressList={onGoToAddressList} onSetExpressForm={onSetExpressForm} expressForm={expressForm} refAddress={refAddress}></ExpressRecMan>
             {/* 重量 - 价格 */}
-            {selfInfo_S && selfInfo_S.regiment_is === 1 && selfInfo_S.print_direct_regiment === true && <ExpressWeightPrice expressForm={expressForm} setExpressForm={setExpressForm}></ExpressWeightPrice>}
+            {selfInfo_S && selfInfo_S.regiment_is === 1 && selfInfo_S.print_direct_regiment === true &&
+              <ComWeightPrice className='mrl10 mt10 bccwhite prl10 o10 pbt4 dbtc' expressForm={expressForm}
+                onBlur_getPrice={async (e) => {
+                  // 表单验证
+                  if (utils_validate_express("rec", expressForm.recMan!) && utils_validate_express("send", expressForm.sendMan!)) {
+                    Taro.showLoading({ title: "获取价格...", mask: true });
+                    const res = await Api_tasks_getPrice({ ...expressForm, weight: e });
+                    setExpressForm(res);
+                    Taro.hideLoading();
+                  }
+                }}></ComWeightPrice>
+            }
             {/* 物品类型-备注-寄件方式 */}
             <ExpressInfo expressForm={expressForm} setExpressForm={setExpressForm}></ExpressInfo>
             {/* 底部tab栏 */}
@@ -604,7 +618,7 @@ const OrderPayRegiment: FC<{
 
       payStatus: PayStatus.PAY1,
       weight: Number(expressForm.weight),
-      totalFee: utils_calc_express_totalFee(expressForm.weight),
+      totalFee: expressForm.totalFee,
 
       deliveryId: logistic.deliveryId,
       bizId: logistic.bizId,
@@ -664,15 +678,27 @@ const OrderPayRegiment: FC<{
             className='bccyellow oo prl10 pbt6 fwb dy fwb mrl10'
             hoverClass='bccyellowtab'
             onClick={async () => {
+              // 表单验证
+              // 检查收件人
+              if (!utils_validate_express("rec", expressForm.recMan!)) {
+                return;
+              }
+              // 检查寄件人
+              if (!utils_validate_express("send", expressForm.sendMan!)) {
+                return;
+              }
               // 检查重量
               if (!expressForm.weight) {
                 Taro.showToast({ title: "请输入重量", icon: "none" });
                 return;
               }
-              // 表单验证
-              if (utils_validate_express("rec", expressForm.recMan!) && utils_validate_express("send", expressForm.sendMan!)) {
-                ___submit();
+              // 检查价格
+              if (!expressForm.totalFee) {
+                Taro.showToast({ title: "请获取价格", icon: "none" });
+                return;
               }
+              ___submit();
+
             }}>
             <Image className='mr6 ' style='width: 1rem; height: 1rem;transform: scale(1.2);' src={wexinpay}></Image>
             团长自助·下单
@@ -755,49 +781,6 @@ const PromptInformation = () => {
 };
 //#endregion
 
-//#region 重量/价格
-const ExpressWeightPrice: FC<{
-  expressForm: Product_Express;
-  setExpressForm: React.Dispatch<React.SetStateAction<Product_Express>>;
-}> = ({ expressForm, setExpressForm }) => {
-  const [rrr, setRrr] = useState(false); // 强制刷新组件
-  const [focus, setFocus] = useState(false);
-  return (
-    <View>
-      <View className='mrl10 mt10 bccwhite prl10 o10 pbt4 dbtc'>
-        <Input
-          className='www40'
-          type='number'
-          confirmType='done'
-          cursorSpacing={50}
-          focus={focus}
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
-          alwaysEmbed
-          placeholder='重量(单位公斤)'
-          value={expressForm.weight == 0 ? "" : String(expressForm.weight)}
-          onInput={(e) => {
-            const num = e.detail.value.replace(/[^0-9]/gi, "").replace(/\b(0+)/gi, "");
-            setExpressForm({ ...expressForm, weight: Number(num) });
-            setTimeout(() => setRrr(!rrr), 0); // 强制刷新组件
-          }}></Input>
-        <View className='dy'>
-          {expressForm.weight !== null && focus && (
-            <View className='cccgreen pl10 pbt6 oo nw mr10' hoverClass='bccbacktab'>
-              确认重量
-            </View>
-          )}
-
-          <View className='cccprice nw pbt6'>
-            价格：
-            {utils_calc_express_totalFee(Number(expressForm.weight)) / 100} 元
-          </View>
-        </View>
-      </View>
-    </View>
-  );
-};
-//#endregion
 
 const ___init_product_express = (): Product_Express => {
   if (getEnv().envVersion === "release") {

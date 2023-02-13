@@ -5,7 +5,7 @@ import { Popup as VPopup } from "@antmjs/vantui";
 import { to } from "await-to-js";
 import { FC, useCallback, useEffect, useState } from "react";
 import { Api_orders_removeOrder, Api_orders_getOrderList, Api_orders_updateOrder_express } from "../api/user__orders";
-import { utils_calc_express_totalFee, utils_generate_order, utils_get_electronic_face_sheet, utils_get_logistics, utils_get_printer, utils_print_express, utils_wx_pay } from "../utils/utils";
+import { utils_generate_order, utils_get_electronic_face_sheet, utils_get_logistics, utils_get_printer, utils_print_express, utils_wx_pay } from "../utils/utils";
 import { useHook_effect_update, useHook_getTimeLimit, useHook_selfInfo_show } from "../utils/useHooks";
 import { PayStatus } from "../a_config";
 import wexinpay from "../image/wexinpay.svg";
@@ -24,6 +24,7 @@ import ComLoading from "../components/ComLoading";
 import ComEmpty from "../components/ComEmpty";
 import ComOrderExpress from "../components/ComOrderExpress";
 import ComHeaderBar from '../components/ComHeaderBar';
+import ComWeightPrice from "../components/ComWeightPrice";
 
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true });
@@ -232,7 +233,7 @@ const OrderInfoSetting: FC<{
       <View className='mrl10'>
         <ComHeaderBar title='修改信息' onClick={() => setOrder(null)}></ComHeaderBar>
         <View className='bccwhite prl10 o10'>
-          <View className='o10 pbt10 dy'>
+          {/* <View className='o10 pbt10 dy'>
             <View>重量：</View>
             <Input
               type='number'
@@ -244,7 +245,10 @@ const OrderInfoSetting: FC<{
                 setWeight(`${num} `);
                 setTimeout(() => setWeight(num), 0);
               }}></Input>
-          </View>
+          </View> */}
+          {order &&
+            <ComWeightPrice className='dbtc pbt4' expressForm={order!} onBlur_getPrice={(e) => { }}></ComWeightPrice>
+          }
           <View className='pbt10 dbtc lit'>
             <View className='dy'>
               <View>打印机：</View>
@@ -297,7 +301,7 @@ const OrderInfoSetting: FC<{
 
                   payStatus: PayStatus.PAY1,
                   weight: Number(weight),
-                  totalFee: utils_calc_express_totalFee(Number(weight)),
+                  totalFee: order!.totalFee,
 
                   deliveryId: logistic.deliveryId,
                   bizId: logistic.bizId,
@@ -319,7 +323,7 @@ const OrderInfoSetting: FC<{
 
                   payStatus: PayStatus.PAY1,
                   weight: Number(weight),
-                  totalFee: utils_calc_express_totalFee(Number(weight)),
+                  totalFee: order!.totalFee,
                 })
               );
               if (err4) {
