@@ -684,6 +684,7 @@ const OrderPayRegiment: FC<{
 };
 //#endregion
 
+//#region 支付成功弹窗
 const PaySuccessPopup: FC<{ showPopup: boolean, orderState: Product_Express | null, selfInfo_S: BaseUserInfo | null, onClick: () => void; }> =
   ({ showPopup, orderState, selfInfo_S, onClick }) => {
 
@@ -738,9 +739,7 @@ const PaySuccessPopup: FC<{ showPopup: boolean, orderState: Product_Express | nu
       </VPopup>
     </RootPortal>;
   };
-
-
-
+//#endregion
 
 //#region 提示信息
 const PromptInformation = () => {
