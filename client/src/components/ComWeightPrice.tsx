@@ -9,6 +9,7 @@ const ComWeightPrice: FC<{
 }> = ({ onBlur_getPrice, expressForm, className }) => {
   const [focus, setFocus] = useState(false);
   const [weight, setWeight] = useState<string>(String(expressForm.weight));
+  const [forceRefresh, setForceRefresh] = useState(false);
   return (
     <View className={className}>
       <Input
@@ -19,8 +20,10 @@ const ComWeightPrice: FC<{
         onFocus={() => setFocus(true)}
         onBlur={() => { setFocus(false); Number(weight) !== 0 && onBlur_getPrice(Number(weight)); }}
         onInput={(e) => {
+          console.log(e.detail.value);
           const num = e.detail.value.replace(/[^0-9]/gi, "").replace(/\b(0+)/gi, "");
           setWeight(num);
+          setForceRefresh(!forceRefresh);
         }}
         alwaysEmbed
         placeholder='重量(单位公斤)'
