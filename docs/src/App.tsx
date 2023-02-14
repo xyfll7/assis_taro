@@ -7,6 +7,7 @@ import { GitActions } from './components/GitActions';
 import { MiniprogramLogin } from './components/MiniprogramLogin';
 import { ConfigProvider, theme } from 'antd';
 import { useState } from 'react';
+import { CloudDB } from './components/CloudDB';
 function App() {
   var themeMedia = window.matchMedia('(prefers-color-scheme: dark)');
   const [isDark, setIsDark] = useState(themeMedia.matches);
@@ -22,6 +23,7 @@ function App() {
         <Footer isDark={isDark} onClick={() => { setIsDark(!isDark); }}></Footer>
         <div className='z1'>
           <IKonva></IKonva>
+          <CloudDB></CloudDB>
           <GitActions></GitActions>
           <IMarkdown></IMarkdown>
         </div>

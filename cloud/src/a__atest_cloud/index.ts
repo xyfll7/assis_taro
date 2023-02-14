@@ -1,12 +1,16 @@
-// 云函数入口文件
-const cloud = require('wx-server-sdk');
+import cloud from "wx-server-sdk";
 
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }); // 使用当前云环境
+// @ts-ignore
+cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
+const db = cloud.database();
+const _ = db.command;
 
 // 云函数入口函数
-exports.main = async (event: any) => {
-  console.log("看看都有些什么参数", event.body);
-  return {
-    event: "SSSSSSS",
-  };
+export const main = async (event: Events<any>,) => {
+  switch (event.func) {
+    case "init_cloud":
+
+
+    default: return "没有调用任何云函数";
+  }
 };

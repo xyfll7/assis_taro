@@ -1,5 +1,3 @@
-[official](https://git.xxassis.cc)
-
 [assis_taro](https://github.com/xyfll7/assis_taro)
 
 [taro](https://taro.jd.com)
@@ -7,13 +5,14 @@
 
 ```md 任务列表？
 
+
+## 团长管理列表增加搜索功能
 ## 团长定位功能
 ## 团长搜索功能
 
 ## 按快递单号搜索
 
 ## 价格、分享
-
 
 ## 团长分享小程序抓客
 
@@ -30,6 +29,7 @@
 
 ## docs部署前先把README.md文件拷贝到docs/public下
 
+🚀 对账单取不到31号数据错误
 🚀 接口名称更改前后端一起部署
 🚀 打印时候更新订单打印次数
 🚀 用户支付完成以后如果没有电子面单号也不能打印面单

@@ -32,3 +32,9 @@ export function login() {
   return Fetch("/a__adocs_cloud/login");
 }
 
+export function get_refund_order() {
+  return Fetch("/a__adocs_cloud/get_refund_order");
+}
+export function get_logistics_track(init?: RequestInit | undefined) {
+  return Fetch("/a__adocs_cloud/get_logistics_track", { ...init, method: "POST" });
+}

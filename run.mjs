@@ -41,7 +41,6 @@ const cfg = {
   static: "./docs/dist/", // 静态网站 文件夹
   dev_env: "cloud1-8gfby1gac203c61c", // 云开发-测试环境id // cSpell:ignore gfby
   pro_env: "production-8g1eglqz3d606693", // 云开发-生产环境id // cSpell:ignore eglqz
-  pro_env: "production-8g1eglqz3d606693", // 云开发-生产环境id // cSpell:ignore eglqz
   git_token: `${github}_${pat}_11AGW563A0P4cSMmiuoLjV_5THZjasAvESlxxIaENZgxPLNLWeZ6p1FAHqz6k8k460YORVPO7PsDXGq4jy`, // 云开发-生产环境id // cSpell:ignore miuo PLNL YORVPO THZ KHTML
 };
 //#endregion

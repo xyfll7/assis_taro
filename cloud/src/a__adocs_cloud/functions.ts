@@ -1,6 +1,12 @@
 
+import cloud from "wx-server-sdk";
 import request from 'superagent';
 import queryString from 'query-string';
+
+// @ts-ignore cSpell:ignore production-8g1eglqz3d606693
+cloud.init({ env: "production-8g1eglqz3d606693" });
+const db = cloud.database();
+const _ = db.command;
 
 export async function get_token() {
   const res0 = await request.get(`https://api.weixin.qq.com/cgi-bin/token?${queryString.stringify({
@@ -38,4 +44,22 @@ export async function login(event: any) {
     },
     body: res.body
   };
+}
+
+export async function get_refund_order(event: any) {
+  const res = await db.collection("orders").where({
+    payStatus: 3
+  }).get();
+  return res;
+}
+
+export async function get_logistics_track(event: any) {
+  // return event;
+  const res0: Logistics_Path = await cloud.openapi.logistics.getPath({
+    openid: event.self_OPENID,
+    orderId: event.outTradeNo,
+    deliveryId: event.deliveryId,
+    waybillId: event.waybillId,
+  });
+  return res0;
 }
