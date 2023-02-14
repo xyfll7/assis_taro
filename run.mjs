@@ -30,7 +30,7 @@ const packageConfig = JSON.parse(
 const filename = fileURLToPath(import.meta.url); // 这里不能声明__filename,因为已经有内部的__filename了，重复声明会报错
 const __dirname = path.dirname(filename);
 
-//#region 配置 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
+//#region 配置
 const github = "github";
 const pat = "pat";
 const cfg = {
@@ -42,7 +42,7 @@ const cfg = {
   dev_env: "cloud1-8gfby1gac203c61c", // 云开发-测试环境id // cSpell:ignore gfby
   pro_env: "production-8g1eglqz3d606693", // 云开发-生产环境id // cSpell:ignore eglqz
   pro_env: "production-8g1eglqz3d606693", // 云开发-生产环境id // cSpell:ignore eglqz
-  git_token: `${github}_${pat}_11AGW563A0u2lyW7DLMfiz_eRHC9t34thjaZsCSQN8uN1J5Qe7ecwPKKkY5Ly8RaL55BXMZD4CFeORZ1Fh`, // 云开发-生产环境id // cSpell:ignore eglqz
+  git_token: `${github}_${pat}_11AGW563A0P4cSMmiuoLjV_5THZjasAvESlxxIaENZgxPLNLWeZ6p1FAHqz6k8k460YORVPO7PsDXGq4jy`, // 云开发-生产环境id // cSpell:ignore miuo PLNL YORVPO THZ KHTML
 };
 //#endregion
 

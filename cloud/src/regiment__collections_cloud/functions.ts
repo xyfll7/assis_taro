@@ -1,7 +1,7 @@
 import { Code } from "../../../client/src/a_config";
 // 云函数代码
 import cloud from "wx-server-sdk";
-import { format, subDays } from "date-fns";
+import { format, subDays, milliseconds } from "date-fns";
 import xlsx from 'node-xlsx';
 
 
@@ -148,7 +148,7 @@ export async function getCollectionExcel_cloud(
         regiment_OPENID: data.OPENID,
         timestamp_pay_callback: _.and(
           _.gte(new Date(data.firstDateOfMonth).getTime()),
-          _.lt(new Date(data.lastDateOfMonth).getTime())
+          _.lt(new Date(data.lastDateOfMonth).getTime() + milliseconds({ days: 1 }))
         ),
         payStatus: 2,
       })
