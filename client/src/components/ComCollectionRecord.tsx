@@ -64,7 +64,7 @@ const ComCollectionRecord: FC<{ OPENID: string; }> = ({ OPENID }) => {
                 <View className='dbtc pbt10'>
                   <View className='dy'>
                     <View>{e.deliveryName}</View>
-                    <View className='ml10 cccplh'>{format(new Date(e.timestamp_pay_callback!), "MM月dd日 hh:mm")}</View>
+                    <View className='ml10 cccplh'>{format(new Date(e.timestamp_pay_callback!), "MM月dd日 HH:mm")}</View>
                   </View>
                   <View className='fwb'>+ {(e.totalFee! / 100).toFixed(2)}</View>
                 </View>
