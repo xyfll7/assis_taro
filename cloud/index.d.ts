@@ -368,6 +368,7 @@ declare global {
   type AddressType = "收件地址" | "寄件地址" | "全部";
   type PickUpType = "上门取件" | "到店寄件";
   type OrderType = "待计重" | "待付款" | "已付款" | "已退款";
+  type CURD_List = "UPDATE" | "DELETE";
 }
 
 declare module "wx-server-sdk" {
