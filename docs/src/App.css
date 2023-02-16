@@ -1604,11 +1604,6 @@
     transform: rotate3d(0, 0, 1, 360deg) scale(1);
   }
 }
-.index-back {
-  background-image: linear-gradient(#ffeb3b, #ffda24, #ffeb3b, #f6f6f6, #f6f6f6, #f6f6f6, #f6f6f6, #f6f6f6, #f6f6f6, #f6f6f6, #ffffff, #ffffff, #ffffff, #f6f6f6);
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-}
 .tac {
   text-align: center;
 }
