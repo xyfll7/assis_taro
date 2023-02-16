@@ -69,10 +69,11 @@ export async function createQRCode_cloud(event: Events<{ page: string, scene: st
 }
 
 export async function getPrice_cloud(event: Events<Product_Express>) {
+  const { data } = event;
   return {
     code: Code.SUCCESS,
     message: "价格计算成功",
-    data: { ...event.data, xx: "kkk", totalFee: 600 } as Product_Express,
+    data: { ...data, totalFee: utils_calc_express_totalFee(data.weight) } as Product_Express,
   };
 }
 
