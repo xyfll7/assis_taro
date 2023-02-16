@@ -170,24 +170,26 @@ const Index_regiment_orders = () => {
             switch (e.product_type) {
               case "express":
                 return (
-                  <OrderExpressCard
-                    time_limit={time_limit}
-                    setQrCode={setQrCode}
-                    item={order}
-                    setItem={setOrder}
-                    key={e._id}
-                    selfInfo_S={selfInfo_S}
-                    orderType={orderType}
-                    order={e as Product_Express}
-                    onClick_setOrders={(ee, crud) => {
-                      if (crud === "DELETE") {
-                        setOrders(orders.filter((eee) => ee._id !== eee._id));
-                      }
-                      if (crud === "UPDATE") {
-                        setOrders(orders.map((eee) => eee._id === ee._id ? ee : eee));
-                      }
+                  <ComOrderExpress className='mrl10' item={e}>
+                    <OrderExpressOperation
+                      time_limit={time_limit}
+                      setQrCode={setQrCode}
+                      item={order}
+                      setItem={setOrder}
+                      key={e._id}
+                      selfInfo_S={selfInfo_S}
+                      orderType={orderType}
+                      order={e}
+                      onClick_setOrders={(ee, crud) => {
+                        if (crud === "DELETE") {
+                          setOrders(orders.filter((eee) => ee._id !== eee._id));
+                        }
+                        if (crud === "UPDATE") {
+                          setOrders(orders.map((eee) => eee._id === ee._id ? ee : eee));
+                        }
 
-                    }}></OrderExpressCard>
+                      }}></OrderExpressOperation>
+                  </ComOrderExpress>
                 );
               default:
                 return null;
@@ -202,8 +204,10 @@ const Index_regiment_orders = () => {
             setOrder(null);
           }}>
           <OrderInfoSetting
-            time_limit={time_limit} orderType={orderType}
-            setQrCode={setQrCode} selfInfo_S={selfInfo_S}
+            time_limit={time_limit}
+            orderType={orderType}
+            setQrCode={setQrCode}
+            selfInfo_S={selfInfo_S}
             onClick_setOrder={(e) => setOrder(e)}
             order={order}
             onClick_setOrders={(ee, crud) => {
@@ -369,10 +373,8 @@ const OrderInfoSetting: FC<{
 };
 //#endregion
 
-
-
-//#region 订单卡片
-const OrderExpressCard: FC<{
+//#region 订单操作
+const OrderExpressOperation: FC<{
   time_limit: string | null;
   setQrCode: React.Dispatch<React.SetStateAction<boolean>>;
   item: Product_Express | null;
@@ -385,35 +387,33 @@ const OrderExpressCard: FC<{
 }> = ({ time_limit, setQrCode, orderType, order, onClick_setOrders, selfInfo_S, setItem }) => {
 
   return (
-    <ComOrderExpress className='mrl10 ' item={order as Product_Express}>
-      {(orderType == "待计重" || orderType == "待付款") && (
-        <>
-          <View className='dbtc pbt4'>
-            <View className='pbt6 pr10 oo cccplh'
-              hoverClass='bccbacktab'
-              onClick={() => {
-                Taro.showModal({
-                  content: "您确定要删除该订单吗？",
-                  success: async (e) => {
-                    if (e.confirm) {
-                      Taro.showLoading({ title: "删除中...", mask: false });
-                      const res = await Api_orders_removeOrder(order);
-                      onClick_setOrders(res, "DELETE");
-                      Taro.hideLoading();
-                    }
-                  },
-                });
-              }}>
-              删除
-            </View>
-            <View
-              className='cccgreen pbt6 pl10 oo'
-              hoverClass='bccbacktab'
-              onClick={() => { setItem(order); }}>
-              修改信息
-            </View>
+    <>
+      {(orderType == "待计重" || orderType == "待付款") && (<>
+        <View className='dbtc pbt4'>
+          <View className='pbt6 pr10 oo cccplh'
+            hoverClass='bccbacktab'
+            onClick={() => {
+              Taro.showModal({
+                content: "您确定要删除该订单吗？",
+                success: async (e) => {
+                  if (e.confirm) {
+                    Taro.showLoading({ title: "删除中...", mask: false });
+                    const res = await Api_orders_removeOrder(order);
+                    onClick_setOrders(res, "DELETE");
+                    Taro.hideLoading();
+                  }
+                },
+              });
+            }}>
+            删除
           </View>
-        </>
+          <View
+            className='cccgreen pbt6 pl10 oo'
+            hoverClass='bccbacktab'
+            onClick={() => { setItem(order); }}>
+            修改信息
+          </View>
+        </View></>
       )}
       {order.self_OPENID === order?.regiment_OPENID && orderType === "待付款" && (
         <View className='pb4 dbtc'>
@@ -535,7 +535,7 @@ const OrderExpressCard: FC<{
           }
         </View>
       )}
-    </ComOrderExpress>
+    </>
   );
 };
 //#endregion
