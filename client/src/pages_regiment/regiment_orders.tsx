@@ -1,18 +1,19 @@
 import Taro, { useShareAppMessage } from "@tarojs/taro";
-import { Input, PageContainer, ScrollView, View, Image } from "@tarojs/components";
+import { PageContainer, ScrollView, View, Image } from "@tarojs/components";
 import debounce from "lodash/debounce";
 import { Popup as VPopup } from "@antmjs/vantui";
 import { to } from "await-to-js";
 import { FC, useCallback, useEffect, useState } from "react";
-import { Api_orders_removeOrder, Api_orders_getOrderList, Api_orders_updateOrder_express } from "../api/user__orders";
+
+import { PayStatus } from "../a_config";
+
 import { utils_generate_order, utils_get_electronic_face_sheet, utils_get_logistics, utils_get_printer, utils_print_express, utils_wx_pay } from "../utils/utils";
 import { useHook_effect_update, useHook_getTimeLimit, useHook_selfInfo_show } from "../utils/useHooks";
-import { PayStatus } from "../a_config";
-import wexinpay from "../image/wexinpay.svg";
+import { getEnvDevParam } from "../utils/env";
+
+import { Api_orders_removeOrder, Api_orders_getOrderList, Api_orders_updateOrder_express } from "../api/user__orders";
 import { Api_wxpay_wxPay_express_refund } from "../api/a__wxpay";
 import { Api_local_reachable } from "../api/aa__local";
-import { getEnvDevParam } from "../utils/env";
-import share_logo from "../image/share_logo.jpeg";
 
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
@@ -25,6 +26,10 @@ import ComEmpty from "../components/ComEmpty";
 import ComOrderExpress from "../components/ComOrderExpress";
 import ComHeaderBar from '../components/ComHeaderBar';
 import ComWeightPrice from "../components/ComWeightPrice";
+
+import wexinpay from "../image/wexinpay.svg";
+import share_logo from "../image/share_logo.jpeg";
+
 
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true });
@@ -62,7 +67,7 @@ const Index_regiment_orders = () => {
   const time_limit = useHook_getTimeLimit(selfInfo_S?.print_time_limit?.limit_time!);
 
   const [order, setOrder] = useState<Product_Express | null>(null);
-  const [show, setShow] = useState(false);
+
   const [searchValue, setSearchValue] = useState("");
   const [qrCode, setQrCode] = useState<boolean>(false);
 
@@ -70,7 +75,7 @@ const Index_regiment_orders = () => {
     selfInfo_S !== null && getOrderList___(searchValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderType]);
-  useEffect(() => setShow(Boolean(order)), [order]);
+
   const getOrderList___ = async (str?: string) => {
     setOrders(null);
     const res = await Api_orders_getOrderList(
@@ -191,13 +196,24 @@ const Index_regiment_orders = () => {
         </View>
         {orders && orders?.length > 0 && <ComFooter></ComFooter>}
         <PageContainer
-          show={show}
+          show={Boolean(order)}
           round
           onLeave={() => {
-            setShow(false);
             setOrder(null);
           }}>
-          <OrderInfoSetting time_limit={time_limit} orderType={orderType} setQrCode={setQrCode} selfInfo_S={selfInfo_S} setOrder={setOrder} setOrders={setOrders} orders={orders} order={order}></OrderInfoSetting>
+          <OrderInfoSetting
+            time_limit={time_limit} orderType={orderType}
+            setQrCode={setQrCode} selfInfo_S={selfInfo_S}
+            onClick_setOrder={(e) => setOrder(e)}
+            order={order}
+            onClick_setOrders={(ee, crud) => {
+              if (crud === "DELETE") {
+                setOrders(orders!.filter((eee) => ee._id !== eee._id));
+              }
+              if (crud === "UPDATE") {
+                setOrders(orders!.map((eee) => eee._id === ee._id ? ee : eee));
+              }
+            }} ></OrderInfoSetting>
         </PageContainer>
       </ScrollView>
     </>
@@ -206,6 +222,7 @@ const Index_regiment_orders = () => {
 
 export default Index_regiment_orders;
 
+
 //#region 修改信息弹窗 订单设置-设置重量-生成面单号-指定打印机
 const OrderInfoSetting: FC<{
   time_limit: string | null;
@@ -213,150 +230,140 @@ const OrderInfoSetting: FC<{
   setQrCode: React.Dispatch<React.SetStateAction<boolean>>;
   selfInfo_S: BaseUserInfo | null;
   order: Product_Express | null;
-  setOrder: React.Dispatch<React.SetStateAction<Product_Express | null>>;
-  orders: Product_Express[] | null;
-  setOrders: React.Dispatch<React.SetStateAction<Product_Express[] | null>>;
-}> = ({ time_limit, selfInfo_S, orderType, order, setOrder, orders, setOrders, setQrCode }) => {
-  const [weight, setWeight] = useState("");
-  const [printer, setPrinter] = useState<Printer_Info | null>(null);
-  useEffect(() => {
-    setWeight(order?.weight ? String(order?.weight) : "");
-    if (order?.printer) {
-      setPrinter(order?.printer);
-    } else if (selfInfo_S?.regiment_info?.printers?.length === 1) {
-      setPrinter(selfInfo_S?.regiment_info?.printers[0]);
-    }
-  }, [order, selfInfo_S]);
-
+  onClick_setOrder: (e: Product_Express | null) => void;
+  onClick_setOrders: (e: Product_Express, crud: CURD_List) => void;
+}> = ({ time_limit, selfInfo_S, orderType, order, setQrCode, onClick_setOrder, onClick_setOrders }) => {
+  const [price, setPrice] = useState(0);
+  const [weight, setWeight] = useState<number>(Number(order?.weight ?? 0));
   return (
     <View className='bccback hhh70'>
-      <View className='mrl10'>
-        <ComHeaderBar title='修改信息' onClick={() => setOrder(null)}></ComHeaderBar>
-        <View className='bccwhite prl10 o10'>
-          {/* <View className='o10 pbt10 dy'>
-            <View>重量：</View>
-            <Input
-              type='number'
-              alwaysEmbed
-              placeholder='请输入订单重量'
-              value={weight}
-              onInput={(e) => {
-                const num = e.detail.value.replace(/[^0-9]/gi, "").replace(/\b(0+)/gi, "");
-                setWeight(`${num} `);
-                setTimeout(() => setWeight(num), 0);
-              }}></Input>
-          </View> */}
-          {order &&
-            <ComWeightPrice className='dbtc pbt4' expressForm={order!} onBlur_getPrice={(e) => { }}></ComWeightPrice>
-          }
-          <View className='pbt10 dbtc lit'>
-            <View className='dy'>
-              <View>打印机：</View>
-              <View>{printer?.siid ?? "无"}</View>
+      {order &&
+        <>
+          <View className='mrl10'>
+            <ComHeaderBar title='修改信息' onClick={() => onClick_setOrder(null)}></ComHeaderBar>
+            <View className='bccwhite prl10 o10'>
+              {order &&
+                <ComWeightPrice className='dbtc pbt4'
+                  expressForm={order}
+                  weight={weight}
+                  price={price}
+                  onSetWeight={(e) => setWeight(e)}
+                  onSetPrice={(e) => setPrice(e)}></ComWeightPrice>
+              }
+              <View className='pbt10 dbtc lit'>
+                <View className='dy'>
+                  <View>打印机：</View>
+                  <View>{order.printer?.siid ?? "无"}</View>
+                </View>
+              </View>
+              <View className='pbt10 dy lit'>
+                <View>面单号：</View>
+                <View>{order.waybillId ?? "无"}</View>
+                <View className='ml6'>{order.deliveryName}</View>
+              </View>
             </View>
           </View>
-          <View className='pbt10 dy lit'>
-            <View>面单号：</View>
-            <View>{order?.waybillId ?? "无"}</View>
-            <View className='ml6'>{order?.deliveryName}</View>
+
+          <View className='fixed-bottom  safe-bottom dxy www100 '>
+            <View
+              className='pbt6 prl20 bccyellow oo mbt10'
+              hoverClass='bccyellowtab'
+              onClick={async () => {
+                if (!weight) {
+                  Taro.showToast({ title: "请输入重量", icon: "none" });
+                  return;
+                }
+                if (!price) {
+                  Taro.showToast({ title: "请获取价格", icon: "none" });
+                  return;
+                }
+                //选择打印机
+                const [err0, res0] = await to(utils_get_printer(selfInfo_S));
+                if (err0) {
+                  Taro.showToast({ title: err0.message, icon: "none" });
+                  return;
+                }
+                if (!time_limit && !order.waybillId) {
+                  // 没有电子面单号 - 选择电子面单账号
+                  const [err1, logistic] = await to(utils_get_logistics(selfInfo_S));
+                  if (err1) {
+                    Taro.showToast({ title: err1.message, icon: "none" });
+                    return;
+                  }
+                  //检查快递可达性
+                  Taro.showLoading({ title: "检查快递...", mask: true });
+                  const res2 = await Api_local_reachable({ ...order, deliveryId: logistic.deliveryId });
+                  if (res2) {
+                    Taro.showToast({ title: res2, icon: "none", duration: 5000 });
+                    return;
+                  }
+                  //生成电子面单
+                  Taro.showLoading({ title: "生成面单", mask: true });
+                  const [err3, res3] = await to(
+                    utils_generate_order({
+                      ...order,
+                      printer: res0,
+
+                      payStatus: PayStatus.PAY1,
+                      weight: Number(weight),
+                      totalFee: Number(price),
+
+                      deliveryId: logistic.deliveryId,
+                      bizId: logistic.bizId,
+                      deliveryName: logistic.deliveryName,
+                    })
+                  );
+                  if (err3) {
+                    Taro.showToast({ title: err3.message, icon: "none" });
+                    return;
+                  }
+                  ___order_update_success(res3);
+                } else {
+                  // 有电子面单号
+                  Taro.showLoading({ title: "更新中...", mask: true });
+                  const [err4, res4] = await to(Api_orders_updateOrder_express({
+                    ...order,
+                    printer: res0,
+
+                    payStatus: PayStatus.PAY1,
+                    weight: Number(weight),
+                    totalFee: Number(price),
+                  })
+                  );
+                  if (err4) {
+                    Taro.showToast({ title: "订单更新失败", icon: "none" });
+                    return;
+                  }
+                  ___order_update_success(res4);
+                }
+                function ___order_update_success(_order: Product_Express) {
+                  Taro.hideLoading();
+                  onClick_setOrder(null);
+                  if (orderType === "待计重") {
+                    onClick_setOrders(_order, "DELETE");
+                    Taro.showModal({
+                      content: `更新成功，订单移入"待付款"`,
+                      confirmText: "收款码",
+                      cancelText: "稍后处理",
+                      success: (e) => {
+                        if (e.confirm) {
+                          setQrCode(true);
+                        }
+                      },
+                    });
+                  } else if (orderType === "待付款") {
+                    onClick_setOrders(_order, "UPDATE");
+                    Taro.showToast({ title: "更新成功", icon: "none" });
+                  }
+                }
+              }}>
+              确认
+            </View>
           </View>
-        </View>
-      </View>
+        </>
 
-      <View className='dxy mt10'>
-        <View
-          className='pbt6 prl20 bccyellow oo'
-          hoverClass='bccyellowtab'
-          onClick={async () => {
-            if (!weight) {
-              Taro.showToast({ title: "请输入重量", icon: "none" });
-              return;
-            }
-            //选择打印机
-            const [err0, res0] = await to(utils_get_printer(selfInfo_S));
-            if (err0) {
-              Taro.showToast({ title: err0.message, icon: "none" });
-              return;
-            }
-            if (!time_limit && !order?.waybillId) {
-              // 没有电子面单号 - 选择电子面单账号
-              const [err1, logistic] = await to(utils_get_logistics(selfInfo_S));
-              if (err1) {
-                Taro.showToast({ title: err1.message, icon: "none" });
-                return;
-              }
-              //检查快递可达性
-              Taro.showLoading({ title: "检查快递...", mask: true });
-              const res2 = await Api_local_reachable({ ...order!, deliveryId: logistic.deliveryId });
-              if (res2) {
-                Taro.showToast({ title: res2, icon: "none", duration: 5000 });
-                return;
-              }
-              //生成电子面单
-              Taro.showLoading({ title: "生成面单", mask: true });
-              const [err3, res3] = await to(
-                utils_generate_order({
-                  ...order!,
-                  printer: res0!,
+      }
 
-                  payStatus: PayStatus.PAY1,
-                  weight: Number(weight),
-                  totalFee: order!.totalFee,
-
-                  deliveryId: logistic.deliveryId,
-                  bizId: logistic.bizId,
-                  deliveryName: logistic.deliveryName,
-                })
-              );
-              if (err3) {
-                Taro.showToast({ title: err3.message, icon: "none" });
-                return;
-              }
-              ___order_update_success(res3);
-            } else {
-              // 有电子面单号
-              Taro.showLoading({ title: "更新中...", mask: true });
-              const [err4, res4] = await to(
-                Api_orders_updateOrder_express({
-                  ...order!,
-                  printer: res0!,
-
-                  payStatus: PayStatus.PAY1,
-                  weight: Number(weight),
-                  totalFee: order!.totalFee,
-                })
-              );
-              if (err4) {
-                Taro.showToast({ title: "订单更新失败", icon: "none" });
-                return;
-              }
-              ___order_update_success(res4);
-            }
-            function ___order_update_success(_order: Product_Express) {
-              Taro.hideLoading();
-              setWeight("");
-              setOrder(null);
-              if (orderType === "待计重") {
-                setOrders(orders!.filter((e) => e._id !== _order._id));
-                Taro.showModal({
-                  content: `更新成功，订单移入"待付款"`,
-                  confirmText: "收款码",
-                  cancelText: "稍后处理",
-                  success: (e) => {
-                    if (e.confirm) {
-                      setQrCode(true);
-                    }
-                  },
-                });
-              } else if (orderType === "待付款") {
-                setOrders(orders!.map((e) => (e._id === _order._id ? _order : e)));
-                Taro.showToast({ title: "更新成功", icon: "none" });
-              }
-            }
-          }}>
-          确认
-        </View>
-      </View>
     </View>
   );
 };
@@ -372,7 +379,7 @@ const OrderExpressCard: FC<{
   setItem: React.Dispatch<React.SetStateAction<Product_Express | null>>;
   orderType: OrderType;
   order: Product_Express;
-  onClick_setOrders: (e: Product_Express, crud: "UPDATE" | "DELETE") => void;
+  onClick_setOrders: (e: Product_Express, crud: CURD_List) => void;
   selfInfo_S: BaseUserInfo | null;
 
 }> = ({ time_limit, setQrCode, orderType, order, onClick_setOrders, selfInfo_S, setItem }) => {

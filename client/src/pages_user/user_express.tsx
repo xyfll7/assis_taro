@@ -2,11 +2,10 @@ import { Popup as VPopup } from "@antmjs/vantui";
 import classNames from "classnames";
 import { to } from "await-to-js";
 import AddressParse from "address-parse";
-import { View, Navigator, Input, RootPortal, Image, Textarea, Label, Button } from "@tarojs/components";
+import { View, Navigator, Input, RootPortal, Image, Textarea, Label, Button, ScrollView } from "@tarojs/components";
 import Taro, { useShareAppMessage } from "@tarojs/taro";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Api_orders_addOrder } from "../api/user__orders";
-import { Api_tasks_getPrice } from '../api/a__tasks';
 import { useOrdersNotice } from "../store/OrdersNoticeProvider";
 import { useHook_getTimeLimit, useHook_selfInfo_show } from "../utils/useHooks";
 import { Api_local_reachable } from "../api/aa__local";
@@ -26,7 +25,7 @@ import ComAddress, { RefAddress } from "../components/ComAddress";
 import ComLoading from "../components/ComLoading";
 import ComWeightPrice from "../components/ComWeightPrice";
 
-definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true });
+definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true, disableScroll: true });
 const Index_user_express = () => {
   useShareAppMessage((res) => {
     if (res.from === "button") {
@@ -114,51 +113,40 @@ const Index_user_express = () => {
       },
     });
   }
-
   return (
-    <>
-      <ComNav className='bccback pb6' isHeight isSticky>
-        <ComNavBar className='prl10 ' title='快递服务'></ComNavBar>
-      </ComNav>
-      {selfInfo_S === null && <ComLoading></ComLoading>}
-      {selfInfo_S && (
-        <>
-          <View className='mt4'>
-            {/* 寄件人信息 */}
-            <ExpressSendMan onGoToAddressList={onGoToAddressList} expressForm={expressForm} refAddress={refAddress} formAddress={expressForm.sendMan}></ExpressSendMan>
-            {/* 收件人信息 */}
-            <ExpressRecMan setExpressForm={setExpressForm} selfInfo_S={selfInfo_S} onGoToAddressList={onGoToAddressList} onSetExpressForm={onSetExpressForm} expressForm={expressForm} refAddress={refAddress}></ExpressRecMan>
-            {/* 重量 - 价格 */}
-            {selfInfo_S && selfInfo_S.regiment_is === 1 && selfInfo_S.print_direct_regiment === true &&
-              <ComWeightPrice className='mrl10 mt10 bccwhite prl10 o10 pbt4 dbtc' expressForm={expressForm}
-                onBlur_getPrice={async (e) => {
-                  // 表单验证
-                  if (utils_validate_express("rec", expressForm.recMan!) && utils_validate_express("send", expressForm.sendMan!)) {
-                    Taro.showLoading({ title: "获取价格...", mask: true });
-                    const res = await Api_tasks_getPrice({ ...expressForm, weight: e });
-                    setExpressForm(res);
-                    Taro.hideLoading();
-                  }
-                }}></ComWeightPrice>
-            }
-            {/* 物品类型-备注-寄件方式 */}
-            <ExpressInfo expressForm={expressForm} setExpressForm={setExpressForm}></ExpressInfo>
-            {/* 底部tab栏 */}
+    <ScrollView style={{ height: "99vh", maxHeight: "99vh", minHeight: "99vh" }} scrollY>
+      <View>
+        <ComNav className='bccback pb6' isHeight isSticky>
+          <ComNavBar className='prl10 ' title='快递服务'></ComNavBar>
+        </ComNav>
+        {selfInfo_S === null && <ComLoading></ComLoading>}
+        {selfInfo_S && (
+          <>
+            <View className='mt4'>
+              {/* 寄件人信息 */}
+              <ExpressSendMan onGoToAddressList={onGoToAddressList} expressForm={expressForm} refAddress={refAddress} formAddress={expressForm.sendMan}></ExpressSendMan>
+              {/* 收件人信息 */}
+              <ExpressRecMan setExpressForm={setExpressForm} selfInfo_S={selfInfo_S} onGoToAddressList={onGoToAddressList} onSetExpressForm={onSetExpressForm} expressForm={expressForm} refAddress={refAddress}></ExpressRecMan>
 
-            {(selfInfo_S
-              && (selfInfo_S.regiment_is === 1)
-              && selfInfo_S.print_direct_regiment === true)
-              ? <OrderPayRegiment selfInfo_S={selfInfo_S} expressForm={expressForm}></OrderPayRegiment>
-              : <OrderPayUser selfInfo_S={selfInfo_S} expressForm={expressForm} setExpressForm={setExpressForm}></OrderPayUser>
-            }
+              {/* 物品类型-备注-寄件方式 */}
+              <ExpressInfo expressForm={expressForm} setExpressForm={setExpressForm}></ExpressInfo>
+              {/* 底部tab栏 */}
 
-            <ComAddress ref={refAddress} onSetExpressForm={onSetExpressForm}></ComAddress>
-          </View>
-          {/* 提示信息 */}
-          <PromptInformation></PromptInformation>
-        </>
-      )}
-    </>
+              {(selfInfo_S
+                && (selfInfo_S.regiment_is === 1)
+                && selfInfo_S.print_direct_regiment === true)
+                ? <OrderPayRegiment selfInfo_S={selfInfo_S} expressForm={expressForm}></OrderPayRegiment>
+                : <OrderPayUser selfInfo_S={selfInfo_S} expressForm={expressForm} setExpressForm={setExpressForm}></OrderPayUser>
+              }
+
+              <ComAddress ref={refAddress} onSetExpressForm={onSetExpressForm}></ComAddress>
+            </View>
+            {/* 提示信息 */}
+            <PromptInformation></PromptInformation>
+          </>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 export default Index_user_express;
@@ -587,10 +575,12 @@ const OrderPayRegiment: FC<{
 }> = ({ expressForm, selfInfo_S }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [orderState, setOrderState] = useState<Product_Express | null>(null);
+  const [price, setPrice] = useState(0);
+  const [weight, setWeight] = useState(0);
   const time_limit = useHook_getTimeLimit(selfInfo_S?.print_time_limit?.limit_time!);
 
   //#region 提交订单
-  async function ___submit() {
+  async function ___submit(_weight: number, _price: number) {
     //选择电子面单账号
     const [err1, logistic] = await to(utils_get_logistics(selfInfo_S));
     if (err1) {
@@ -617,8 +607,8 @@ const OrderPayRegiment: FC<{
       regiment_sub_mchId: selfInfo_S?.regiment_info?.regiment_sub_mchId,
 
       payStatus: PayStatus.PAY1,
-      weight: Number(expressForm.weight),
-      totalFee: expressForm.totalFee,
+      weight: _weight,
+      totalFee: _price,
 
       deliveryId: logistic.deliveryId,
       bizId: logistic.bizId,
@@ -667,15 +657,26 @@ const OrderPayRegiment: FC<{
   //#endregion
 
   return (
-    <View className='fixed-bottom safe-bottom bccwhite www100 prl10'>
+    <View className='fixed-bottom safe-bottom bccwhite www100 prl10 tab-back'>
+      {/* 揽件超时限制通知 */}
       <ComPrintNotice className='pt10' time_limit={time_limit}></ComPrintNotice>
+      {/* 支付成功弹窗 */}
       <PaySuccessPopup showPopup={showPopup} orderState={orderState} selfInfo_S={selfInfo_S} onClick={() => setShowPopup(false)}></PaySuccessPopup>
+      {/* 重量 - 价格 */}
+      {selfInfo_S && selfInfo_S.regiment_is === 1 && selfInfo_S.print_direct_regiment === true &&
+        <ComWeightPrice className='mrl10 mt10 prl10 o10 pbt4 dbtc bccback'
+          expressForm={expressForm}
+          weight={weight}
+          price={price}
+          onSetWeight={(e) => setWeight(e)}
+          onSetPrice={(e) => setPrice(e)}></ComWeightPrice>
+      }
       <View className='www pbt10 dbtc '>
         {/* 团长信息 */}
         <RegimentInfo selfInfo_S={selfInfo_S}></RegimentInfo>
         <View className='dy'>
           <View
-            className='bccyellow oo prl10 pbt6 fwb dy fwb mrl10'
+            className='bccyellow oo prl10 pbt6 fwb dy fwb mrl10 '
             hoverClass='bccyellowtab'
             onClick={async () => {
               // 表单验证
@@ -688,17 +689,16 @@ const OrderPayRegiment: FC<{
                 return;
               }
               // 检查重量
-              if (!expressForm.weight) {
+              if (!weight) {
                 Taro.showToast({ title: "请输入重量", icon: "none" });
                 return;
               }
               // 检查价格
-              if (!expressForm.totalFee) {
+              if (!price) {
                 Taro.showToast({ title: "请获取价格", icon: "none" });
                 return;
               }
-              ___submit();
-
+              ___submit(price, weight);
             }}>
             <Image className='mr6 ' style='width: 1rem; height: 1rem;transform: scale(1.2);' src={wexinpay}></Image>
             团长自助·下单
