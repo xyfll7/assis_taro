@@ -202,21 +202,23 @@ const Index_regiment_orders = () => {
           onLeave={() => {
             setOrder(null);
           }}>
-          <OrderInfoSetting
-            time_limit={time_limit}
-            orderType={orderType}
-            setQrCode={setQrCode}
-            selfInfo_S={selfInfo_S}
-            onClick_setOrder={(e) => setOrder(e)}
-            order={order}
-            onClick_setOrders={(ee, crud) => {
-              if (crud === "DELETE") {
-                setOrders(orders!.filter((eee) => ee._id !== eee._id));
-              }
-              if (crud === "UPDATE") {
-                setOrders(orders!.map((eee) => eee._id === ee._id ? ee : eee));
-              }
-            }} ></OrderInfoSetting>
+          {order &&
+            <OrderInfoSetting
+              time_limit={time_limit}
+              orderType={orderType}
+              setQrCode={setQrCode}
+              selfInfo_S={selfInfo_S}
+              onClick_setOrder={(e) => setOrder(e)}
+              order={order}
+              onClick_setOrders={(ee, crud) => {
+                if (crud === "DELETE") {
+                  setOrders(orders!.filter((eee) => ee._id !== eee._id));
+                }
+                if (crud === "UPDATE") {
+                  setOrders(orders!.map((eee) => eee._id === ee._id ? ee : eee));
+                }
+              }} ></OrderInfoSetting>
+          }
         </PageContainer>
       </ScrollView>
     </>
@@ -231,11 +233,11 @@ const OrderInfoSetting: FC<{
   orderType: OrderType;
   setQrCode: React.Dispatch<React.SetStateAction<boolean>>;
   selfInfo_S: BaseUserInfo | null;
-  order: Product_Express | null;
+  order: Product_Express;
   onClick_setOrder: (e: Product_Express | null) => void;
   onClick_setOrders: (e: Product_Express, crud: CURD_List) => void;
 }> = ({ time_limit, selfInfo_S, orderType, order, setQrCode, onClick_setOrder, onClick_setOrders }) => {
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState(order.totalFee!);
   const [weight, setWeight] = useState<number>(Number(order?.weight ?? 0));
   return (
     <View className='bccback hhh70'>
@@ -341,21 +343,24 @@ const OrderInfoSetting: FC<{
                 function ___order_update_success(_order: Product_Express) {
                   Taro.hideLoading();
                   onClick_setOrder(null);
-                  if (orderType === "待计重") {
-                    onClick_setOrders(_order, "DELETE");
-                    Taro.showModal({
-                      content: `更新成功，订单移入"待付款"`,
-                      confirmText: "收款码",
-                      cancelText: "稍后处理",
-                      success: (e) => {
-                        if (e.confirm) {
-                          setQrCode(true);
-                        }
-                      },
-                    });
-                  } else if (orderType === "待付款") {
-                    onClick_setOrders(_order, "UPDATE");
-                    Taro.showToast({ title: "更新成功", icon: "none" });
+                  switch (orderType) {
+                    case "待计重":
+                      onClick_setOrders(_order, "DELETE");
+                      Taro.showModal({
+                        content: `更新成功，订单移入"待付款"`,
+                        confirmText: "收款码",
+                        cancelText: "稍后处理",
+                        success: (e) => {
+                          if (e.confirm) {
+                            setQrCode(true);
+                          }
+                        },
+                      });
+                      return;
+                    case "待付款":
+                      onClick_setOrders(_order, "UPDATE");
+                      Taro.showToast({ title: "更新成功", icon: "none" });
+                      return;
                   }
                 }
               }}>

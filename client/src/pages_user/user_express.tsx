@@ -698,7 +698,7 @@ const OrderPayRegiment: FC<{
                 Taro.showToast({ title: "请获取价格", icon: "none" });
                 return;
               }
-              ___submit(price, weight);
+              ___submit(weight, price);
             }}>
             <Image className='mr6 ' style='width: 1rem; height: 1rem;transform: scale(1.2);' src={wexinpay}></Image>
             团长自助·下单
