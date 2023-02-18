@@ -1,7 +1,7 @@
 import Taro, { useShareAppMessage } from "@tarojs/taro";
-import { PageContainer, ScrollView, View, Image } from "@tarojs/components";
+import { PageContainer, ScrollView, View } from "@tarojs/components";
 import debounce from "lodash/debounce";
-import { Popup as VPopup } from "@antmjs/vantui";
+
 import { to } from "await-to-js";
 import { FC, useCallback, useEffect, useState } from "react";
 
@@ -25,6 +25,7 @@ import ComOrderExpress from "../components/ComOrderExpress";
 import ComHeaderBar from '../components/ComHeaderBar';
 import ComWeightPrice from "../components/ComWeightPrice";
 import ComOrderExpressOperation from "../components/ComOrderExpressOperation";
+import ComCollectionQRCode from '../components/ComCollectionQRCode';
 
 
 import share_logo from "../image/share_logo.jpeg";
@@ -32,8 +33,6 @@ import share_logo from "../image/share_logo.jpeg";
 
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true });
-
-const qrCode_collection_url = "https://636c-cloud1-8gfby1gac203c61c-1306790653.tcb.qcloud.la/线上_收款码.jpeg";
 
 const Index_regiment_orders = () => {
   useShareAppMessage((res) => {
@@ -109,56 +108,12 @@ const Index_regiment_orders = () => {
   //#endregion
   return (
     <>
-      <VPopup className='www90 dcl pbt10' show={Boolean(qrCode)} round onClose={() => setQrCode(false)}>
-        <View className='dcl mt10'>
-          <View className='mb4'>请顾客扫此二维码支付</View>
-          <View className='tac mrl10 prl10 cccplh'>可将此二维码保存打印 </View>
-          <View className='tac mrl10 prl10 cccplh'>顾客扫此二维码打开“待付款”订单列表 </View>
-          <Image src={qrCode_collection_url} className='wwwhhh50 mbt10 img-back-loading o10 bccback'></Image>
-          <View
-            className='prl10 pbt6 oo bccyellow'
-            hoverClass='bccyellowtab'
-            onClick={() => {
-              Taro.showLoading({ title: "保存中...", mask: true });
-              Taro.downloadFile({
-                url: qrCode_collection_url,
-                filePath: `${Taro.env.USER_DATA_PATH}/收款码.jpeg`,
-                success: (e) => {
-                  Taro.saveImageToPhotosAlbum({
-                    filePath: e.filePath,
-                    success(ee) {
-                      if (ee.errMsg === "saveImageToPhotosAlbum:ok") {
-                        Taro.showToast({ title: "保存成功", icon: "none" });
-                      } else {
-                        Taro.showToast({ title: "保存失败", icon: "none" });
-                      }
-                    },
-                    fail: () => Taro.showToast({ title: "保存失败", icon: "none" }),
-                  });
-                },
-                fail: () => Taro.showToast({ title: "保存失败", icon: "none" }),
-              });
-            }}>
-            保存二维码
-          </View>
-          <View className='mt10 prl10 pbt6 oo cccplh' hoverClass='bccbacktab' onClick={() => setQrCode(false)}>
-            关闭
-          </View>
-        </View>
-      </VPopup>
       <ScrollView scrollY className='hhh99'>
         <View>
           <ComNav className='bccback' isHeight isSticky>
             <ComNavBar className='prl10' title='订单管理(团长)'></ComNavBar>
             <ComListTypeSelector typeList={["待计重", "待付款", "已付款", "已退款"]} orderType={orderType} setOrderType={(e) => setOrderType(e)}>
-              <View className='mr10 pr10'>
-                <View
-                  className='cccgreen pbt6 pl10 oo'
-                  hoverClass='bccbacktab'
-                  onClick={async () => setQrCode(true)}>
-                  收款码
-                </View>
-              </View>
+              <ComCollectionQRCode qrCode={qrCode} onClick_setQrCode={(e) => setQrCode(e)}></ComCollectionQRCode>
             </ComListTypeSelector>
             <ComSearcher searchValue={searchValue} setSearchValue={setSearchValue} onGetOrderList={getOrderList___}></ComSearcher>
             {orderType !== "已退款" && <ComPrintNotice className='pb10' time_limit={time_limit}></ComPrintNotice>}
@@ -186,7 +141,6 @@ const Index_regiment_orders = () => {
                         if (crud === "UPDATE") {
                           setOrders(orders.map((eee) => eee._id === ee._id ? ee : eee));
                         }
-
                       }}></ComOrderExpressOperation>
                   </ComOrderExpress>
                 );
@@ -199,9 +153,7 @@ const Index_regiment_orders = () => {
         <PageContainer
           show={Boolean(order)}
           round
-          onLeave={() => {
-            setOrder(null);
-          }}>
+          onLeave={() => { setOrder(null); }}>
           {order &&
             <OrderInfoSetting
               time_limit={time_limit}
@@ -303,20 +255,18 @@ const OrderInfoSetting: FC<{
                   }
                   //生成电子面单
                   Taro.showLoading({ title: "生成面单", mask: true });
-                  const [err3, res3] = await to(
-                    utils_generate_order({
-                      ...order,
-                      printer: res0,
+                  const [err3, res3] = await to(utils_generate_order({
+                    ...order,
+                    printer: res0,
 
-                      payStatus: PayStatus.PAY1,
-                      weight: Number(weight),
-                      totalFee: Number(price),
+                    payStatus: PayStatus.PAY1,
+                    weight: Number(weight),
+                    totalFee: Number(price),
 
-                      deliveryId: logistic.deliveryId,
-                      bizId: logistic.bizId,
-                      deliveryName: logistic.deliveryName,
-                    })
-                  );
+                    deliveryId: logistic.deliveryId,
+                    bizId: logistic.bizId,
+                    deliveryName: logistic.deliveryName,
+                  }));
                   if (err3) {
                     Taro.showToast({ title: err3.message, icon: "none" });
                     return;
@@ -332,8 +282,7 @@ const OrderInfoSetting: FC<{
                     payStatus: PayStatus.PAY1,
                     weight: Number(weight),
                     totalFee: Number(price),
-                  })
-                  );
+                  }));
                   if (err4) {
                     Taro.showToast({ title: "订单更新失败", icon: "none" });
                     return;
@@ -368,9 +317,7 @@ const OrderInfoSetting: FC<{
             </View>
           </View>
         </>
-
       }
-
     </View>
   );
 };
