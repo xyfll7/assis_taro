@@ -1697,7 +1697,6 @@ image {
 page {
   font-size: 1rem !important;
   background-color: #f6f6f6 !important;
-  overflow: hidden;
 }
 ::-webkit-scrollbar {
   display: none;
