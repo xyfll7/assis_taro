@@ -64,10 +64,12 @@ async function ___print_express(
     if (result?.body?.code == 200 && result?.body?.success) {
       return result.body as PrintRes;
     } else {
+      console.log(result);
       throw new Error("打印任务提交失败");
     }
   } catch (err: any) {
-    throw new Error(`未知错误，${err.errMsg}`);
+    console.log(err);
+    throw new Error(`服务器错误，打印任务提交失败，${err.errMsg}`);
   }
 }
 
@@ -90,10 +92,12 @@ async function ___order_update(
     if (res.errMsg === "document.update:ok" && res.stats.updated === 1) {
       return data;
     } else {
+      console.log(res);
       throw new Error(`订单更新失败，${res.errMsg}。`);
     }
   } catch (err: any) {
-    throw new Error(`未知错误，${err.errMsg}`);
+    console.log(err);
+    throw new Error(`服务器错误，订单更新失败，${err.errMsg}`);
   }
 }
 
