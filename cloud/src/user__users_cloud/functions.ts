@@ -7,8 +7,10 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
 const _ = db.command;
 
-export async function getSelfInfo_cloud(): Promise<Result<BaseUserInfo>> {
-  const { OPENID } = cloud.getWXContext();
+export async function getSelfInfo_cloud(event: Events<string>): Promise<Result<BaseUserInfo>> {
+  let { OPENID } = cloud.getWXContext();
+  const { data } = event;
+  OPENID = data ? data : OPENID;
   try {
     const res = <cloud.DB.IAggregateResult>await db.collection("users").aggregate().match({ _id: OPENID }).lookup({
       from: 'users',

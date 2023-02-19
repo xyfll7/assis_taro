@@ -5,7 +5,8 @@ export async function Api_users_getSelfInfo(): Promise<BaseUserInfo> {
     const res = await wx_cloud_callFunctions<BaseUserInfo>({
       name: "user__users_cloud",
       data: {
-        func: "getSelfInfo_cloud"
+        func: "getSelfInfo_cloud",
+        // data: "oGwbL5FKCrALVPc-XBeBspHo_gMw"
       }
     });
     return res;

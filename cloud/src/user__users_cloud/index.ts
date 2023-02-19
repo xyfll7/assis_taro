@@ -4,7 +4,7 @@ import { getSelfInfo_cloud, getRegimentList_cloud, updateUserInfo_cloud, getUser
 export const main = async (event: Events<any, any>,) => {
   switch (event.func) {
     case "getSelfInfo_cloud":
-      return await getSelfInfo_cloud();
+      return await getSelfInfo_cloud(event);
     case "getUserInfo_cloud":
       return await getUserInfo_cloud(event);
     case "getTeamList_cloud":
