@@ -79,9 +79,12 @@ const Index_user_express = () => {
         };
       }
       if (getEnv().envVersion === "develop") {
+        console.log("JJ", _expressForm.sendMan);
         _expressForm = {
           ..._expressForm,
-          sendMan: { ..._expressForm.sendMan!, ...selfInfo_S.address_info },
+          ...(_expressForm.sendMan ?
+            { sendMan: _expressForm.sendMan! } :
+            { sendMan: { ..._expressForm.sendMan!, ...selfInfo_S.address_info } }),
         };
       }
     }
@@ -806,19 +809,44 @@ const ___init_product_express = (): Product_Express => {
       recMan: false
         ? null
         : {
-          name: "麦芒",
-          mobile: "15915710969",
-          company: "",
-          post_code: "",
-          code: "",
-          country: "中国",
-          province: "湖北省",
-          city: "省直辖县级行政区划",
-          area: "仙桃市",
-          address: "剅河镇实验幼儿园",
-          from: "WX", // 微信 ｜ 粘贴
+          // name: "麦芒",
+          // mobile: "15915710969",
+          // company: "",
+          // post_code: "",
+          // code: "",
+          // country: "中国",
+          // province: "湖北省",
+          // city: "省直辖县级行政区划",
+          // area: "仙桃市",
+          // address: "剅河镇实验幼儿园",
+          // from: "WX", // 微信 ｜ 粘贴
+          "address": "新安集镇张楼村 王浩臣",
+          "address_type": "收件地址",
+          "area": "沈丘县",
+          "city": "周口市",
+          "code": "411624",
+          "company": "",
+          "country": "中国",
+          "from": "CP",
+          "mobile": "18240742987",
+          "name": "王浩臣",
+          "post_code": "",
+          "province": "河南省"
         },
-      sendMan: null,
+      sendMan: false ? null : {
+        "address": "二庄科金岳小区",
+        "address_type": "寄件地址",
+        "area": "宝塔区",
+        "city": "延安市",
+        "code": "610602",
+        "company": "",
+        "country": "中国",
+        "from": "CP",
+        "mobile": "19991121616",
+        "name": "诺",
+        "post_code": "",
+        "province": "陕西省",
+      },
       totalFee: 0,
       itemType: "文件",
       itemNotes: "",
