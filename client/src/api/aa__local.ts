@@ -36,13 +36,13 @@ export async function Api_local_reachable(express: Product_Express) {
 }
 
 const ___process_reachable = (data: any) => {
-  if (data?.toReachable[0]?.reachable === 0) { // 不可达
+  if (data?.toReachable[0] && data?.toReachable[0]?.reachable === 0) { // 不可达
     return `${data.toReachable[0]?.reason},暂不可向该收件地址发货`;
-  } else if (data?.toReachable[0]?.reachable === 1) {
+  } else if (data?.toReachable[0] && data?.toReachable[0]?.reachable === 1) {
     return false;
-  } else if (data?.fromReachable[0]?.reachable === 0) {
+  } else if (data?.fromReachable && data?.fromReachable[0]?.reachable === 0) {
     return `${data.fromReachable[0]?.reason},该寄件地址暂不可发货`;
-  } else if (data?.fromReachable[0]?.reachable === 1) {
+  } else if (data?.fromReachable && data?.fromReachable[0]?.reachable === 1) {
     return false;
   } else {
     return false;

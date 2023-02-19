@@ -806,16 +806,16 @@ const ___init_product_express = (): Product_Express => {
       recMan: false
         ? null
         : {
-          name: "小王",
-          mobile: "17709205216",
+          name: "麦芒",
+          mobile: "15915710969",
           company: "",
           post_code: "",
           code: "",
           country: "中国",
-          province: "广东省",
-          city: "深圳市",
-          area: "南山区",
-          address: "江南西路杏园大街15号 海珠区妇幼保健院",
+          province: "湖北省",
+          city: "省直辖县级行政区划",
+          area: "仙桃市",
+          address: "剅河镇实验幼儿园",
           from: "WX", // 微信 ｜ 粘贴
         },
       sendMan: null,
