@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { FC, useState } from "react";
-import Taro, { useLoad } from "@tarojs/taro";
+import Taro, { useLoad, useShareAppMessage } from "@tarojs/taro";
 import { minutesToMilliseconds } from "date-fns";
-import { View, Navigator, ScrollView } from "@tarojs/components";
+import { View, Navigator, ScrollView, Button, Label } from "@tarojs/components";
 import ComAvatar from "../../components/ComAvatar";
 import ComNav from "../../components/ComNav";
 import ComLoading from "../../components/ComLoading";
@@ -13,11 +13,27 @@ import { Api_orders_getOrderList } from "../../api/user__orders";
 import { useOrdersNotice } from "../../store/OrdersNoticeProvider";
 import { Api_users_getSelfInfo } from "../../api/user__users";
 import getEnv from "../../utils/env";
+import share_logo from "../../image/share_logo.jpeg";
 
 definePageConfig({ enableShareAppMessage: true, backgroundColor: "#ffffff", navigationStyle: "custom", disableScroll: true });
 const Index = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({ isOrderNotice: true, isGetOrderNoticeOnce: true });
   useHook_getQuota_number(minutesToMilliseconds(60));
+  useShareAppMessage((res) => {
+    if (res.from === "button") {
+      // 来自页面内转发按钮
+      return {
+        title: `${selfInfo_S?.name} 团长 邀您6元起寄快递`,
+        path: `/pages_user/user_express?scene=${encodeURIComponent(`R_D=${selfInfo_S?.OPENID}`)}`,
+        imageUrl: share_logo,    // * 支持PNG及JPG * 显示图片长宽比是 5:4
+      };
+    }
+    return {
+      title: "小象团长助手",
+      path: "/pages/index/index",
+      imageUrl: share_logo,    // * 支持PNG及JPG * 显示图片长宽比是 5:4
+    };
+  });
   return (
     <View>
       {selfInfo_S == null && <ComLoading isIndex></ComLoading>}
@@ -76,10 +92,21 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
             </View>
           </View>
         </ComNav>
-        <View className='prl10 ds dwp '>
-          <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_user/user_express'>
-            🛵 快递服务
-          </Navigator>
+        <View className='prl10 ds dwp'>
+          <View className='oo bccwhite  mr6 mt6 dy' >
+            <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
+              <View className='mrl4'>🛵</View>
+              <View>快递服务</View>
+            </Navigator>
+            {selfInfo_S?.regiment_is === 1 &&
+              <Label for='share_express'>
+                <View className='prl10 cccgreen pbt10 oo nw ' hoverClass='bccbacktab'>
+                  <View className='prl4'>邀请顾客下单</View>
+                </View>
+                <Button className='dsn' id='share_express' openType='share'></Button>
+              </Label>
+            }
+          </View>
           {selfInfo_S?.regiment_is != 1 && <ComOrderNotice className='mt6 mr6 pbt8 bccwhite oo dxy' hoverClass='bccbacktab'></ComOrderNotice>}
           <Regiment selfInfo_S={selfInfo_S}></Regiment>
           {selfInfo_S?.regiment_is != 1 && (
