@@ -558,7 +558,7 @@ export function utils_get_timestamp(subDay: number) {
 //#endregion
 
 //#region 本月第一天，本月最后一天
-export function utils_start_end_date(date: string) {
+export function utils_get_start_end_date(date: string) {
   const today = new Date(date);
   const firstDateOfMonth = format(startOfMonth(today), "yyyy-MM-dd");
   const lastDateOfMonth = format(lastDayOfMonth(today), "yyyy-MM-dd");
@@ -569,16 +569,46 @@ export function utils_start_end_date(date: string) {
 }
 //#endregion
 
-//#region 打开 excel 表格文件
-export async function utils_open_excle(buffer: ArrayBuffer, date: string) {
-  const filePath = `${Taro.env.USER_DATA_PATH}/${date}对账单.xlsx`;
-  Taro.getFileSystemManager().writeFile({
-    filePath: filePath,
-    data: buffer,
-    success: () => {
-      Taro.openDocument({ filePath: filePath, showMenu: true });
-    },
+
+function getFileSystemManager_saveFile({ tempFilePath, filePath }: { tempFilePath: string, filePath?: string; }): Promise<Taro.FileSystemManager.SaveFileSuccessCallbackResult> {
+  return new Promise<Taro.FileSystemManager.SaveFileSuccessCallbackResult>((resolve, reject) => {
+    Taro.getFileSystemManager().saveFile({
+      tempFilePath,
+      filePath,
+      success: (res) => resolve(res),
+      fail: (err) => reject(err),
+    });
   });
+}
+
+//#region 打开 excel 表格文件
+export async function utils_open_excle(fileID: string, name: string, date: string) {
+  try {
+    const res0 = await Taro.cloud.downloadFile({ fileID: fileID });
+    if (res0.errMsg === "downloadFile:ok" && res0.statusCode === 200) {
+      const res1 = await getFileSystemManager_saveFile({
+        tempFilePath: res0.tempFilePath,
+        filePath: `${Taro.env.USER_DATA_PATH}/${name}_${date}_对账单.xlsx`
+      });
+      if (res1.errMsg === "saveFile:ok") {
+        const res2 = await Taro.openDocument({ filePath: res1.savedFilePath, showMenu: true });
+        if (res2.errMsg !== "openDocument:ok") {
+          throw new Error("打开文件失败");
+        }
+      } else {
+        throw new Error("保存文件失败");
+      }
+
+    } else {
+      throw new Error("下载文件失败");
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      throw err;
+    } else {
+      throw err;
+    }
+  }
 }
 //#endregion
 

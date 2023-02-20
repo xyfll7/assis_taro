@@ -16,14 +16,24 @@ export async function wx_cloud_callFunctions<OUT>(params: RQ<Taro.cloud.CallFunc
         environment: getEnv(),
       },
     });
-    const result = res.result as unknown as Result<OUT>;
-    if (result.code === Code.SUCCESS) {
-      return result.data as OUT;
+    if (res.errMsg === "cloud.callFunction:ok") {
+      const result = res.result as unknown as Result<OUT>;
+      if (result.code === Code.SUCCESS) {
+        return result.data as OUT;
+      } else {
+        throw new Error(result.message);
+      }
     } else {
-      throw res.result;
+      console.error("云函数调用错误：", res);
+      throw new Error(`云函数调用错误：${res.errMsg}`);
     }
   } catch (err) {
-    throw err;
+    if (err instanceof Error) {
+      throw err;
+    } else {
+      console.error("未知错误：", err);
+      throw new Error("未知错误");
+    }
   }
 }
 

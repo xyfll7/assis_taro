@@ -1,11 +1,11 @@
-import { useRouter } from "@tarojs/taro";
+import Taro, { useRouter } from "@tarojs/taro";
 import { View, Picker } from "@tarojs/components";
 import { format } from "date-fns";
 import { useState } from "react";
 import ComCollectionRecord from "../components/ComCollectionRecord";
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
-import { utils_start_end_date, utils_open_excle } from "../utils/utils";
+import { utils_get_start_end_date, utils_open_excle } from "../utils/utils";
 import { Api_regiment_collections_getCollectionExcel } from "../api/regiment__collections";
 
 definePageConfig({ navigationStyle: "custom" });
@@ -26,15 +26,26 @@ const Index_admin_collection_record = () => {
             mode='date'
             fields='month'
             onChange={async (e) => {
+              Taro.showLoading({ title: "下载中...", mask: true });
               const _date = format(new Date(e.detail.value), "yyyy-MM-dd");
-              const dateRes = utils_start_end_date(_date);
+              const dateRes = utils_get_start_end_date(_date);
               setDate(_date);
-              const excelRes = await Api_regiment_collections_getCollectionExcel({
-                OPENID: router.params?.OPENID!,
-                firstDateOfMonth: dateRes.firstDateOfMonth,
-                lastDateOfMonth: dateRes.lastDateOfMonth,
-              });
-              utils_open_excle(excelRes, `${router.params.regiment_name}-${format(new Date(e.detail.value), "yyyy年MM月")}`);
+              try {
+                const excelRes = await Api_regiment_collections_getCollectionExcel({
+                  OPENID: router.params?.OPENID!,
+                  firstDateOfMonth: dateRes.firstDateOfMonth,
+                  lastDateOfMonth: dateRes.lastDateOfMonth,
+                });
+                await utils_open_excle(excelRes, router.params.regiment_name, format(new Date(e.detail.value), "yyyy年MM月"));
+                Taro.hideLoading();
+              } catch (err) {
+                Taro.hideLoading();
+                if (err instanceof Error) {
+                  Taro.showToast({ title: err.message, icon: "none" });
+                } else {
+                  Taro.showToast({ title: "未知错误,下载对账单失败", icon: "none" });
+                }
+              }
             }}>
             <View className='pbt6 pl10 cccgreen oo' hoverClass='bccbacktab'>
               下载对账单

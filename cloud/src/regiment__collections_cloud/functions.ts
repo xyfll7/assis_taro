@@ -138,11 +138,10 @@ export async function getCollectionExcel_cloud(
     firstDateOfMonth: string;
     lastDateOfMonth: string;
   }>
-): Promise<Result<ArrayBuffer>> {
+): Promise<Result<string>> {
   try {
     const { data } = event;
-
-    const res = <cloud.DB.IQueryResult>await db
+    const res0 = <cloud.DB.IQueryResult>await db
       .collection("orders")
       .where({
         regiment_OPENID: data.OPENID,
@@ -154,31 +153,43 @@ export async function getCollectionExcel_cloud(
       })
       .limit(10000)
       .get();
-    if (res.errMsg === "collection.get:ok") {
-      const excleRes = make_excle(res.data as Product_Express[], data.firstDateOfMonth);
+    if (res0.errMsg === "collection.get:ok") {
+      const excleRes = make_excle(res0.data as Product_Express[], data.firstDateOfMonth);
+      const res1 = await cloud.uploadFile({
+        cloudPath: `account_statement/${data.OPENID}.xlsx`,
+        fileContent: excleRes
+      });
+      if (res1.errMsg === "uploadFile:ok") {
+        return {
+          code: Code.SUCCESS,
+          message: "成功",
+          data: res1.fileID,
+        };
+      } else {
+        throw new Error(`上传对账单.xlsx文件错误，${res1.errMsg}`, { cause: res1 });
+      }
+    } else {
+      throw new Error(`数据库执行错误，${res0.errMsg}`, { cause: res0 });
+    }
+  } catch (err) {
+    if (err instanceof Error) {
       return {
-        code: Code.SUCCESS,
-        message: res.errMsg,
-        data: excleRes,
+        code: Code.SERVER_ERROR,
+        message: `${err.message}`,
+        err: err.cause,
       };
     } else {
       return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res,
+        code: Code.OTHER_ERROR,
+        message: `未知错误`,
+        err,
       };
     }
-  } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err,
-    };
   }
 }
 
 
-function make_excle(params: Product_Express[], date: string): ArrayBuffer {
+function make_excle(params: Product_Express[], date: string): Buffer {
   let count_totalFee = 0;  // 金额
   let count_weight = 0; // 重量
   let count_profit = 0; // 利润合计
@@ -227,9 +238,6 @@ function make_excle(params: Product_Express[], date: string): ArrayBuffer {
       e.regiment_sub_mchId ? `商户：${e.regiment_sub_mchId}` : "总账号"
     ];
   });
-
-
-
   var buffer = xlsx.build([{
     name: format(new Date(date), "yyyy年MM月"),
     data: [

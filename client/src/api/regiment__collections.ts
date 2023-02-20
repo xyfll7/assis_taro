@@ -29,9 +29,13 @@ export async function Api_regiment_collections_getCollectionHistoryList(params: 
   }
 }
 
-export async function Api_regiment_collections_getCollectionExcel(params: { OPENID: string; firstDateOfMonth: string; lastDateOfMonth: string; }): Promise<ArrayBuffer> {
+export async function Api_regiment_collections_getCollectionExcel(params: {
+  OPENID: string;
+  firstDateOfMonth: string;
+  lastDateOfMonth: string;
+}): Promise<string> {
   try {
-    const res = await wx_cloud_callFunctions<ArrayBuffer>({
+    const res = await wx_cloud_callFunctions<string>({
       name: "regiment__collections_cloud",
       data: {
         func: "getCollectionExcel_cloud",
