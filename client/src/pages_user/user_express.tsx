@@ -775,7 +775,7 @@ const PromptInformation = () => {
   return (
     <>
       <View className='ml10  pl10'>
-        <View className='pbt6 cccplh'>首重6元，上门取件+2元</View>
+        <View className='pbt6 cccplh'>首重6元起，上门取件+2元</View>
         {/* <Navigator className="pbt6 pl10 oo cccgreen " hoverClass="cccwhitetab">价格计算器</Navigator> */}
       </View>
       <View className='hhh25'></View>

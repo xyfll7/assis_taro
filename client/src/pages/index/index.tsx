@@ -95,7 +95,7 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
         <View className='prl10 ds dwp'>
           <View className='oo bccwhite  mr6 mt6 dy' >
             <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
-              <View className='mrl4'>🛵</View>
+              <View className='mrl6 lh100'>🛵</View>
               <View>快递服务</View>
             </Navigator>
             {selfInfo_S?.regiment_is === 1 &&
