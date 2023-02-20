@@ -152,7 +152,7 @@ export async function getCollectionExcel_cloud(
         ),
         payStatus: 2,
       })
-      .limit(1000)
+      .limit(10000)
       .get();
     if (res.errMsg === "collection.get:ok") {
       const excleRes = make_excle(res.data as Product_Express[], data.firstDateOfMonth);
