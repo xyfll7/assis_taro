@@ -15,7 +15,7 @@ import wexinpay from "../image/wexinpay.svg";
 import getEnv from "../utils/env";
 import { PayStatus } from "../a_config";
 import share_logo from "../image/share_logo.jpeg";
-import { utils_deep, utils_generate_order, utils_get_logistics, utils_print_express, utils_validate_express, utils_wx_pay } from "../utils/utils";
+import { utils_deep, utils_generate_order, utils_get_logistics, utils_init_product_express, utils_print_express, utils_validate_express, utils_wx_pay } from "../utils/utils";
 
 import ComPrintNotice from '../components/ComPrintNotice';
 import ComAvatar from "../components/ComAvatar";
@@ -44,7 +44,7 @@ const Index_user_express = () => {
   });
 
   const [selfInfo_S] = useHook_selfInfo_show({ isRefreshSelfInfo_SEveryTime: true });
-  const [expressForm, setExpressForm] = useState<Product_Express>(utils_deep(___init_product_express()));
+  const [expressForm, setExpressForm] = useState<Product_Express>(utils_deep(utils_init_product_express()));
   const refAddress = useRef<RefAddress>(null);
   const onSetExpressForm = (mantype: AddressManType, data: AddressInfo) => {
     function make_addr____(): Product_Express {
@@ -239,7 +239,7 @@ const ExpressRecMan: FC<{
               hoverClass='bccbacktab'
               onClick={async () => {
                 setExpressForm({
-                  ...(await ___init_product_express()),
+                  ...(await utils_init_product_express()),
                   sendMan: selfInfo_S?.address_info,
                 });
               }}>
@@ -552,7 +552,7 @@ const OrderPayUser: FC<{
                 success: async (e) => {
                   if (e.cancel) {
                     setExpressForm({
-                      ...(await ___init_product_express()),
+                      ...(await utils_init_product_express()),
                       sendMan: selfInfo_S?.address_info,
                     });
                   }
@@ -785,75 +785,4 @@ const PromptInformation = () => {
 //#endregion
 
 
-const ___init_product_express = (): Product_Express => {
-  if (getEnv().envVersion === "release") {
-    return {
-      self_OPENID: "",
-      regiment_OPENID: "",
-      product_type: "express",
-      recMan: null,
-      sendMan: null,
-      totalFee: 0,
-      itemType: "文件",
-      itemNotes: "",
-      weight: 0,
-      describe: "快递",
-      pickUpType: "到店寄件",
-      print_times: 0,
-    } as Product_Express;
-  } else {
-    return {
-      self_OPENID: "",
-      regiment_OPENID: "",
-      product_type: "express",
-      recMan: false
-        ? null
-        : {
-          // name: "麦芒",
-          // mobile: "15915710969",
-          // company: "",
-          // post_code: "",
-          // code: "",
-          // country: "中国",
-          // province: "湖北省",
-          // city: "省直辖县级行政区划",
-          // area: "仙桃市",
-          // address: "剅河镇实验幼儿园",
-          // from: "WX", // 微信 ｜ 粘贴
-          "address": "新安集镇张楼村 王浩臣",
-          "address_type": "收件地址",
-          "area": "沈丘县",
-          "city": "周口市",
-          "code": "411624",
-          "company": "",
-          "country": "中国",
-          "from": "CP",
-          "mobile": "18240742987",
-          "name": "王浩臣",
-          "post_code": "",
-          "province": "河南省"
-        },
-      sendMan: false ? null : {
-        "address": "二庄科金岳小区",
-        "address_type": "寄件地址",
-        "area": "宝塔区",
-        "city": "延安市",
-        "code": "610602",
-        "company": "",
-        "country": "中国",
-        "from": "CP",
-        "mobile": "19991121616",
-        "name": "诺",
-        "post_code": "",
-        "province": "陕西省",
-      },
-      totalFee: 0,
-      itemType: "文件",
-      itemNotes: "",
-      weight: 0,
-      describe: "快递",
-      pickUpType: "到店寄件",
-      print_times: 0,
-    } as Product_Express;
-  }
-};
+

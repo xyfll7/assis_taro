@@ -2,12 +2,74 @@ import { format, lastDayOfMonth, startOfMonth, subDays, intervalToDuration } fro
 import { to } from "await-to-js";
 import Taro from "@tarojs/taro";
 import Schema from "validate";
-import { getEnvDevParam } from "./env";
+import getEnv, { getEnvDevParam } from "./env";
 import { Api_wxpay_wxPay_express } from "../api/a__wxpay";
 import { Api_tasks_createQRCode } from "../api/a__tasks";
 import { Api_logistics_addOrder } from "../api/a__logistics";
 import { Api_printer_printExpress } from "../api/a__printer";
 import { Api_local_reachable } from '../api/aa__local';
+
+//#region 快递表单数据初始化
+export function utils_init_product_express(): Product_Express {
+  if (getEnv().envVersion === "release") {
+    return {
+      self_OPENID: "",
+      regiment_OPENID: "",
+      product_type: "express",
+      recMan: null,
+      sendMan: null,
+      totalFee: 0,
+      itemType: "文件",
+      itemNotes: "",
+      weight: 0,
+      describe: "快递",
+      pickUpType: "到店寄件",
+      print_times: 0,
+    } as Product_Express;
+  } else {
+    return {
+      self_OPENID: "",
+      regiment_OPENID: "",
+      product_type: "express",
+      recMan: false
+        ? null
+        : {
+          name: "依辰美",
+          mobile: "17727658643",
+          company: "",
+          post_code: "",
+          code: "",
+          country: "中国",
+          province: "湖北省",
+          city: "省直辖县",
+          area: "天门市",
+          address: "南洋大道57号",
+          from: "WX", // 微信 ｜ 粘贴
+        },
+      sendMan: false ? null : {
+        name: "闫飞",
+        mobile: "15399269833",
+        company: "",
+        post_code: "",
+        code: "",
+        country: "中国",
+        province: "陕西省",
+        city: "延安市",
+        area: "宝塔区",
+        address: "二庄科金岳小区",
+        from: "WX", // 微信 ｜ 粘贴
+      },
+      totalFee: 0,
+      itemType: "文件",
+      itemNotes: "",
+      weight: 0,
+      describe: "快递",
+      pickUpType: "到店寄件",
+      print_times: 0,
+    } as Product_Express;
+  }
+};
+//#endregion
 
 
 //#region 生成电子面单
