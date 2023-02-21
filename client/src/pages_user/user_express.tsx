@@ -65,6 +65,7 @@ const Index_user_express = () => {
     }
     setExpressForm({ ...make_addr____() });
   };
+
   useEffect(() => {
     let _expressForm: Product_Express = utils_deep({
       ...expressForm,
@@ -75,11 +76,10 @@ const Index_user_express = () => {
       if (selfInfo_S.regiment_is !== 1) {
         _expressForm = {
           ..._expressForm,
-          sendMan: { ..._expressForm.sendMan!, ...selfInfo_S.address_info },
+          sendMan: { ..._expressForm.sendMan!, ...(_expressForm.sendMan ?? selfInfo_S.address_info) },
         };
       }
       if (getEnv().envVersion === "develop") {
-        console.log("JJ", _expressForm.sendMan);
         _expressForm = {
           ..._expressForm,
           ...(_expressForm.sendMan ?
@@ -519,7 +519,6 @@ const OrderPayUser: FC<{
   selfInfo_S: BaseUserInfo | null;
   setExpressForm: React.Dispatch<React.SetStateAction<Product_Express>>;
 }> = ({ expressForm, selfInfo_S, setExpressForm }) => {
-  const [orders_S, setOrders_S] = useOrdersNotice();
   return (
     <View className='fixed-bottom safe-bottom bccwhite www100 prl10'>
       <View className='www pbt10 dbtc '>
@@ -542,7 +541,6 @@ const OrderPayUser: FC<{
 
                 payStatus: PayStatus.PAY0,
               });
-              setOrders_S([res1, ...(orders_S ?? [])]);
               Taro.hideLoading();
               Taro.showModal({
                 title: "提示",
