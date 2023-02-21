@@ -14,6 +14,7 @@ import { useOrdersNotice } from "../../store/OrdersNoticeProvider";
 import { Api_users_getSelfInfo } from "../../api/user__users";
 import getEnv from "../../utils/env";
 import share_logo from "../../image/share_logo.jpeg";
+import ComRegimentQRCode from '../../components/ComRegimentQRCode';
 
 definePageConfig({ enableShareAppMessage: true, backgroundColor: "#ffffff", navigationStyle: "custom", disableScroll: true });
 const Index = () => {
@@ -100,13 +101,19 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
               <View>快递服务</View>
             </Navigator>
             {selfInfo_S?.regiment_is === 1 &&
-              <Label for='share_express'>
-                <View className='prl10 cccgreen pbt10 oo nw ' hoverClass='bccbacktab'>
-                  <View className='prl4'>邀请顾客下单</View>
-                </View>
-                <Button className='dsn' id='share_express' openType='share'></Button>
-              </Label>
+              <>
+                <Label for='share_express'>
+                  <View className='prl10 cccgreen pbt10 oo nw ' hoverClass='bccbacktab'>
+                    <View className='prl4'>邀请</View>
+                  </View>
+                  <Button className='dsn' id='share_express' openType='share'></Button>
+                </Label>
+                <ComRegimentQRCode className='prl10 cccgreen pbt10 oo nw' hoverClass='bccbacktab'>
+                  二维码
+                </ComRegimentQRCode>
+              </>
             }
+
           </View>
           {selfInfo_S?.regiment_is != 1 && <ComOrderNotice className='mt6 mr6 pbt8 bccwhite oo dxy' hoverClass='bccbacktab'></ComOrderNotice>}
           <Regiment selfInfo_S={selfInfo_S}></Regiment>

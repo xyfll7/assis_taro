@@ -1,21 +1,19 @@
 import classNames from "classnames";
 import Taro, { useShareAppMessage } from "@tarojs/taro";
-import { useState } from "react";
-import { Popup as VPopup } from "@antmjs/vantui";
+
 import { View, Navigator, Image } from "@tarojs/components";
 import { useHook_selfInfo_show } from "../utils/useHooks";
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import { Api_users_updateUserInfo } from "../api/user__users";
 import ComAdmin from "../components/ComAdmin";
+import ComRegimentQRCode from "../components/ComRegimentQRCode";
 import { utils_get_qrcode } from "../utils/utils";
 import share_logo from "../image/share_logo.jpeg";
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true });
 const Index_regiment_setting = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
-
-  const [qrcode, setQrcode] = useState<string | null>(null);
 
   useShareAppMessage((res) => {
     if (res.from === "button") {
@@ -76,40 +74,9 @@ const Index_regiment_setting = () => {
           </View>
         </View>
         <View className='mt10 dll'>
-          <VPopup className='www90 dcl pbt10' show={Boolean(qrcode)} round onClose={() => setQrcode(null)}>
-            <View className='pbt10'>团长专属小程序码</View>
-            <Image src={qrcode!} className='wwwhhh50 mbt10'></Image>
-            <View
-              className='mbt10 pbt6 prl10 oo bccyellow'
-              hoverClass='bccyellowtab'
-              onClick={() => {
-                Taro.saveImageToPhotosAlbum({
-                  filePath: qrcode!,
-                  success(res) {
-                    if (res.errMsg === "saveImageToPhotosAlbum:ok") {
-                      Taro.showToast({ title: "保存成功", icon: "none" });
-                    }
-                  },
-                });
-              }}>
-              保存到相册
-            </View>
-            <View className='pb10 prl10 pbt6 oo cccplh' hoverClass='bccbacktab' onClick={() => setQrcode(null)}>
-              关闭
-            </View>
-          </VPopup>
-          <View
-            className='pbt6 pr10 oo cccplh ml6 '
-            hoverClass='bccbacktab'
-            onClick={async () => {
-              const _qrcode = await utils_get_qrcode({
-                page: "pages_user/user_express",
-                scene: `R_D=${selfInfo_S?.OPENID}`,
-              });
-              setQrcode(_qrcode);
-            }}>
+          <ComRegimentQRCode className='pbt6 pr10 oo cccplh ml6' hoverClass='bccbacktab'>
             团长专属小程序码
-          </View>
+          </ComRegimentQRCode>
           <Navigator className='pbt6 pr10 oo cccplh ml6 ' hoverClass='bccbacktab' url='/pages_regiment/regiment_my_team'>
             我的团队
           </Navigator>
