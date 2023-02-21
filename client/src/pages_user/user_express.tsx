@@ -6,7 +6,6 @@ import { View, Navigator, Input, RootPortal, Image, Textarea, Label, Button, Scr
 import Taro, { useShareAppMessage } from "@tarojs/taro";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Api_orders_addOrder } from "../api/user__orders";
-import { useOrdersNotice } from "../store/OrdersNoticeProvider";
 import { useHook_getTimeLimit, useHook_selfInfo_show } from "../utils/useHooks";
 import { Api_local_reachable } from "../api/aa__local";
 
@@ -532,33 +531,42 @@ const OrderPayUser: FC<{
 
             Taro.showLoading({ title: "提交中...", mask: true });
             if (utils_validate_express("rec", expressForm.recMan!) && utils_validate_express("send", expressForm.sendMan!)) {
-              const res1 = await Api_orders_addOrder({
-                ...expressForm,
+              try {
+                await Api_orders_addOrder({
+                  ...expressForm,
 
-                self_OPENID: selfInfo_S?.OPENID,
-                regiment_OPENID: selfInfo_S?.regiment_OPENID,
-                regiment_sub_mchId: selfInfo_S?.regiment_info?.regiment_sub_mchId,
+                  self_OPENID: selfInfo_S?.OPENID,
+                  regiment_OPENID: selfInfo_S?.regiment_OPENID,
+                  regiment_sub_mchId: selfInfo_S?.regiment_info?.regiment_sub_mchId,
 
-                payStatus: PayStatus.PAY0,
-              });
-              Taro.hideLoading();
-              Taro.showModal({
-                title: "提示",
-                content: "下单成功",
-                confirmText: "查看订单",
-                cancelText: "继续下单",
-                success: async (e) => {
-                  if (e.cancel) {
-                    setExpressForm({
-                      ...(await utils_init_product_express()),
-                      sendMan: selfInfo_S?.address_info,
-                    });
-                  }
-                  if (e.confirm) {
-                    Taro.redirectTo({ url: "/pages_user/user_orders" });
-                  }
-                },
-              });
+                  payStatus: PayStatus.PAY0,
+                });
+                Taro.hideLoading();
+                Taro.showModal({
+                  title: "提示",
+                  content: "下单成功",
+                  confirmText: "查看订单",
+                  cancelText: "继续下单",
+                  success: async (e) => {
+                    if (e.cancel) {
+                      setExpressForm({
+                        ...(utils_init_product_express()),
+                        sendMan: selfInfo_S?.address_info,
+                      });
+                    }
+                    if (e.confirm) {
+                      Taro.redirectTo({ url: "/pages_user/user_orders" });
+                    }
+                  },
+                });
+              } catch (err) {
+                if (err instanceof Error) {
+                  Taro.showToast({ title: err.message, icon: "none" });
+                } else {
+                  Taro.showToast({ title: "未知错误", icon: "none" });
+                }
+              }
+
             }
           }}>
           确认·下单
