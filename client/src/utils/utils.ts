@@ -31,21 +31,19 @@ export function utils_init_product_express(): Product_Express {
       self_OPENID: "",
       regiment_OPENID: "",
       product_type: "express",
-      recMan: false
-        ? null
-        : {
-          name: "依辰美",
-          mobile: "17727658643",
-          company: "",
-          post_code: "",
-          code: "",
-          country: "中国",
-          province: "湖北省",
-          city: "省直辖县",
-          area: "天门市",
-          address: "南洋大道57号",
-          from: "WX", // 微信 ｜ 粘贴
-        },
+      recMan: false ? null : {
+        name: "依辰美",
+        mobile: "17727658643",
+        company: "",
+        post_code: "",
+        code: "",
+        country: "中国",
+        province: "湖北省",
+        city: "省直辖县",
+        area: "天门市",
+        address: "南洋大道57号",
+        from: "WX", // 微信 ｜ 粘贴
+      },
       sendMan: false ? null : {
         name: "闫飞",
         mobile: "15399269833",

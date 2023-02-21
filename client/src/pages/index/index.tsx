@@ -8,7 +8,7 @@ import ComNav from "../../components/ComNav";
 import ComLoading from "../../components/ComLoading";
 import ComRegimentList from "../../components/ComRegimentList";
 import ComOrderNotice from "../../components/ComOrderNotice";
-import { useHook_getQuota_number, useHook_selfInfo_show } from "../../utils/useHooks";
+import { useHook_getQuota_number, useHook_get_orderList, useHook_selfInfo_show } from "../../utils/useHooks";
 import { Api_orders_getOrderList } from "../../api/user__orders";
 import { useOrdersNotice } from "../../store/OrdersNoticeProvider";
 import { Api_users_getSelfInfo } from "../../api/user__users";
@@ -17,7 +17,8 @@ import share_logo from "../../image/share_logo.jpeg";
 
 definePageConfig({ enableShareAppMessage: true, backgroundColor: "#ffffff", navigationStyle: "custom", disableScroll: true });
 const Index = () => {
-  const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({ isOrderNotice: true, isGetOrderNoticeOnce: true });
+  const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
+  useHook_get_orderList();
   useHook_getQuota_number(minutesToMilliseconds(60));
   useShareAppMessage((res) => {
     if (res.from === "button") {
