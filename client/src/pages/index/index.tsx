@@ -133,18 +133,13 @@ const Regiment: FC<{ selfInfo_S: BaseUserInfo | null; }> = ({ selfInfo_S }) => {
   return (
     <View className='ww ds dwp'>
       {selfInfo_S?.regiment_is == 1 && (
-        <>
-          {!selfInfo_S.regiment_replica_is &&
-            <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_setting'>
-              🌿 团长
-            </Navigator>
-          }
+        <>{!selfInfo_S.regiment_replica_is &&
+          <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_setting'>
+            🌿 团长
+          </Navigator>}
           <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_orders'>
             🍒 团长订单
           </Navigator>
-          {/* <Navigator className="prl10 pbt8 oo bccwhite  mr6 mt6" hoverClass="bccbacktab" url="/pages_regiment/regiment_batch_printing">
-          🐝 批量打单</Navigator> */}
-          {/* <Navigator className="prl10 pbt10 oo bccwhite  mr6" hoverClass="bccbacktab" url="/pages_regiment/regiment_printer"> 🖨️ 打印机</Navigator> */}
         </>
       )}
     </View>
