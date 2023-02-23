@@ -50,9 +50,15 @@ export default defineAppConfig({
   style: "v2",
   sitemapLocation: "sitemap.json",
   requiredPrivateInfos: [
+    "getLocation",
     "chooseLocation",
     "chooseAddress"
   ],
+  permission: {
+    "scope.userLocation": {
+      desc: "你的位置信息将用于小程序搜索附近的团长"
+    }
+  },
   plugins: {
     // logisticsPlugin: {
     //   version: "2.2.22",
