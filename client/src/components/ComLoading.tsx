@@ -1,7 +1,7 @@
-import { View, Image } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import classNames from 'classnames';
 import { FC } from 'react';
-import pawsvg from "../image/logo.svg";
+import ComAvatar from './ComAvatar';
 
 const ComLoading: FC<{ className?: string, isIndex?: boolean; }> = ({ className, isIndex, }) =>
   <>
@@ -13,7 +13,7 @@ const ComLoading: FC<{ className?: string, isIndex?: boolean; }> = ({ className,
     </View>
     {isIndex && <View className='ww dxyl'>
       <View className='hhh20'></View>
-      <Image className='wwwhhh20' src={pawsvg} />
+      <ComAvatar size={130}></ComAvatar>
       <View className='hhh40'></View>
     </View>}
   </>;

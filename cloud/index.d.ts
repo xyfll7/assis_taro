@@ -13,6 +13,7 @@ declare global {
     avatar?: string; // 头像
     phone?: string; // 手机号
 
+    distance?: number;
     location_name?: string; // 地址
     location?: {
       type: "Point";

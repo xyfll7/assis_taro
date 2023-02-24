@@ -42,12 +42,13 @@ export async function Api_users_getTeamList(OPENID: string): Promise<BaseUserInf
     throw err;
   }
 }
-export async function Api_users_getRegimentList(): Promise<BaseUserInfo[]> {
+export async function Api_users_getRegimentListNearby(locate: Taro.getLocation.SuccessCallbackResult): Promise<BaseUserInfo[]> {
   try {
     const res = await wx_cloud_callFunctions<BaseUserInfo[]>({
       name: "user__users_cloud",
       data: {
-        func: "getRegimentList_cloud"
+        func: "getRegimentListNearby_cloud",
+        data: { ...locate }
       }
     });
     return res;

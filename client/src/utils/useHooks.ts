@@ -1,6 +1,6 @@
 import Taro, { useDidShow } from "@tarojs/taro";
 import { useEffect, useRef, useState } from "react";
-import { Api_users_getSelfInfo, Api_users_updateUserInfo } from "../api/user__users";
+import { Api_users_getRegimentListNearby, Api_users_getSelfInfo, Api_users_updateUserInfo } from "../api/user__users";
 import { useSelfInfo } from "../store/SelfInfoProvider";
 import { utils_urlToObj, utils_get_time_limit } from "./utils";
 import { Api_logistics_getQuota } from "../api/a__logistics";
@@ -111,4 +111,48 @@ export function useHook_getTimeLimit(timeStr: string) {
     return () => clearInterval(_timer);
   });
   return time;
+}
+
+
+export function useHook_getLocation() {
+  const [locate, setLocate] = useState<Taro.getLocation.SuccessCallbackResult | null>(null);
+  useEffect(() => {
+    console.log("执行了啊啊")
+      ; (async () => {
+        try {
+          const res = await Taro.getLocation({
+            type: 'gcj02',
+          });
+          setLocate(res);
+        } catch (err) {
+          if (err instanceof Error) {
+            Taro.showToast({ title: err.message, icon: "none" });
+          } else if (typeof (err as TaroGeneral.CallbackResult).errMsg === "string") {
+            Taro.showToast({ title: "获取位置信息失败，无法为您查找附近的团长", icon: "none", duration: 5000 });
+          } else {
+            Taro.showToast({ title: "未知错误:Taro.getLocation", icon: "none" });
+          }
+        }
+      })();
+  }, []);
+  return { locate };
+}
+
+export function useHook_getRegimentListNearby(locate: Taro.getLocation.SuccessCallbackResult | null) {
+  const [regiment_list, setRegiment_list] = useState<BaseUserInfo[] | null>(null);
+  useEffect(() => {
+    locate && (async () => {
+      try {
+        setRegiment_list(await Api_users_getRegimentListNearby(locate));
+      } catch (err) {
+        if (err instanceof Error) {
+          Taro.showToast({ title: `获取附近团长失败：${err.message}`, icon: "none" });
+        } else {
+          Taro.showToast({ title: `获取附近团长失败：${err} 未知错误`, icon: "none" });
+        }
+      }
+    }
+    )();
+  }, [locate]);
+  return { regiment_list };
 }

@@ -166,17 +166,17 @@ export async function getCollectionExcel_cloud(
           data: res1.fileID,
         };
       } else {
-        throw new Error(`上传对账单.xlsx文件错误，${res1.errMsg}`, { cause: res1 });
+        throw new Error(`上传对账单.xlsx文件错误，${res1.errMsg}`);
       }
     } else {
-      throw new Error(`数据库执行错误，${res0.errMsg}`, { cause: res0 });
+      throw new Error(`数据库执行错误，${res0.errMsg}`);
     }
   } catch (err) {
     if (err instanceof Error) {
       return {
         code: Code.SERVER_ERROR,
         message: `${err.message}`,
-        err: err.cause,
+        err: err,
       };
     } else {
       return {

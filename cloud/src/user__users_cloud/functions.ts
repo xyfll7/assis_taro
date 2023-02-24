@@ -1,6 +1,7 @@
 import { Code } from "../../../client/src/a_config";
 // 云函数代码
 import cloud from "wx-server-sdk";
+import Taro from "@tarojs/taro";
 
 // @ts-ignore
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
@@ -109,34 +110,51 @@ export async function getTeamList_cloud(event: Events<string>): Promise<Result<B
     };
   }
 }
-export async function getRegimentList_cloud(): Promise<Result<BaseUserInfo[]>> {
+export async function getRegimentListNearby_cloud(event: Events<Taro.getLocation.SuccessCallbackResult>): Promise<Result<BaseUserInfo[]>> {
   try {
-    const res = <cloud.DB.IQuerySingleResult>await db.collection("users")
-      .orderBy("timestamp_update", "desc")
-      .where({
-        regiment_is: _.or([_.eq(1)])
-      }).get();
-    if (res.errMsg == "collection.get:ok") {
+    const { data } = event;
+    const res = <cloud.DB.IAggregateResult>await db.collection("users")
+      .aggregate()
+      .geoNear({
+        distanceField: 'distance', // 输出的每个记录中 distance 即是与给定点的距离
+        distanceMultiplier: 1 / 1000,
+        spherical: true,
+        near: db.Geo.Point(data.longitude, data.latitude),
+        query: {
+          regiment_is: _.or([_.eq(1)]),
+        },
+        minDistance: 0,
+        maxDistance: 5000,
+        key: 'location', // 若只有 location 一个地理位置索引的字段，则不需填
+        includeLocs: 'location', // 若只有 location 一个是地理位置，则不需填
+      })
+      .end();
+    if (res.errMsg == "collection.aggregate:ok") {
       // 根据myRegimentId查找我的团长信息
       return {
         code: Code.SUCCESS,
         message: res.errMsg,
-        data: res.data as BaseUserInfo[],
+        data: res.list as BaseUserInfo[],
         res
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误`,
-        res,
-      };
+      throw new Error(`数据库查询错误：${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误`,
-      err
-    };
+    console.log("错误距离：：", err);
+    if (err instanceof Error) {
+      return {
+        code: Code.SERVER_ERROR,
+        message: `${err.message}`,
+        err: err,
+      };
+    } else {
+      return {
+        code: Code.OTHER_ERROR,
+        message: `未知错误`,
+        err,
+      };
+    }
   }
 }
 export async function updateUserInfo_cloud(event: Events<BaseUserInfo, string>): Promise<Result<BaseUserInfo>> {
