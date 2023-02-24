@@ -567,8 +567,8 @@ export function utils_get_start_end_date(date: string) {
 }
 //#endregion
 
-
-function getFileSystemManager_saveFile({ tempFilePath, filePath }: { tempFilePath: string, filePath?: string; }): Promise<Taro.FileSystemManager.SaveFileSuccessCallbackResult> {
+//#region 打开 excel 表格文件
+function ___getFileSystemManager_saveFile_promise({ tempFilePath, filePath }: { tempFilePath: string, filePath?: string; }): Promise<Taro.FileSystemManager.SaveFileSuccessCallbackResult> {
   return new Promise<Taro.FileSystemManager.SaveFileSuccessCallbackResult>((resolve, reject) => {
     Taro.getFileSystemManager().saveFile({
       tempFilePath,
@@ -579,12 +579,11 @@ function getFileSystemManager_saveFile({ tempFilePath, filePath }: { tempFilePat
   });
 }
 
-//#region 打开 excel 表格文件
 export async function utils_open_excle(fileID: string, name: string, date: string) {
   try {
     const res0 = await Taro.cloud.downloadFile({ fileID: fileID });
     if (res0.errMsg === "downloadFile:ok" && res0.statusCode === 200) {
-      const res1 = await getFileSystemManager_saveFile({
+      const res1 = await ___getFileSystemManager_saveFile_promise({
         tempFilePath: res0.tempFilePath,
         filePath: `${Taro.env.USER_DATA_PATH}/${name}_${date}_对账单.xlsx`
       });
