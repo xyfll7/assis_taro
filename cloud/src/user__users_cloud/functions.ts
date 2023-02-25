@@ -27,28 +27,31 @@ export async function getSelfInfo_cloud(event: Events<string>): Promise<Result<B
         code: Code.SUCCESS,
         message: res.errMsg,
         data: { ...userInfo, regiment_info: regiment_info ?? null },
-        res
       };
     } else if (res.errMsg === "collection.aggregate:ok" && res.list.length === 0) {
       return {
         code: Code.SUCCESS,
         message: res.errMsg,
         data: { OPENID },
-        res
+      };
+    } else {
+      console.log(res);
+      throw new Error("数据库执行错误");
+    }
+  } catch (err: any) {
+    if (err instanceof Error) {
+      return {
+        code: Code.SERVER_ERROR,
+        message: err.message,
+        err
       };
     } else {
       return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误`,
-        res,
+        code: Code.SERVER_ERROR,
+        message: `未知错误`,
+        err
       };
     }
-  } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误`,
-      err
-    };
   }
 }
 export async function getUserInfo_cloud(event: Events<string>): Promise<Result<BaseUserInfo>> {
@@ -63,18 +66,23 @@ export async function getUserInfo_cloud(event: Events<string>): Promise<Result<B
         res
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误`,
-        res,
-      };
+      console.log(res);
+      throw new Error("数据库执行错误");
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误`,
-      err
-    };
+    if (err instanceof Error) {
+      return {
+        code: Code.SERVER_ERROR,
+        message: err.message,
+        err
+      };
+    } else {
+      return {
+        code: Code.SERVER_ERROR,
+        message: `未知错误`,
+        err
+      };
+    }
   }
 }
 // 获取团队成员列表
@@ -96,18 +104,23 @@ export async function getTeamList_cloud(event: Events<string>): Promise<Result<B
         res
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误`,
-        res,
-      };
+      console.log(res);
+      throw new Error("数据库执行错误");
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误`,
-      err
-    };
+    if (err instanceof Error) {
+      return {
+        code: Code.SERVER_ERROR,
+        message: err.message,
+        err
+      };
+    } else {
+      return {
+        code: Code.SERVER_ERROR,
+        message: `未知错误`,
+        err
+      };
+    }
   }
 }
 export async function getRegimentListNearby_cloud(event: Events<Taro.getLocation.SuccessCallbackResult>): Promise<Result<BaseUserInfo[]>> {
@@ -141,7 +154,6 @@ export async function getRegimentListNearby_cloud(event: Events<Taro.getLocation
       throw new Error(`数据库查询错误：${res.errMsg}`);
     }
   } catch (err: any) {
-    console.log("错误距离：：", err);
     if (err instanceof Error) {
       return {
         code: Code.SERVER_ERROR,
@@ -180,17 +192,22 @@ export async function updateUserInfo_cloud(event: Events<BaseUserInfo, string>):
         res
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res
-      };
+      console.log(res);
+      throw new Error("数据库执行错误");
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    if (err instanceof Error) {
+      return {
+        code: Code.SERVER_ERROR,
+        message: err.message,
+        err
+      };
+    } else {
+      return {
+        code: Code.SERVER_ERROR,
+        message: `未知错误`,
+        err
+      };
+    }
   }
 }
