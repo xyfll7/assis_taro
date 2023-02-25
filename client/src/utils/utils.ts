@@ -118,7 +118,11 @@ export async function utils_print_express(_order: Product_Express, selfInfo_S: B
   }
   //打印订单
   Taro.showLoading({ title: "打印中...", mask: true });
-  const [err1, res1] = await to(Api_printer_printExpress({ ..._order, printer }));
+  const [err1, res1] = await to(Api_printer_printExpress({
+    ..._order,
+    printer,
+    // printer: { direction: 0, siid: "KX100L3AF70711D420" }
+  }));
   if (err1) {
     Taro.showToast({ title: "打印出错，请重试", icon: "none" });
     throw err1;
