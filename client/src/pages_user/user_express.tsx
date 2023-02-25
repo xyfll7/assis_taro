@@ -519,7 +519,7 @@ const OrderPayUser: FC<{
   setExpressForm: React.Dispatch<React.SetStateAction<Product_Express>>;
 }> = ({ expressForm, selfInfo_S, setExpressForm }) => {
   return (
-    <View className='fixed-bottom safe-bottom bccwhite www100 prl10'>
+    <View className='fixed-bottom safe-bottom bccwhite www100 prl10 tab-back'>
       <View className='www pbt10 dbtc '>
         {/* 团长信息 */}
         <RegimentInfo selfInfo_S={selfInfo_S}></RegimentInfo>
