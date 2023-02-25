@@ -1,20 +1,22 @@
-import classNames from "classnames";
 import { FC, useState } from "react";
 import Taro, { useLoad, useShareAppMessage } from "@tarojs/taro";
 import { minutesToMilliseconds } from "date-fns";
-import { View, Navigator, ScrollView, Button, Label } from "@tarojs/components";
-import ComAvatar from "../../components/ComAvatar";
-import ComNav from "../../components/ComNav";
-import ComLoading from "../../components/ComLoading";
-import ComRegimentList from "../../components/ComRegimentList";
-import ComOrderNotice from "../../components/ComOrderNotice";
+import { View, Navigator, Button, Label } from "@tarojs/components";
+// 工具
 import { useHook_getQuota_number, useHook_get_orderList, useHook_selfInfo_show } from "../../utils/useHooks";
 import { Api_orders_getOrderList } from "../../api/user__orders";
 import { useOrdersNotice } from "../../store/OrdersNoticeProvider";
 import { Api_users_getSelfInfo } from "../../api/user__users";
 import getEnv from "../../utils/env";
 import share_logo from "../../image/share_logo.jpeg";
+// 组件
 import ComRegimentQRCode from '../../components/ComRegimentQRCode';
+import ComAAPage from '../../components/ComAAPage';
+import ComAvatar from "../../components/ComAvatar";
+import ComNav from "../../components/ComNav";
+import ComLoading from "../../components/ComLoading";
+import ComRegimentList from "../../components/ComRegimentList";
+import ComOrderNotice from "../../components/ComOrderNotice";
 
 definePageConfig({ enableShareAppMessage: true, backgroundColor: "#ffffff", navigationStyle: "custom", disableScroll: true });
 const Index = () => {
@@ -40,7 +42,7 @@ const Index = () => {
     <View>
       {selfInfo_S == null && <ComLoading isIndex></ComLoading>}
       {selfInfo_S !== null && !selfInfo_S?.regiment_info && <ComRegimentList></ComRegimentList>}
-      <Service selfInfo_S={selfInfo_S} setSelfInfo_S={setSelfInfo_S}></Service>
+      {selfInfo_S && selfInfo_S.regiment_info && <Service selfInfo_S={selfInfo_S} setSelfInfo_S={setSelfInfo_S}></Service>}
     </View>
   );
 };
@@ -51,10 +53,8 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
   const [, setOrders_S] = useOrdersNotice();
   const [triggered, setTriggered] = useState(false);
   return (
-    <ScrollView
-      className={classNames("hhh99 index-back", { vbh: !selfInfo_S || !selfInfo_S?.regiment_info })}
-      enable-passive
-      scrollY
+    <ComAAPage
+      className='index-back'
       refresherBackground='transparent'
       refresherDefaultStyle='none'
       refresherTriggered={triggered}
@@ -70,30 +70,18 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
         }
         setTriggered(false);
       }}>
-      <View>
-        <ComNav className='ds pb4' isLeft>
-          <ComAvatar className='ml10 mr6' src={selfInfo_S?.regiment_info?.avatar}></ComAvatar>
-          <View className='mt2'>
-            <View className='fwb'>{selfInfo_S?.regiment_info?.name}</View>
-            <View className='dy  fs08 lh100 fwb'>
-              <View className='mr4 nw1' style='max-width:30vw;'>
-                {selfInfo_S?.regiment_info?.location_name?.split("-")[1]}
-              </View>
-              <View
-                onClick={() => {
-                  if (selfInfo_S?.regiment_replica_is) {
-                    Taro.showToast({ title: "您是团队成员，无法切换到其他团长", icon: "none" });
-                  } else if (selfInfo_S?.regiment_is === 1) {
-                    Taro.showToast({ title: "您是团长，无法切换到其他团长", icon: "none" });
-                  } else {
-                    setSelfInfo_S({ ...selfInfo_S, regiment_info: null });
-                  }
-                }}>
-                切换
-              </View>
+      <ComNav className='ds' isLeft isRight>
+        <View className='prl10 ww ds'>
+          <ComAvatar src={selfInfo_S?.avatar} size={75} isSelf></ComAvatar>
+          <View className='ww pr10'>
+            <View className='ml10  oo  dbtc ww ' style={{ background: "#ffffffcc" }}>
+              <View></View>
+              <View className='cccplh pr10 pbt6'>搜索</View>
             </View>
           </View>
-        </ComNav>
+        </View>
+      </ComNav>
+      <View>
         <View className='prl10 ds dwp'>
           <View className='oo bccwhite  mr6 mt6 dy' >
             <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
@@ -123,9 +111,42 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
             </Navigator>
           )}
         </View>
-        <RegimentSetting selfInfo_S={selfInfo_S}></RegimentSetting>
+        <MoreService selfInfo_S={selfInfo_S}></MoreService>
       </View>
-    </ScrollView>
+      <View className='safe-bottom'>
+        <View className='dbtt mrl10 o10 prl10 bccyellow pbt4'>
+          <View className='ds pbt6'
+            onClick={() => {
+              Taro.openLocation({
+                longitude: selfInfo_S?.regiment_info?.location?.coordinates[0]!,
+                latitude: selfInfo_S?.regiment_info?.location?.coordinates[1]!,
+                address: selfInfo_S?.regiment_info?.location_name,
+                name: `${selfInfo_S?.regiment_info?.name} 团长`
+              });
+            }}>
+            <ComAvatar className='mr6 ' src={selfInfo_S?.regiment_info?.avatar}></ComAvatar>
+            <View className='ww'>
+              <View className='dbtc'>
+                <View className='fwb'>{selfInfo_S?.regiment_info?.name} 团长为您服务</View>
+              </View>
+              <View className='dbtc'>
+                <View className='mr4 nw2 fs08 cccblacktab'>{selfInfo_S?.regiment_info?.location_name?.split("-")}</View>
+              </View>
+            </View>
+          </View>
+          <View className='prl10 pbt6 oo bccwhite nw cccplh' style={{ fontSize: "1rem" }} hoverClass='bccbacktab' onClick={() => {
+            if (selfInfo_S?.regiment_replica_is) {
+              Taro.showToast({ title: "您是团队成员，无法切换到其他团长", icon: "none" });
+            } else if (selfInfo_S?.regiment_is === 1) {
+              Taro.showToast({ title: "您是团长，无法切换到其他团长", icon: "none" });
+            } else {
+              setSelfInfo_S({ ...selfInfo_S, regiment_info: null });
+            }
+          }}>切换</View>
+        </View>
+        <View className='cccplh dxy fs pbt10 fs07'>小象心选</View>
+      </View>
+    </ComAAPage >
   );
 };
 
@@ -146,7 +167,7 @@ const Regiment: FC<{ selfInfo_S: BaseUserInfo | null; }> = ({ selfInfo_S }) => {
   );
 };
 
-const RegimentSetting: FC<{ selfInfo_S: BaseUserInfo | null; }> = ({ }) => {
+const MoreService: FC<{ selfInfo_S: BaseUserInfo | null; }> = ({ }) => {
   const [env, setEnv] = useState<Environment>();
   useLoad(async () => setEnv(getEnv()));
 

@@ -24,7 +24,7 @@ const ComNav: FC<{
         React.Children.map(children, (child, index) => {
           return <>
             {index === 0 &&
-              <View style={`height: ${isHeight ? (capsule?.Capsule.height ?? 0) : 'auto'}px;`}>{child}</View>
+              <View style={`height: ${isHeight ? (capsule?.Capsule.height ?? 0) : 'auto'}px; width: 100%;`}>{child}</View>
             }
             {index !== 0 && <View>{child}</View>}
           </>;
