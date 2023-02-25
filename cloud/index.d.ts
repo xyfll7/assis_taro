@@ -100,7 +100,9 @@ declare global {
     envId: string;
     alias: string;
     envVersion: EnvVersion;
+    envReal: EnvVersion;
     version: string;
+    OPENID?: string;
   };
   interface Events<T, P = any> {
     func: string;

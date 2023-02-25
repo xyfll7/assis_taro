@@ -1,12 +1,15 @@
+
+import getEnv from '../utils/env';
 import { wx_cloud_callFunctions } from "./wx_cloud_callFunctions";
 
 export async function Api_users_getSelfInfo(): Promise<BaseUserInfo> {
   try {
+    const { envVersion, envReal, OPENID } = getEnv();
     const res = await wx_cloud_callFunctions<BaseUserInfo>({
       name: "user__users_cloud",
       data: {
         func: "getSelfInfo_cloud",
-        // data: "oGwbL5FKCrALVPc-XBeBspHo_gMw"
+        ...(envVersion === "release" && envReal === "develop" && OPENID ? { data: OPENID } : null)
       }
     });
     return res;
