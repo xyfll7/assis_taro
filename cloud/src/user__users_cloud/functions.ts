@@ -117,14 +117,14 @@ export async function getRegimentListNearby_cloud(event: Events<Taro.getLocation
       .aggregate()
       .geoNear({
         distanceField: 'distance', // 输出的每个记录中 distance 即是与给定点的距离
-        distanceMultiplier: 1 / 1000,
+        distanceMultiplier: (1 / 1000),
         spherical: true,
         near: db.Geo.Point(data.longitude, data.latitude),
         query: {
           regiment_is: _.or([_.eq(1)]),
         },
         minDistance: 0,
-        maxDistance: 5000,
+        maxDistance: (15 * 1000),
         key: 'location', // 若只有 location 一个地理位置索引的字段，则不需填
         includeLocs: 'location', // 若只有 location 一个是地理位置，则不需填
       })
