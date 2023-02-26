@@ -1,26 +1,30 @@
 import Taro from "@tarojs/taro";
 import { useState } from "react";
 import { Button, Label, View, Image } from "@tarojs/components";
-import ComNav from "../components/ComNav";
-import ComNavBar from "../components/ComNavBar";
+
 import { Api_tasks_getPhoneNumber } from "../api/a__tasks";
-import ComAvatar from "../components/ComAvatar";
+
 import { Api_users_updateUserInfo } from "../api/user__users";
 import { useHook_selfInfo_show } from "../utils/useHooks";
 import { utils_get_qrcode } from "../utils/utils";
+// 组件
+import ComNav from "../components/ComNav";
+import ComNavBar from "../components/ComNavBar";
+import ComAvatar from "../components/ComAvatar";
+import ComAAPage from "../components/ComAAPage";
 
-definePageConfig({ navigationBarTitleText: "我的", navigationStyle: "custom" });
+definePageConfig({ navigationBarTitleText: "我的", navigationStyle: "custom", disableScroll: true, });
 
 const Index_user_my = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
   const [qrCode, setQrCode] = useState<string>("");
   return (
-    <>
-      <ComNav className='bccback' isHeight isSticky>
+    <ComAAPage>
+      <ComNav className='bccback'>
         <ComNavBar className='prl10' title='我的'></ComNavBar>
       </ComNav>
-      <View className='mrl10 prl10 dll'>
-        <ComAvatar className='mt10 '></ComAvatar>
+      <View className='dll'>
+        <ComAvatar className=''></ComAvatar>
         <View className='pbt4'>
           {selfInfo_S?.phone ? (
             <View className='dy'>
@@ -86,7 +90,7 @@ const Index_user_my = () => {
         )}
         {qrCode && <View className='pbt10'><Image showMenuByLongpress className='wwwhhh50 o10 ' src={qrCode} ></Image></View>}
       </View>
-    </>
+    </ComAAPage>
   );
 };
 

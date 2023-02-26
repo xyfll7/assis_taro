@@ -1,17 +1,19 @@
 import { FC, useEffect, useState } from "react";
 import Taro, { useShareAppMessage } from "@tarojs/taro";
-import { ScrollView, View } from "@tarojs/components";
-
+import { View } from "@tarojs/components";
+//
+import { useHook_selfInfo_show } from "../utils/useHooks";
+import { Api_logistics_bindAccount, Api_logistics_getQuota } from "../api/a__logistics";
+import share_logo from "../image/share_logo.jpeg";
+// 组件
+import ComLoading from "../components/ComLoading";
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import ComLogisticsBindAccount from "../components/ComLogisticsBindAccount";
-import { useHook_selfInfo_show } from "../utils/useHooks";
-import ComLoading from "../components/ComLoading";
-import { Api_logistics_bindAccount, Api_logistics_getQuota } from "../api/a__logistics";
 import ComEmpty from "../components/ComEmpty";
-import share_logo from "../image/share_logo.jpeg";
+import ComAAPage from "../components/ComAAPage";
 
-definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true });
+definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true, disableScroll: true });
 const Index_regiment_bind_account = () => {
   const [selfInfo_S] = useHook_selfInfo_show({});
   const router = Taro.getCurrentInstance().router;
@@ -36,19 +38,18 @@ const Index_regiment_bind_account = () => {
 
 
   const [show, setShow] = useState(false);
-  return <ScrollView scrollY className='hhh99'>
-    <View>
-      <ComNav className='bccback dy' isHeight isSticky>
-        <ComNavBar className='prl10' title='电子面单账号管理'></ComNavBar>
-      </ComNav>
-      <BindAccountList></BindAccountList>
-      <View className='fixed-bottom safe-bottom ww dxy'>
-        <View className='prl10 pbt6 oo bccyellow mb10' hoverClass='bccyellowtab'
-          onClick={() => setShow(!show)}>添加电子面单账号</View>
-      </View>
-      <ComLogisticsBindAccount show={show} onAfterLeave={() => { setShow(!show); }}></ComLogisticsBindAccount>
+  return <ComAAPage>
+    <ComNav className='bccback dy' isHeight isSticky>
+      <ComNavBar className='prl10' title='电子面单账号管理'></ComNavBar>
+    </ComNav>
+    <BindAccountList></BindAccountList>
+    <View className='ww dxy safe-bottom'>
+      <View className='prl10 pbt6 oo bccyellow' hoverClass='bccyellowtab'
+        onClick={() => setShow(!show)}>添加电子面单账号1</View>
     </View>
-  </ScrollView>;
+    <ComLogisticsBindAccount show={show} onAfterLeave={() => { setShow(!show); }}></ComLogisticsBindAccount>
+  </ComAAPage>;
+
 };
 export default Index_regiment_bind_account;
 
@@ -57,34 +58,33 @@ const BindAccountList = () => {
   return <>
     {!selfInfo_S && <ComLoading></ComLoading>}
     {!selfInfo_S?.logistics || selfInfo_S?.logistics?.length == 0 && <ComEmpty msg='您没还有绑定电子面单账号'></ComEmpty>}
-    {selfInfo_S &&
-      selfInfo_S?.logistics?.sort(e => e.selected ? -1 : 0).map(logistic =>
-        <View className='m10 prl10 o10 bccwhite' key={logistic.bizId}>
-          <View className='dbtc pbt4'>
-            <View className='pbt6 dy'>{logistic.deliveryName}</View>
-            <View className='cccplh oo pbt6 prl10' hoverClass='bccbacktab' onClick={() => {
-              Taro.showModal({
-                content: "您确定要解绑吗?",
-                success: async (res0) => {
-                  if (res0.confirm) {
-                    Taro.showLoading();
-                    const res1 = await Api_logistics_bindAccount({
-                      ...selfInfo_S,
-                      logistics: selfInfo_S.logistics?.filter(ee => ee.bizId !== logistic.bizId),
-                    }, { ...logistic, type: "unbind" });
-                    setSelfInfo_S(res1);
-                    Taro.showToast({ title: "解绑成功", icon: "none" });
-                  }
+    {selfInfo_S && selfInfo_S?.logistics?.sort(e => e.selected ? -1 : 0).map(logistic =>
+      <View className=' prl10 o10 bccwhite' key={logistic.bizId}>
+        <View className='dbtc pbt4'>
+          <View className='pbt6 dy'>{logistic.deliveryName}</View>
+          <View className='cccplh oo pbt6 prl10' hoverClass='bccbacktab' onClick={() => {
+            Taro.showModal({
+              content: "您确定要解绑吗?",
+              success: async (res0) => {
+                if (res0.confirm) {
+                  Taro.showLoading();
+                  const res1 = await Api_logistics_bindAccount({
+                    ...selfInfo_S,
+                    logistics: selfInfo_S.logistics?.filter(ee => ee.bizId !== logistic.bizId),
+                  }, { ...logistic, type: "unbind" });
+                  setSelfInfo_S(res1);
+                  Taro.showToast({ title: "解绑成功", icon: "none" });
                 }
-              });
-              return;
-            }}>解绑</View>
-          </View>
-          <View className='dbtc pbt4 lit'>
-            <View className='pbt6'>面单余额</View>
-            <View className='pbt6 prl10'>{logistic && <QuotaNum logistic={logistic}></QuotaNum>}</View>
-          </View>
-          {/* <View className='dbtc pbt4 lit'>
+              }
+            });
+            return;
+          }}>解绑</View>
+        </View>
+        <View className='dbtc pbt4 lit'>
+          <View className='pbt6'>面单余额</View>
+          <View className='pbt6 prl10'>{logistic && <QuotaNum logistic={logistic}></QuotaNum>}</View>
+        </View>
+        {/* <View className='dbtc pbt4 lit'>
             <View>共享电子面单</View>
             <Label for={logistic?.bizId}>
               <View className='cccgreen prl10 oo pbt6' hoverClass='bccbacktab'>
@@ -93,7 +93,7 @@ const BindAccountList = () => {
               <Button className='dsn' id={logistic?.bizId} openType='share' data-logistic={queryString.stringify(logistic)}></Button>
             </Label>
           </View> */}
-        </View>)
+      </View>)
     }
   </>;
 };

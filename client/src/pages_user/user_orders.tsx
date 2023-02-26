@@ -3,24 +3,29 @@ import { useEffect, useState } from "react";
 import Taro, { useShareAppMessage } from "@tarojs/taro";
 import { to } from "await-to-js";
 
-import ComLoading from "../components/ComLoading";
-import ComEmpty from "../components/ComEmpty";
+
 import ComOrderExpress from "../components/ComOrderExpress";
 import { Api_orders_getOrderList, Api_orders_removeOrder } from "../api/user__orders";
 import { useHook_selfInfo_show } from "../utils/useHooks";
 import wexinpay from "../image/wexinpay.svg";
-import ComNav from "../components/ComNav";
-import ComNavBar from "../components/ComNavBar";
+
 import { PayStatus } from "../a_config";
 import { utils_wx_pay } from "../utils/utils";
 import { Api_printer_printExpress } from "../api/a__printer";
-import ComListTypeSelector from "../components/ComListTypeSelector";
 import share_logo from "../image/share_logo.jpeg";
+// 组件
+import ComListTypeSelector from "../components/ComListTypeSelector";
+import ComNav from "../components/ComNav";
+import ComNavBar from "../components/ComNavBar";
+import ComLoading from "../components/ComLoading";
+import ComEmpty from "../components/ComEmpty";
+import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({
   navigationBarTitleText: "我的订单",
   navigationStyle: "custom",
   enableShareAppMessage: true,
+  disableScroll: true,
 });
 
 const Index_user_orders = () => {
@@ -69,12 +74,12 @@ const Index_user_orders = () => {
     setOrders(res);
   };
   return (
-    <>
-      <ComNav className='bccback' isHeight isSticky>
+    <ComAAPage>
+      <ComNav className='bccback'>
         <ComNavBar className='prl10' title='我的订单'></ComNavBar>
         <ComListTypeSelector typeList={["待付款", "已付款"]} orderType={orderType} setOrderType={(e) => setOrderType(e)}></ComListTypeSelector>
       </ComNav>
-      <View className='prl10'>
+      <View >
         {orders == null ? <ComLoading></ComLoading> : null}
         {orders?.length == 0 ? <ComEmpty msg='没有数据'></ComEmpty> : null}
         {orders?.map((e) => {
@@ -141,7 +146,7 @@ const Index_user_orders = () => {
           }
         })}
       </View>
-    </>
+    </ComAAPage>
   );
 };
 

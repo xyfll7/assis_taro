@@ -2,12 +2,13 @@ import { CommonEventFunction, ScrollView, View } from '@tarojs/components';
 import { FC } from 'react';
 
 const ComAAPage: FC<{
-  children: JSX.Element | JSX.Element[];
+  children?: JSX.Element | JSX.Element[];
   refresherBackground?: string;
   refresherDefaultStyle?: string;
   refresherTriggered?: boolean;
   refresherEnabled?: boolean;
   onRefresherRefresh?: CommonEventFunction;
+  onScrollToLower?: CommonEventFunction;
   className?: string;
 }> = ({
   children,
@@ -16,6 +17,7 @@ const ComAAPage: FC<{
   refresherDefaultStyle,
   refresherTriggered,
   refresherEnabled,
+  onScrollToLower,
   onRefresherRefresh
 }) => {
     const height = "100vh";
@@ -30,10 +32,14 @@ const ComAAPage: FC<{
           refresherTriggered={refresherTriggered}
           refresherEnabled={refresherEnabled}
           onRefresherRefresh={onRefresherRefresh}
+          onScrollToLower={onScrollToLower}
           scrollY>
-          {(children instanceof Array) ? children[1] : children}
+          <View className='p10'>
+            {(children instanceof Array) ? children[1] : null}
+          </View>
         </ScrollView>
-        {(children instanceof Array) ? children[2] : children}
+        {(children instanceof Array) ? children[2] : null}
+        {(children instanceof Array) ? children[3] : null}
       </View >
     );
   };

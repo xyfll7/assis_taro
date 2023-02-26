@@ -1,51 +1,51 @@
 import Taro from "@tarojs/taro";
 import { FC } from "react";
-import { ScrollView, View } from "@tarojs/components";
-import ComNav from "../components/ComNav";
-import ComNavBar from "../components/ComNavBar";
+import { View } from "@tarojs/components";
 import { useHook_selfInfo_show } from "../utils/useHooks";
-import ComLoading from "../components/ComLoading";
-import ComEmpty from "../components/ComEmpty";
 import { utils_get_scan_code } from "../utils/utils";
 import { Api_users_updateUserInfo } from "../api/user__users";
+// 组件
+import ComNav from "../components/ComNav";
+import ComNavBar from "../components/ComNavBar";
+import ComLoading from "../components/ComLoading";
+import ComEmpty from "../components/ComEmpty";
+import ComAAPage from "../components/ComAAPage";
 
-definePageConfig({ navigationStyle: "custom" });
+definePageConfig({ navigationStyle: "custom", disableScroll: true });
 const Index_regiment_bind_printer_cloud = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
   return (
-    <ScrollView scrollY className='hhh99'>
-      <View>
-        <ComNav className='bccback dy' isHeight isSticky>
-          <ComNavBar className='prl10' title='云打印机管理'></ComNavBar>
-        </ComNav>
-        <BindAccountList selfInfo_S={selfInfo_S} setSelfInfo_S={setSelfInfo_S}></BindAccountList>
-        <View className='fixed-bottom safe-bottom ww dxy'>
-          <View
-            className='prl10 pbt6 oo bccyellow mb10'
-            hoverClass='bccyellowtab'
-            onClick={async () => {
-              Taro.showLoading({ title: "配置中...", mask: true });
-              const siid = await utils_get_scan_code();
-              if (siid) {
-                if (selfInfo_S?.printers?.find((e) => e.siid === siid)) {
-                  Taro.showToast({ title: "您已经添加过该打印机,请勿重复添加", icon: "none" });
-                  return;
-                }
-                const res = await Api_users_updateUserInfo({
-                  ...selfInfo_S,
-                  printers: [...(selfInfo_S?.printers ?? []), { siid: siid, direction: 0 }]
-                });
-                setSelfInfo_S(res);
-                Taro.showToast({ title: "打印机配置成功", icon: "none" });
-              } else {
-                Taro.showToast({ title: "没有识别到打印机，请重试" });
+    <ComAAPage>
+      <ComNav className='bccback dy' isHeight isSticky>
+        <ComNavBar className='prl10' title='云打印机管理'></ComNavBar>
+      </ComNav>
+      <BindAccountList selfInfo_S={selfInfo_S} setSelfInfo_S={setSelfInfo_S}></BindAccountList>
+      <View className='safe-bottom ww dxy'>
+        <View
+          className='prl10 pbt6 oo bccyellow mb10'
+          hoverClass='bccyellowtab'
+          onClick={async () => {
+            Taro.showLoading({ title: "配置中...", mask: true });
+            const siid = await utils_get_scan_code();
+            if (siid) {
+              if (selfInfo_S?.printers?.find((e) => e.siid === siid)) {
+                Taro.showToast({ title: "您已经添加过该打印机,请勿重复添加", icon: "none" });
+                return;
               }
-            }}>
-            添加云打印机
-          </View>
+              const res = await Api_users_updateUserInfo({
+                ...selfInfo_S,
+                printers: [...(selfInfo_S?.printers ?? []), { siid: siid, direction: 0 }]
+              });
+              setSelfInfo_S(res);
+              Taro.showToast({ title: "打印机配置成功", icon: "none" });
+            } else {
+              Taro.showToast({ title: "没有识别到打印机，请重试" });
+            }
+          }}>
+          添加云打印机
         </View>
       </View>
-    </ScrollView>
+    </ComAAPage>
   );
 };
 export default Index_regiment_bind_printer_cloud;
@@ -58,7 +58,7 @@ const BindAccountList: FC<{
     {!selfInfo_S && <ComLoading></ComLoading>}
     {!selfInfo_S?.printers || (selfInfo_S?.printers?.length == 0 && <ComEmpty msg='您没还有添加打印机'></ComEmpty>)}
     {selfInfo_S?.printers?.map((printer) => (
-      <View className='m10 prl10  o10 bccwhite' key={printer.siid}>
+      <View className='prl10  o10 bccwhite' key={printer.siid}>
         <View className='pbt10'>打印机ID {printer.siid}</View>
         <View className='dbtc pbt4 lit'>
           <View> 打印方向 {printer.direction === 0 ? "正向" : "反向"}</View>

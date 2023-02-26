@@ -2,7 +2,7 @@ import { Popup as VPopup } from "@antmjs/vantui";
 import classNames from "classnames";
 import { to } from "await-to-js";
 import AddressParse from "address-parse";
-import { View, Navigator, Input, RootPortal, Image, Textarea, Label, Button, ScrollView } from "@tarojs/components";
+import { View, Navigator, Input, RootPortal, Image, Textarea, Label, Button } from "@tarojs/components";
 import Taro, { useShareAppMessage } from "@tarojs/taro";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Api_orders_addOrder } from "../api/user__orders";
@@ -15,7 +15,7 @@ import getEnv from "../utils/env";
 import { PayStatus } from "../a_config";
 import share_logo from "../image/share_logo.jpeg";
 import { utils_deep, utils_generate_order, utils_get_logistics, utils_init_product_express, utils_print_express, utils_validate_express, utils_wx_pay } from "../utils/utils";
-
+// 组件
 import ComPrintNotice from '../components/ComPrintNotice';
 import ComAvatar from "../components/ComAvatar";
 import ComNav from "../components/ComNav";
@@ -23,6 +23,7 @@ import ComNavBar from "../components/ComNavBar";
 import ComAddress, { RefAddress } from "../components/ComAddress";
 import ComLoading from "../components/ComLoading";
 import ComWeightPrice from "../components/ComWeightPrice";
+import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true, disableScroll: true });
 const Index_user_express = () => {
@@ -116,39 +117,36 @@ const Index_user_express = () => {
     });
   }
   return (
-    <ScrollView style={{ height: "99vh", maxHeight: "99vh", minHeight: "99vh" }} scrollY>
-      <View>
-        <ComNav className='bccback pb6' isHeight isSticky>
-          <ComNavBar className='prl10 ' title='快递服务'></ComNavBar>
-        </ComNav>
+    <ComAAPage>
+      <ComNav className='bccback pb6' isHeight isSticky>
+        <ComNavBar className='prl10 ' title='快递服务'></ComNavBar>
+      </ComNav>
+      <>
         {selfInfo_S === null && <ComLoading></ComLoading>}
         {selfInfo_S && (
           <>
-            <View className='mt4'>
-              {/* 寄件人信息 */}
-              <ExpressSendMan onGoToAddressList={onGoToAddressList} expressForm={expressForm} refAddress={refAddress} formAddress={expressForm.sendMan}></ExpressSendMan>
-              {/* 收件人信息 */}
-              <ExpressRecMan setExpressForm={setExpressForm} selfInfo_S={selfInfo_S} onGoToAddressList={onGoToAddressList} onSetExpressForm={onSetExpressForm} expressForm={expressForm} refAddress={refAddress}></ExpressRecMan>
-
-              {/* 物品类型-备注-寄件方式 */}
-              <ExpressInfo expressForm={expressForm} setExpressForm={setExpressForm}></ExpressInfo>
-              {/* 底部tab栏 */}
-
-              {(selfInfo_S
-                && (selfInfo_S.regiment_is === 1)
-                && selfInfo_S.print_direct_regiment === true)
-                ? <OrderPayRegiment selfInfo_S={selfInfo_S} expressForm={expressForm}></OrderPayRegiment>
-                : <OrderPayUser selfInfo_S={selfInfo_S} expressForm={expressForm} setExpressForm={setExpressForm}></OrderPayUser>
-              }
-
-              <ComAddress ref={refAddress} onSetExpressForm={onSetExpressForm}></ComAddress>
-            </View>
+            {/* 寄件人信息 */}
+            <ExpressSendMan onGoToAddressList={onGoToAddressList} expressForm={expressForm} refAddress={refAddress} formAddress={expressForm.sendMan}></ExpressSendMan>
+            {/* 收件人信息 */}
+            <ExpressRecMan setExpressForm={setExpressForm} selfInfo_S={selfInfo_S} onGoToAddressList={onGoToAddressList} onSetExpressForm={onSetExpressForm} expressForm={expressForm} refAddress={refAddress}></ExpressRecMan>
+            {/* 物品类型-备注-寄件方式 */}
+            <ExpressInfo expressForm={expressForm} setExpressForm={setExpressForm}></ExpressInfo>
             {/* 提示信息 */}
             <PromptInformation></PromptInformation>
           </>
         )}
-      </View>
-    </ScrollView>
+      </>
+      {/* 底部tab栏 */}
+
+      {(selfInfo_S
+        && (selfInfo_S.regiment_is === 1)
+        && selfInfo_S.print_direct_regiment === true)
+        ? <OrderPayRegiment selfInfo_S={selfInfo_S} expressForm={expressForm}></OrderPayRegiment>
+        : <OrderPayUser selfInfo_S={selfInfo_S} expressForm={expressForm} setExpressForm={setExpressForm}></OrderPayUser>
+      }
+
+      <ComAddress ref={refAddress} onSetExpressForm={onSetExpressForm}></ComAddress>
+    </ComAAPage>
   );
 };
 export default Index_user_express;
@@ -162,7 +160,7 @@ const ExpressSendMan: FC<{
   onGoToAddressList: (type: AddressManType) => void;
 }> = ({ className, refAddress, expressForm, onGoToAddressList }) => {
   return (
-    <View className={classNames("mrl10 o10 bccwhite", className)}>
+    <View className={classNames("o10 bccwhite", className)}>
       {/* 寄件人 */}
       <View className='pbt4 o10 prl10 o10 ww'>
         <View className='dbtc'>
@@ -229,7 +227,7 @@ const ExpressRecMan: FC<{
 
   return (
     <>
-      <View className='mrl10 prl10 o10 bccwhite mt10'>
+      <View className='prl10 o10 bccwhite mt10'>
         <View className='dbtc pbt4 lit'>
           <View className='fwb'>收件人</View>
           <View className='dy'>
@@ -444,7 +442,7 @@ const ExpressInfo: FC<{
   return (
     <>
       {/* 物品类型-备注-寄件方式 */}
-      <View className='m10 o10 prl10 '>
+      <View className='mbt10 o10 prl10 '>
         {/* 物品类型 */}
         <View className='dy dwp'>
           <View className='fwb '>物品类型：</View>
@@ -519,7 +517,7 @@ const OrderPayUser: FC<{
   setExpressForm: React.Dispatch<React.SetStateAction<Product_Express>>;
 }> = ({ expressForm, selfInfo_S, setExpressForm }) => {
   return (
-    <View className='fixed-bottom safe-bottom bccwhite www100 prl10 tab-back'>
+    <View className='safe-bottom bccwhite www100 prl10 tab-back'>
       <View className='www pbt10 dbtc '>
         {/* 团长信息 */}
         <RegimentInfo selfInfo_S={selfInfo_S}></RegimentInfo>
@@ -666,7 +664,7 @@ const OrderPayRegiment: FC<{
   //#endregion
 
   return (
-    <View className='fixed-bottom safe-bottom bccwhite www100 prl10 tab-back'>
+    <View className='safe-bottom bccwhite www100 prl10 tab-back'>
       {/* 揽件超时限制通知 */}
       <ComPrintNotice className='pt10' time_limit={time_limit}></ComPrintNotice>
       {/* 支付成功弹窗 */}
@@ -780,7 +778,7 @@ const PaySuccessPopup: FC<{ showPopup: boolean, orderState: Product_Express | nu
 const PromptInformation = () => {
   return (
     <>
-      <View className='ml10  pl10'>
+      <View className='pl10'>
         <View className='pbt6 cccplh'>首重6元起，上门取件+2元</View>
         {/* <Navigator className="pbt6 pl10 oo cccgreen " hoverClass="cccwhitetab">价格计算器</Navigator> */}
       </View>

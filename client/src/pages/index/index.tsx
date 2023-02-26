@@ -71,46 +71,48 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
         setTriggered(false);
       }}>
       <ComNav className='ds' isLeft isRight>
-        <View className='prl10 ww ds'>
-          <ComAvatar src={selfInfo_S?.avatar} size={75} isSelf></ComAvatar>
-          <View className='ww pr10'>
-            <View className='ml10  oo  dbtc ww ' style={{ background: "#ffffffcc" }}>
-              <View></View>
-              <View className='cccplh pr10 pbt6'>搜索</View>
+        <View>
+          <View className='prl10 ww ds'>
+            <ComAvatar src={selfInfo_S?.avatar} size={75} isSelf></ComAvatar>
+            <View className='ww pr10'>
+              <View className='ml10  oo  dbtc ww ' style={{ background: "#ffffffcc" }}>
+                <View></View>
+                <View className='cccplh pr10 pbt6'>搜索</View>
+              </View>
             </View>
+          </View>
+          <View className='ds dwp pt10'>
+            <View className='oo bccwhite  mr6  dy' >
+              <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
+                <View className='mrl6 lh100'>🛵</View>
+                <View>快递服务</View>
+              </Navigator>
+              {selfInfo_S?.regiment_is === 1 &&
+                <>
+                  <Label for='share_express'>
+                    <View className='prl10 cccgreen pbt10 oo nw ' hoverClass='bccbacktab'>
+                      <View className='prl4'>邀请</View>
+                    </View>
+                    <Button className='dsn' id='share_express' openType='share'></Button>
+                  </Label>
+                  <ComRegimentQRCode className='prl10 cccgreen pbt10 oo nw' hoverClass='bccbacktab'>
+                    二维码
+                  </ComRegimentQRCode>
+                </>
+              }
+
+            </View>
+            {selfInfo_S?.regiment_is != 1 && <ComOrderNotice className='mr6 pbt8 bccwhite oo dxy' hoverClass='bccbacktab'></ComOrderNotice>}
+            <Regiment selfInfo_S={selfInfo_S}></Regiment>
+            {selfInfo_S?.regiment_is != 1 && (
+              <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_user/user_my'>
+                🐣 我的
+              </Navigator>
+            )}
           </View>
         </View>
       </ComNav>
       <View>
-        <View className='prl10 ds dwp'>
-          <View className='oo bccwhite  mr6 mt6 dy' >
-            <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
-              <View className='mrl6 lh100'>🛵</View>
-              <View>快递服务</View>
-            </Navigator>
-            {selfInfo_S?.regiment_is === 1 &&
-              <>
-                <Label for='share_express'>
-                  <View className='prl10 cccgreen pbt10 oo nw ' hoverClass='bccbacktab'>
-                    <View className='prl4'>邀请</View>
-                  </View>
-                  <Button className='dsn' id='share_express' openType='share'></Button>
-                </Label>
-                <ComRegimentQRCode className='prl10 cccgreen pbt10 oo nw' hoverClass='bccbacktab'>
-                  二维码
-                </ComRegimentQRCode>
-              </>
-            }
-
-          </View>
-          {selfInfo_S?.regiment_is != 1 && <ComOrderNotice className='mt6 mr6 pbt8 bccwhite oo dxy' hoverClass='bccbacktab'></ComOrderNotice>}
-          <Regiment selfInfo_S={selfInfo_S}></Regiment>
-          {selfInfo_S?.regiment_is != 1 && (
-            <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_user/user_my'>
-              🐣 我的
-            </Navigator>
-          )}
-        </View>
         <MoreService selfInfo_S={selfInfo_S}></MoreService>
       </View>
       <View className='safe-bottom'>
@@ -192,7 +194,7 @@ const MoreService: FC<{ selfInfo_S: BaseUserInfo | null; }> = ({ }) => {
   const [env, setEnv] = useState<Environment>();
   useEffect(() => setEnv(getEnv()), []);
   return (
-    <View className='prl10 dll'>
+    <View className='dll'>
       <View className='pbt6 pr10 oo cccplh ml6'>更多服务敬请期待...</View>
       <View className='pbt6 pr10 oo cccplh ml6 fs06 fwl'>
         <View>

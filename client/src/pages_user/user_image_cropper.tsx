@@ -2,12 +2,18 @@ import { View } from '@tarojs/components';
 import Taro, { getCurrentInstance, useRouter } from '@tarojs/taro';
 import { useState } from 'react';
 import { utils_ocr } from '../utils/utils';
+// 组件
+import ComNav from "../components/ComNav";
+import ComNavBar from "../components/ComNavBar";
+import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({
   navigationBarTitleText: "裁剪图片",
+  navigationStyle: "custom",
   usingComponents: {
     'image-cropper': '../components/image-cropper/image-cropper'
-  }
+  },
+  disableScroll: true,
 });
 const Index_user_image_cropper = () => {
   const { safeArea } = Taro.getSystemInfoSync();
@@ -29,7 +35,10 @@ const Index_user_image_cropper = () => {
     return cropper;
   };
   return (
-    <View>
+    <ComAAPage>
+      <ComNav className='bccback pb6' isHeight isSticky>
+        <ComNavBar className='prl10 ' title='裁剪图片'></ComNavBar>
+      </ComNav>
       {/* @ts-ignore */}
       <image-cropper
         id='image-cropper'
@@ -76,7 +85,7 @@ const Index_user_image_cropper = () => {
             }}>完成</View>
         </View>
       </View>
-    </View>
+    </ComAAPage>
   );
 };
 export default Index_user_image_cropper;

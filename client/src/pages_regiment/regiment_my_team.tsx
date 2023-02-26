@@ -3,14 +3,17 @@ import { View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useHook_selfInfo_show } from "../utils/useHooks";
 import { Api_users_getTeamList, Api_users_getUserInfo, Api_users_updateUserInfo } from "../api/user__users";
+import { utils_get_scan_code_team_member_OPENID } from "../utils/utils";
+// 组件
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
-import { utils_get_scan_code_team_member_OPENID } from "../utils/utils";
 import ComLoading from "../components/ComLoading";
 import ComEmpty from "../components/ComEmpty";
+import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({
   navigationStyle: "custom",
+  disableScroll: true,
 });
 const Index_regiment_my_team = () => {
   const [selfInfo_S] = useHook_selfInfo_show({});
@@ -24,11 +27,11 @@ const Index_regiment_my_team = () => {
     }
   }, [selfInfo_S]);
   return (
-    <>
+    <ComAAPage>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='我的团队(团长)'></ComNavBar>
       </ComNav>
-      <View className='m10'>
+      <>
         {teamList === null && <ComLoading></ComLoading>}
         {/* 团队成员列表 */}
         {teamList?.map((e) => {
@@ -56,9 +59,9 @@ const Index_regiment_my_team = () => {
           );
         })}
         {teamList?.length === 0 && <ComEmpty msg='您还没有团队成员'></ComEmpty>}
-      </View>
+      </>
       {/* 添加团队成员 */}
-      <View className='fixed-bottom safe-bottom ww dxy'>
+      <View className='safe-bottom ww dxy'>
         <View
           className='prl10 pbt6 oo bccyellow mb10'
           hoverClass='bccyellowtab'
@@ -84,7 +87,7 @@ const Index_regiment_my_team = () => {
           添加团队成员
         </View>
       </View>
-    </>
+    </ComAAPage>
   );
 };
 export default Index_regiment_my_team;

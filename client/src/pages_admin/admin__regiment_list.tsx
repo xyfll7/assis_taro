@@ -1,4 +1,4 @@
-import { View, Navigator, PageContainer, ScrollView, Picker } from "@tarojs/components";
+import { View, Navigator, PageContainer, Picker } from "@tarojs/components";
 import Taro, { useLoad } from "@tarojs/taro";
 import { FC, useState } from "react";
 import { format, subDays } from "date-fns";
@@ -6,13 +6,16 @@ import { utils_get_time_limit } from '../utils/utils';
 import { Api_logistics_getQuota } from "../api/a__logistics";
 import { Api_users_updateUserInfo } from "../api/user__users";
 import { Api_admin_price_getPriceSchemeList, Api_admin_users_getRegimentList, } from "../api/admin__db";
+// 组件
 import ComEmpty from "../components/ComEmpty";
 import ComNavBar from "../components/ComNavBar";
 import ComNav from "../components/ComNav";
 import ComHeaderBar from "../components/ComHeaderBar";
 import ComLoading from "../components/ComLoading";
+import ComAAPage from "../components/ComAAPage";
+import ComFooter from '../components/ComFooter';
 
-definePageConfig({ navigationStyle: "custom" });
+definePageConfig({ navigationStyle: "custom", disableScroll: true, });
 const Index_admin__regiment_list = () => {
   const [regimentList, setRegimentList] = useState<BaseUserInfo[] | null>(null);
   useLoad(async () => {
@@ -21,7 +24,7 @@ const Index_admin__regiment_list = () => {
   });
 
   return (
-    <>
+    <ComAAPage>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='团长管理(超管)'></ComNavBar>
       </ComNav>
@@ -30,7 +33,7 @@ const Index_admin__regiment_list = () => {
           setRegimentList(regimentList!.map((e) => e._id === param._id ? param : e));
         }
         }></RegimentListINCOM>
-    </>
+    </ComAAPage>
   );
 };
 export default Index_admin__regiment_list;
@@ -47,12 +50,12 @@ const RegimentListINCOM: FC<{
         setRegiment(null);
       }}></PriceSchemeListINCOM>
     </PageContainer>
-    <View className='mrl10'>
+    <View >
       {regimentList === null && <ComLoading></ComLoading>}
       {regimentList?.length === 0 && <ComEmpty msg='团长列表为空'></ComEmpty>}
       {regimentList?.map((e) => {
         return (
-          <View key={e._id} className='mt10  prl10 pt10 o10 bccwhite'>
+          <View key={e._id} className='mb10  prl10 pt10 o10 bccwhite'>
             <View className=''>{e.name} {e.regiment_price_scheme?.name}</View>
             <View className='cccplh pb10 '>{e.location_name}</View>
             <View className='dr'>
@@ -66,6 +69,7 @@ const RegimentListINCOM: FC<{
           </View>
         );
       })}
+      <ComFooter></ComFooter>
     </View>
   </>;
 };
@@ -232,7 +236,6 @@ const RegimentApprovedINCOM: FC<{
   );
 };
 
-
 const PriceSchemeListINCOM: FC<{
   regiment: BaseUserInfo | null;
   onClick_close: () => void;
@@ -244,36 +247,36 @@ const PriceSchemeListINCOM: FC<{
     setPriceSchemeList(res0);
   });
   return (
-    <ScrollView className='hhh70 ' scrollY>
-      <View className='bccback prl10'>
-        <ComHeaderBar className='sticky-top bccback' title={`${regiment?.name}`} desc='价格方案' onClick={() => onClick_close()}></ComHeaderBar>
-        {priceSchemeList === null && <ComLoading></ComLoading>}
-        {priceSchemeList?.length === 0 && <ComEmpty msg='团长列表为空'></ComEmpty>}
-        {priceSchemeList?.map(e =>
-          <View key={e._id} className='o10 prl10 bccwhite mt10'>
-            <View className='pbt6 dbtc'>
-              <View>{e.name}</View>
-              <View className='dy'>
-                {e.scheme === regiment?.regiment_price_scheme?.scheme ?
-                  <View className='pbt4 pl10 dy'><View className='cccplh'>(当前执行方案)</View>已选</View> :
-                  <View className='pbt4 pl10 oo cccgreen' hoverClass='bccbacktab'
-                    onClick={async () => {
-                      Taro.showLoading({ title: "更新中...", mask: true });
-                      const res1 = await Api_users_updateUserInfo({
-                        ...regiment,
-                        regiment_price_scheme: e
-                      });
-                      onClick_setRegimentList(res1);
-                      Taro.showToast({ title: "设置成功", icon: "none" });
-                    }}>选择</View>
-                }
-              </View>
+
+    <View className='bccback prl10'>
+      <ComHeaderBar className='sticky-top bccback' title={`${regiment?.name}`} desc='价格方案' onClick={() => onClick_close()}></ComHeaderBar>
+      {priceSchemeList === null && <ComLoading></ComLoading>}
+      {priceSchemeList?.length === 0 && <ComEmpty msg='团长列表为空'></ComEmpty>}
+      {priceSchemeList?.map(e =>
+        <View key={e._id} className='o10 prl10 bccwhite mt10'>
+          <View className='pbt6 dbtc'>
+            <View>{e.name}</View>
+            <View className='dy'>
+              {e.scheme === regiment?.regiment_price_scheme?.scheme ?
+                <View className='pbt4 pl10 dy'><View className='cccplh'>(当前执行方案)</View>已选</View> :
+                <View className='pbt4 pl10 oo cccgreen' hoverClass='bccbacktab'
+                  onClick={async () => {
+                    Taro.showLoading({ title: "更新中...", mask: true });
+                    const res1 = await Api_users_updateUserInfo({
+                      ...regiment,
+                      regiment_price_scheme: e
+                    });
+                    onClick_setRegimentList(res1);
+                    Taro.showToast({ title: "设置成功", icon: "none" });
+                  }}>选择</View>
+              }
             </View>
-            <View className='pbt10 lit cccplh'> {e.desc} </View>
           </View>
-        )}
-      </View>
-    </ScrollView>
+          <View className='pbt10 lit cccplh'> {e.desc} </View>
+        </View>
+      )}
+      <ComFooter></ComFooter>
+    </View>
   );
 };
 

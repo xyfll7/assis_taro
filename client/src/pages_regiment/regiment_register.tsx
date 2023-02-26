@@ -6,27 +6,38 @@ import { utils_validate_register } from "../utils/utils";
 import { Api_tasks_getPhoneNumber } from "../api/a__tasks";
 import { useHook_selfInfo_show } from "../utils/useHooks";
 import { Api_users_updateUserInfo } from "../api/user__users";
+// 组件
+import ComNav from "../components/ComNav";
+import ComNavBar from "../components/ComNavBar";
+import ComAAPage from '../components/ComAAPage';
 
-definePageConfig({ navigationBarTitleText: "注册团长", disableScroll: true });
+definePageConfig({ navigationBarTitleText: "注册团长", disableScroll: true, navigationStyle: "custom" });
 const Index_regiment_register = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
 
   return (
-    <>
-      {selfInfo_S && selfInfo_S.regiment_is == 1 &&
-        <View className='dxyl mt10vh'>
-          <View className='cccplh'>{selfInfo_S.name} 您好</View>
-          <View className='cccplh'>您已经是团长了</View>
-        </View>
-      }
-      {selfInfo_S && selfInfo_S.regiment_is == 0 &&
-        <View className='dxyl mt10vh'>
-          <View className='cccplh'>您的团长申请已提交</View>
-          <View className='cccplh'>请耐心等待管理员审核</View>
-        </View>}
-      {selfInfo_S && selfInfo_S.regiment_is == undefined &&
-        <Register selfInfo_S={selfInfo_S} setSelfInfo_S={setSelfInfo_S}></Register>}
-    </>
+    <ComAAPage>
+      <ComNav>
+        <ComNavBar className='prl10' title='注册团长'></ComNavBar>
+      </ComNav>
+      <>
+        {selfInfo_S && selfInfo_S.regiment_is == 1 &&
+          <View className='dxyl mt10vh'>
+            <View className='cccplh'>{selfInfo_S.name} 您好</View>
+            <View className='cccplh'>您已经是团长了</View>
+          </View>
+        }
+        {selfInfo_S && selfInfo_S.regiment_is == 0 &&
+          <View className='dxyl mt10vh'>
+            <View className='cccplh'>您的团长申请已提交</View>
+            <View className='cccplh'>请耐心等待管理员审核</View>
+          </View>}
+        {selfInfo_S && selfInfo_S.regiment_is == undefined &&
+          <Register selfInfo_S={selfInfo_S} setSelfInfo_S={setSelfInfo_S}></Register>
+        }
+      </>
+    </ComAAPage>
+
   );
 };
 export default Index_regiment_register;
@@ -51,7 +62,7 @@ const Register: FC<{ selfInfo_S: BaseUserInfo | null, setSelfInfo_S: Dispatch<Ba
     return (
       <>
         {/* 表单 */}
-        <View className='m10  o10 bccwhite '>
+        <View className='o10 bccwhite '>
           {/* 姓名 */}
           <View className='dy p10'>
             <View className='w4rem'>姓名</View>
@@ -113,7 +124,7 @@ const Register: FC<{ selfInfo_S: BaseUserInfo | null, setSelfInfo_S: Dispatch<Ba
           </View>
         </View>
         {/* 申请按钮 */}
-        <View className='dxy'>
+        <View className='dxy mt10'>
           <View
             className='bccgreen prl10 pbt6 oo cccwhite'
             hoverClass='bccgreentab'

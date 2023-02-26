@@ -2,19 +2,21 @@ import Taro, { useRouter } from "@tarojs/taro";
 import { View, Picker } from "@tarojs/components";
 import { format } from "date-fns";
 import { useState } from "react";
+import { utils_get_start_end_date, utils_open_excle } from "../utils/utils";
+import { Api_regiment_collections_getCollectionExcel } from "../api/regiment__collections";
+// 组件
 import ComCollectionRecord from "../components/ComCollectionRecord";
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
-import { utils_get_start_end_date, utils_open_excle } from "../utils/utils";
-import { Api_regiment_collections_getCollectionExcel } from "../api/regiment__collections";
+import ComAAPage from "../components/ComAAPage";
 
-definePageConfig({ navigationStyle: "custom" });
+definePageConfig({ navigationStyle: "custom", disableScroll: true, });
 
 const Index_admin_collection_record = () => {
   const router = useRouter<{ OPENID?: string; regiment_name: string; }>();
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
   return (
-    <>
+    <ComAAPage>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='对账单(超管)'></ComNavBar>
         <View className='mrl10 prl10 pbt4 dbtc'>
@@ -53,8 +55,10 @@ const Index_admin_collection_record = () => {
           </Picker>
         </View>
       </ComNav>
-      {router.params && router.params.OPENID && <ComCollectionRecord OPENID={router.params.OPENID}></ComCollectionRecord>}
-    </>
+      <>
+        {router.params && router.params.OPENID && <ComCollectionRecord OPENID={router.params.OPENID}></ComCollectionRecord>}
+      </>
+    </ComAAPage>
   );
 };
 export default Index_admin_collection_record;

@@ -2,18 +2,20 @@ import debounce from "lodash/debounce";
 import throttle from "lodash/throttle";
 import Taro, { useLoad, useRouter } from "@tarojs/taro";
 import { forwardRef, Ref, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { ScrollView, View } from "@tarojs/components";
+import { View } from "@tarojs/components";
+import { Api_address_getAddressList, Api_address_removeAddress } from "../api/user__address";
+import { Api_users_updateUserInfo } from "../api/user__users";
+import { useHook_effect_update, useHook_selfInfo_show } from "../utils/useHooks";
+// 组件
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import ComAddress, { RefAddress } from "../components/ComAddress";
-import { Api_address_getAddressList, Api_address_removeAddress } from "../api/user__address";
 import ComLoading from "../components/ComLoading";
 import ComEmpty from "../components/ComEmpty";
-import { Api_users_updateUserInfo } from "../api/user__users";
 import ComNoMore from "../components/ComNoMore";
 import ComSearcher from "../components/ComSearcher";
-import { useHook_effect_update, useHook_selfInfo_show } from "../utils/useHooks";
 import ComListTypeSelector from "../components/ComListTypeSelector";
+import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({ navigationStyle: "custom", disableScroll: true });
 
@@ -55,20 +57,17 @@ const Index_user_address_list = () => {
     getOrderList_Callback(searchValue);
   }, [searchValue]);
   return (
-    <>
-      <ScrollView className='hhh99' scrollY scrollWithAnimation enableFlex onScrollToLower={onScrollToLower}>
-        <View>
-          <ComNav className='bccback' isHeight isSticky>
-            <ComNavBar key={0} className='prl10' title='地址薄'></ComNavBar>
-            <ComListTypeSelector typeList={["收件地址", "寄件地址", "全部"]} orderType={addressType} setOrderType={(e) => setAddressType(e)}></ComListTypeSelector>
-            <ComSearcher placeholder='输入姓名/电话搜索' searchValue={searchValue} setSearchValue={setSearchValue} onGetOrderList={getAddressList___}></ComSearcher>
-          </ComNav>
+    <ComAAPage onScrollToLower={onScrollToLower}>
 
-          <AddressList isLoadMore={isLoadMore} setIsLoadMore={setIsLoadMore} addressType={addressType} searchValue={searchValue} ref={refAddress_list} refAddress={refAddress} addressList={addressList} setAddressList={setAddressList}></AddressList>
-          <View className='hhh15'></View>
-        </View>
-      </ScrollView>
-      <View className='fixed-bottom safe-bottom ww dxy'>
+      <ComNav className='bccback' isHeight isSticky>
+        <ComNavBar key={0} className='prl10' title='地址薄'></ComNavBar>
+        <ComListTypeSelector typeList={["收件地址", "寄件地址", "全部"]} orderType={addressType} setOrderType={(e) => setAddressType(e)}></ComListTypeSelector>
+        <ComSearcher placeholder='输入姓名/电话搜索' searchValue={searchValue} setSearchValue={setSearchValue} onGetOrderList={getAddressList___}></ComSearcher>
+      </ComNav>
+
+      <AddressList isLoadMore={isLoadMore} setIsLoadMore={setIsLoadMore} addressType={addressType} searchValue={searchValue} ref={refAddress_list} refAddress={refAddress} addressList={addressList} setAddressList={setAddressList}></AddressList>
+
+      <View className='safe-bottom ww dxy'>
         {addressType !== "全部" && (
           <View
             className='pbt6 prl10 oo bccyellow'
@@ -81,7 +80,7 @@ const Index_user_address_list = () => {
         )}
       </View>
       <ComAddress ref={refAddress} addressList={addressList} setAddressList={setAddressList}></ComAddress>
-    </>
+    </ComAAPage>
   );
 };
 export default Index_user_address_list;
@@ -142,7 +141,7 @@ const AddressList = forwardRef(
           <View>
             {addressList.map((e) => {
               return (
-                <View key={e._id} className='mrl10  o10 bccwhite mb10'>
+                <View key={e._id} className='o10 bccwhite mb10'>
                   <View className='pr'>
                     <View className='par prl10 pbt4'>
                       <View

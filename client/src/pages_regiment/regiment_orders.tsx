@@ -1,5 +1,5 @@
 import Taro, { useShareAppMessage } from "@tarojs/taro";
-import { PageContainer, ScrollView, View } from "@tarojs/components";
+import { PageContainer, View } from "@tarojs/components";
 import debounce from "lodash/debounce";
 
 import { to } from "await-to-js";
@@ -12,7 +12,7 @@ import { useHook_effect_update, useHook_getTimeLimit, useHook_selfInfo_show } fr
 
 import { Api_orders_getOrderList, Api_orders_updateOrder_express } from "../api/user__orders";
 import { Api_local_reachable } from "../api/aa__local";
-
+// 组件
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import ComSearcher from "../components/ComSearcher";
@@ -26,13 +26,14 @@ import ComHeaderBar from '../components/ComHeaderBar';
 import ComWeightPrice from "../components/ComWeightPrice";
 import ComOrderExpressOperation from "../components/ComOrderExpressOperation";
 import ComCollectionQRCode from '../components/ComCollectionQRCode';
+import ComAAPage from '../components/ComAAPage';
 
 
 import share_logo from "../image/share_logo.jpeg";
 
 
 
-definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true });
+definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true, disableScroll: true, });
 
 const Index_regiment_orders = () => {
   useShareAppMessage((res) => {
@@ -107,73 +108,71 @@ const Index_regiment_orders = () => {
   }, [searchValue]);
   //#endregion
   return (
-    <>
-      <ScrollView scrollY className='hhh99'>
-        <View>
-          <ComNav className='bccback' isHeight isSticky>
-            <ComNavBar className='prl10' title='订单管理(团长)'></ComNavBar>
-            <ComListTypeSelector typeList={["待计重", "待付款", "已付款", "已退款"]} orderType={orderType} setOrderType={(e) => setOrderType(e)}>
-              <ComCollectionQRCode qrCode={qrCode} onClick_setQrCode={(e) => setQrCode(e)}></ComCollectionQRCode>
-            </ComListTypeSelector>
-            <ComSearcher searchValue={searchValue} setSearchValue={setSearchValue} onGetOrderList={getOrderList___}></ComSearcher>
-            {orderType !== "已退款" && <ComPrintNotice className='pb10' time_limit={time_limit}></ComPrintNotice>}
-          </ComNav>
-          {orders == null ? <ComLoading></ComLoading> : null}
-          {orders?.length == 0 ? <ComEmpty msg='没有数据'></ComEmpty> : null}
-          {orders?.map((e) => {
-            switch (e.product_type) {
-              case "express":
-                return (
-                  <ComOrderExpress className='mrl10' item={e}>
-                    <ComOrderExpressOperation
-                      time_limit={time_limit}
-                      setQrCode={setQrCode}
-                      item={order}
-                      setItem={setOrder}
-                      key={e._id}
-                      selfInfo_S={selfInfo_S}
-                      orderType={orderType}
-                      order={e}
-                      onClick_setOrders={(ee, crud) => {
-                        if (crud === "DELETE") {
-                          setOrders(orders.filter((eee) => ee._id !== eee._id));
-                        }
-                        if (crud === "UPDATE") {
-                          setOrders(orders.map((eee) => eee._id === ee._id ? ee : eee));
-                        }
-                      }}></ComOrderExpressOperation>
-                  </ComOrderExpress>
-                );
-              default:
-                return null;
-            }
-          })}
-        </View>
-        {orders && orders?.length > 0 && <ComFooter></ComFooter>}
-        <PageContainer
-          show={Boolean(order)}
-          round
-          onLeave={() => { setOrder(null); }}>
-          {order &&
-            <OrderInfoSetting
-              time_limit={time_limit}
-              orderType={orderType}
-              setQrCode={setQrCode}
-              selfInfo_S={selfInfo_S}
-              onClick_setOrder={(e) => setOrder(e)}
-              order={order}
-              onClick_setOrders={(ee, crud) => {
-                if (crud === "DELETE") {
-                  setOrders(orders!.filter((eee) => ee._id !== eee._id));
-                }
-                if (crud === "UPDATE") {
-                  setOrders(orders!.map((eee) => eee._id === ee._id ? ee : eee));
-                }
-              }} ></OrderInfoSetting>
+    <ComAAPage>
+      <ComNav className='bccback' isHeight isSticky>
+        <ComNavBar className='prl10' title='订单管理(团长)'></ComNavBar>
+        <ComListTypeSelector typeList={["待计重", "待付款", "已付款", "已退款"]} orderType={orderType} setOrderType={(e) => setOrderType(e)}>
+          <ComCollectionQRCode qrCode={qrCode} onClick_setQrCode={(e) => setQrCode(e)}></ComCollectionQRCode>
+        </ComListTypeSelector>
+        <ComSearcher searchValue={searchValue} setSearchValue={setSearchValue} onGetOrderList={getOrderList___}></ComSearcher>
+        {orderType !== "已退款" && <ComPrintNotice className='pb10' time_limit={time_limit}></ComPrintNotice>}
+      </ComNav>
+      <View>
+        {orders == null ? <ComLoading></ComLoading> : null}
+        {orders?.length == 0 ? <ComEmpty msg='没有数据'></ComEmpty> : null}
+        {orders?.map((e) => {
+          switch (e.product_type) {
+            case "express":
+              return (
+                <ComOrderExpress item={e}>
+                  <ComOrderExpressOperation
+                    time_limit={time_limit}
+                    setQrCode={setQrCode}
+                    item={order}
+                    setItem={setOrder}
+                    key={e._id}
+                    selfInfo_S={selfInfo_S}
+                    orderType={orderType}
+                    order={e}
+                    onClick_setOrders={(ee, crud) => {
+                      if (crud === "DELETE") {
+                        setOrders(orders.filter((eee) => ee._id !== eee._id));
+                      }
+                      if (crud === "UPDATE") {
+                        setOrders(orders.map((eee) => eee._id === ee._id ? ee : eee));
+                      }
+                    }}></ComOrderExpressOperation>
+                </ComOrderExpress>
+              );
+            default:
+              return null;
           }
-        </PageContainer>
-      </ScrollView>
-    </>
+        })}
+        {orders && orders?.length > 0 && <ComFooter></ComFooter>}
+      </View>
+      <PageContainer
+        show={Boolean(order)}
+        round
+        onLeave={() => { setOrder(null); }}>
+        {order &&
+          <OrderInfoSetting
+            time_limit={time_limit}
+            orderType={orderType}
+            setQrCode={setQrCode}
+            selfInfo_S={selfInfo_S}
+            onClick_setOrder={(e) => setOrder(e)}
+            order={order}
+            onClick_setOrders={(ee, crud) => {
+              if (crud === "DELETE") {
+                setOrders(orders!.filter((eee) => ee._id !== eee._id));
+              }
+              if (crud === "UPDATE") {
+                setOrders(orders!.map((eee) => eee._id === ee._id ? ee : eee));
+              }
+            }} ></OrderInfoSetting>
+        }
+      </PageContainer>
+    </ComAAPage>
   );
 };
 

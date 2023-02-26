@@ -3,10 +3,11 @@ import { PageContainer, ScrollView, View } from "@tarojs/components";
 import { useReachBottom } from "@tarojs/taro";
 import { FC, useEffect, useState } from "react";
 import { Api_regiment_collections_getCollectionHistoryList, Api_regiment_collections_getCollectionList } from "../api/regiment__collections";
-
+import { utils_get_timestamp } from "../utils/utils";
+// 组件
 import ComLoading from "../components/ComLoading";
 import ComNoMore from "../components/ComNoMore";
-import { utils_get_timestamp } from "../utils/utils";
+import ComFooter from './ComFooter';
 
 
 const ComCollectionRecord: FC<{ OPENID: string; }> = ({ OPENID }) => {
@@ -52,12 +53,13 @@ const ComCollectionRecord: FC<{ OPENID: string; }> = ({ OPENID }) => {
           <TodayCollectionRecord collectionRecord={collectionRecord} collectionHistory={collectionHistory}></TodayCollectionRecord>
           <HistoryCollectionRecord OPENID={OPENID} setCollectionRecordOneDay={setCollectionRecordOneDay} setShow={setShow} collectionHistory={collectionHistory}></HistoryCollectionRecord>
           {collectionHistory?.length !== 0 && <ComNoMore isLoadMore={isLoadMore}></ComNoMore>}
-          <View className='hhh15'></View>
+          <ComFooter></ComFooter>
         </>
       }
       <PageContainer show={show} onLeave={() => { setShow(false); }} round>
         <ScrollView className=' hhh70 ' scrollY>
           <View className='mrl10 prl10'>
+            {collectionHistory === null && <ComLoading></ComLoading>}
             {collectionRecordOneDay && <View className='dxy pbt10 sticky-top bccwhite'>{format(new Date(collectionRecordOneDay[0].timestamp_pay_callback!), "MM月dd日")}明细</View>}
             {collectionRecordOneDay?.map(e => {
               return <View className='o10 lit' key={e._id}>
@@ -70,7 +72,7 @@ const ComCollectionRecord: FC<{ OPENID: string; }> = ({ OPENID }) => {
                 </View>
               </View>;
             })}
-            <View className='hhh10'></View>
+            <ComFooter></ComFooter>
           </View>
         </ScrollView>
       </PageContainer>
@@ -85,8 +87,8 @@ const TodayCollectionRecord: FC<{
 }> = ({ collectionHistory, collectionRecord }) => {
   return (
     <>
-      <View className='mt10 mrl10 prl10 cccplh mb10'>今天</View>
-      <View className='mrl10 prl10  o10 bccwhite'>
+      <View className='prl10 cccplh mb10'>今天</View>
+      <View className='prl10  o10 bccwhite'>
         <View className='pbt10'>
           <View className='fwb'> {collectionHistory && `￥${collectionHistory[0].countTotalFee / 100}`}  </View>
           <View className='cccplh'>{collectionHistory && `收款${collectionHistory[0].count}笔`}</View>
@@ -99,7 +101,7 @@ const TodayCollectionRecord: FC<{
                   <View className='dbtc pbt10'>
                     <View className='dy'>
                       <View>{e.deliveryName}</View>
-                      <View className='ml10 cccplh'>{format(new Date(e.timestamp_pay_callback!), "MM月dd日 hh:mm")}</View>
+                      <View className=' cccplh'>{format(new Date(e.timestamp_pay_callback!), "MM月dd日 hh:mm")}</View>
                     </View>
                     <View className='fwb'>+ {(e.totalFee! / 100).toFixed(2)}</View>
                   </View>
@@ -128,7 +130,7 @@ const HistoryCollectionRecord: FC<{
     <>
       {collectionHistory?.slice(1).map((e) => {
         return (
-          <View className='mrl10 ' key={e._id}>
+          <View key={e._id}>
             <View className='mt10  prl10 cccplh'>{format(new Date(e._id), "MM月dd日")}</View>
             <View className='prl10 mt10 pbt10 bccwhite o10 dbtc' hoverClass='bccbacktab'>
               <View>

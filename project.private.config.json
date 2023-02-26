@@ -170,6 +170,27 @@
           "query": "OPENID=oGwbL5CEoFe5T1fqyAQUu0ohSLSM&regiment_name=王红霞",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "团长-批量打印",
+          "pathName": "pages_regiment/regiment_batch_printing",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "团长-云打印机管理",
+          "pathName": "pages_regiment/regiment_bind_printer_cloud",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "团长-蓝牙",
+          "pathName": "pages_regiment/regiment_printer",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

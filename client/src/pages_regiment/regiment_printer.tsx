@@ -3,10 +3,13 @@ import Taro from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import { utils_uniqByKey } from '../utils/utils';
 import { printer_BleConnect, printer_PrintReceipt } from '../utils/printer';
+import ComAAPage from "../components/ComAAPage";
 
 const ___MY_PRINTER = "___MY_PRINTER";
 definePageConfig({
-  navigationBarTitleText: "打印机管理"
+  navigationBarTitleText: "打印机管理",
+  disableScroll: true,
+  navigationStyle: "custom",
 });
 const Index_regiment_printer = () => {
   // 检查已链接过的打印机
@@ -37,23 +40,25 @@ const Index_regiment_printer = () => {
       });
     };
   }, []);
-  return <View className='p10'>
-    {devices?.map(e =>
-      <View className='p10 o10 bccwhite mt10' key={e.deviceId}>
-        <View className='dbtc'>
-          <View>{e.name || e.localName}</View>
-          <View>
-            {(myPrinter?.deviceId == e.deviceId) ? <View className='dy'> <View className='fs06 cccplh  mr4'>✔️</View> 已选 </View> :
-              <View onClick={async () => {
-                setMyPrinter(e);
-                Taro.setStorageSync(___MY_PRINTER, e);
-              }}>选这个</View>
-            }
+  return <ComAAPage >
+    <>
+      {devices?.map(e =>
+        <View className='p10 o10 bccwhite mt10' key={e.deviceId}>
+          <View className='dbtc'>
+            <View>{e.name || e.localName}</View>
+            <View>
+              {(myPrinter?.deviceId == e.deviceId) ? <View className='dy'> <View className='fs06 cccplh  mr4'>✔️</View> 已选 </View> :
+                <View onClick={async () => {
+                  setMyPrinter(e);
+                  Taro.setStorageSync(___MY_PRINTER, e);
+                }}>选这个</View>
+              }
+            </View>
           </View>
-        </View>
-        <View className='fs08 cccplh'>信号强度: {e.RSSI}dBm ({Math.max(0, e.RSSI + 100)}%)</View>
-      </View>)
-    }
+          <View className='fs08 cccplh'>信号强度: {e.RSSI}dBm ({Math.max(0, e.RSSI + 100)}%)</View>
+        </View>)
+      }
+    </>
     <View className='dxy cccplh fs08 mt10'>
       <View className='weui-loading-small mr2'></View>
       搜索蓝牙设备
@@ -66,9 +71,7 @@ const Index_regiment_printer = () => {
           printer_PrintReceipt(res!);
         }}>打印测试</View>
     </View>
-  </View>;
-
-
+  </ComAAPage>;
 };
 export default Index_regiment_printer;
 

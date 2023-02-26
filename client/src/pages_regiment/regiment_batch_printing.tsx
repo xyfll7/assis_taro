@@ -5,11 +5,12 @@ import classNames from 'classnames';
 import { FC, useEffect, useState } from 'react';
 import { useHook_selfInfo_show } from '../utils/useHooks';
 import { utils_import_excle } from '../utils/utils';
+import { Api_printer_printExpress_excle } from '../api/a__printer';
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
-import { Api_printer_printExpress_excle } from '../api/a__printer';
+import ComAAPage from "../components/ComAAPage";
 
-definePageConfig({ navigationStyle: "custom" });
+definePageConfig({ navigationStyle: "custom", disableScroll: true, });
 
 const data = JSON.parse('[{"name":"张三","tel":15840628673,"mobile":15840628673,"company":"","post_code":"","code":"610103","country":"中国","province":"陕西省","city":"西安市","area":"碑林区","address":"太乙嘉园B座1206","from":"CP"},{"name":"王五","tel":15901974092,"mobile":15901974092,"company":"","post_code":"","code":"610602","country":"中国","province":"陕西省","city":"延安市","area":"宝塔区","address":"嘉丰上城3号楼1单元402","from":"CP"},{"name":"老六子","tel":17709205210,"mobile":17709205210,"company":"","post_code":"","code":"310114","country":"中国","province":"上海","city":"上海市","area":"嘉定区","address":"荣轩路60弄君悦华庭4号202","from":"CP"}]');
 
@@ -29,7 +30,7 @@ const Index_regiment_batch_printing = () => {
     });
   }
   return (
-    <>
+    <ComAAPage>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='批量打单'></ComNavBar>
       </ComNav>
@@ -86,7 +87,7 @@ const Index_regiment_batch_printing = () => {
         }
 
       </View>
-    </>
+    </ComAAPage>
   );
 };
 export default Index_regiment_batch_printing;

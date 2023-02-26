@@ -3,14 +3,15 @@ import Taro, { useShareAppMessage } from "@tarojs/taro";
 
 import { View, Navigator } from "@tarojs/components";
 import { useHook_selfInfo_show } from "../utils/useHooks";
+import { Api_users_updateUserInfo } from "../api/user__users";
+import share_logo from "../image/share_logo.jpeg";
+// 组件
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
-import { Api_users_updateUserInfo } from "../api/user__users";
 import ComAdmin from "../components/ComAdmin";
-import ComRegimentQRCode from "../components/ComRegimentQRCode";
-import share_logo from "../image/share_logo.jpeg";
+import ComAAPage from "../components/ComAAPage";
 
-definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true });
+definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true, disableScroll: true });
 const Index_regiment_setting = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
 
@@ -30,11 +31,11 @@ const Index_regiment_setting = () => {
     };
   });
   return (
-    <>
+    <ComAAPage>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='设置(团长)'></ComNavBar>
       </ComNav>
-      <View className='mrl10 mt10'>
+      <View >
         <View className='bccwhite o10 prl10'>
           {/* 团长信息 */}
           <View className='pbt10'>
@@ -73,9 +74,6 @@ const Index_regiment_setting = () => {
           </View>
         </View>
         <View className='mt10 dll'>
-          <ComRegimentQRCode className='pbt6 pr10 oo cccplh ml6' hoverClass='bccbacktab'>
-            团长专属小程序码
-          </ComRegimentQRCode>
           <Navigator className='pbt6 pr10 oo cccplh ml6 ' hoverClass='bccbacktab' url='/pages_regiment/regiment_my_team'>
             我的团队
           </Navigator>
@@ -91,7 +89,7 @@ const Index_regiment_setting = () => {
           <ComAdmin></ComAdmin>
         </View>
       </View>
-    </>
+    </ComAAPage>
   );
 };
 export default Index_regiment_setting;
