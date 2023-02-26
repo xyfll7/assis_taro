@@ -1,7 +1,7 @@
 
 
 
-import { Image, View } from '@tarojs/components';
+import { Image } from '@tarojs/components';
 import { FC } from 'react';
 import pawsvg from "../image/logo.svg";
 import user_avatar from "../image/user_avatar.png";
