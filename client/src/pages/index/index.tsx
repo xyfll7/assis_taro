@@ -1,7 +1,7 @@
-import { FC, useState } from "react";
-import Taro, { useLoad, useShareAppMessage } from "@tarojs/taro";
+import { FC, useEffect, useState } from "react";
+import Taro, { useShareAppMessage } from "@tarojs/taro";
 import { minutesToMilliseconds } from "date-fns";
-import { View, Navigator, Button, Label } from "@tarojs/components";
+import { View, Navigator, Button, Label, Map } from "@tarojs/components";
 // 工具
 import { useHook_getQuota_number, useHook_get_orderList, useHook_selfInfo_show } from "../../utils/useHooks";
 import { Api_orders_getOrderList } from "../../api/user__orders";
@@ -114,35 +114,56 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
         <MoreService selfInfo_S={selfInfo_S}></MoreService>
       </View>
       <View className='safe-bottom'>
-        <View className='dbtt mrl10 o10 prl10 bccyellow pbt4'>
-          <View className='ds pbt6'
-            onClick={() => {
-              Taro.openLocation({
-                longitude: selfInfo_S?.regiment_info?.location?.coordinates[0]!,
-                latitude: selfInfo_S?.regiment_info?.location?.coordinates[1]!,
-                address: selfInfo_S?.regiment_info?.location_name,
-                name: `${selfInfo_S?.regiment_info?.name} 团长`
-              });
-            }}>
-            <ComAvatar className='mr6 ' src={selfInfo_S?.regiment_info?.avatar}></ComAvatar>
-            <View className='ww'>
-              <View className='dbtc'>
-                <View className='fwb'>{selfInfo_S?.regiment_info?.name} 团长为您服务</View>
-              </View>
-              <View className='dbtc'>
-                <View className='mr4 nw2 fs08 cccblacktab'>{selfInfo_S?.regiment_info?.location_name?.split("-")}</View>
+        <View className='mrl10 o15 ovh shadow'>
+          <Map
+            id='my_map'
+            className='ww'
+            customMapStyle='light'
+            skew={40}
+            enableOverlooking
+            enableZoom={false}
+            markers={[{
+              id: 0,
+              width: "",
+              height: "",
+              longitude: selfInfo_S?.regiment_info?.location?.coordinates[0]!,
+              latitude: selfInfo_S?.regiment_info?.location?.coordinates[1]!,
+              iconPath: ""
+            }]}
+            longitude={selfInfo_S?.regiment_info?.location?.coordinates[0]!}
+            latitude={selfInfo_S?.regiment_info?.location?.coordinates[1]!}>
+            <View className='dr p10'>
+              <View className='prl10 pbt6 oo bccyellow' hoverClass='bccbacktab' onClick={() => {
+                Taro.createMapContext("my_map").openMapApp({
+                  longitude: selfInfo_S?.regiment_info?.location?.coordinates[0]!,
+                  latitude: selfInfo_S?.regiment_info?.location?.coordinates[1]!,
+                  destination: `${selfInfo_S?.regiment_info?.name!} 团长`
+                });
+              }}>到这去</View>
+            </View>
+          </Map>
+          <View className='dbtt  o10 prl10 pbt4'>
+            <View className='ds pbt6'>
+              <ComAvatar className='mr6 ' src={selfInfo_S?.regiment_info?.avatar}></ComAvatar>
+              <View className='ww'>
+                <View className='dbtc'>
+                  <View className='fwb'>{selfInfo_S?.regiment_info?.name} 团长为您服务</View>
+                </View>
+                <View className='dbtc'>
+                  <View className='mr4 nw2 fs08 cccblacktab'>{selfInfo_S?.regiment_info?.location_name?.split("-")}</View>
+                </View>
               </View>
             </View>
+            <View className='prl10 pbt6 oo bccyellow nw' hoverClass='bccbacktab' onClick={() => {
+              if (selfInfo_S?.regiment_replica_is) {
+                Taro.showToast({ title: "您是团队成员，无法切换到其他团长", icon: "none" });
+              } else if (selfInfo_S?.regiment_is === 1) {
+                Taro.showToast({ title: "您是团长，无法切换到其他团长", icon: "none" });
+              } else {
+                setSelfInfo_S({ ...selfInfo_S, regiment_info: null });
+              }
+            }}>切换</View>
           </View>
-          <View className='prl10 pbt6 oo bccwhite nw cccplh' style={{ fontSize: "1rem" }} hoverClass='bccbacktab' onClick={() => {
-            if (selfInfo_S?.regiment_replica_is) {
-              Taro.showToast({ title: "您是团队成员，无法切换到其他团长", icon: "none" });
-            } else if (selfInfo_S?.regiment_is === 1) {
-              Taro.showToast({ title: "您是团长，无法切换到其他团长", icon: "none" });
-            } else {
-              setSelfInfo_S({ ...selfInfo_S, regiment_info: null });
-            }
-          }}>切换</View>
         </View>
         <View className='cccplh dxy fs pbt10 fs07'>小象心选</View>
       </View>
@@ -169,14 +190,13 @@ const Regiment: FC<{ selfInfo_S: BaseUserInfo | null; }> = ({ selfInfo_S }) => {
 
 const MoreService: FC<{ selfInfo_S: BaseUserInfo | null; }> = ({ }) => {
   const [env, setEnv] = useState<Environment>();
-  useLoad(async () => setEnv(getEnv()));
-
+  useEffect(() => setEnv(getEnv()), []);
   return (
-    <View className='prl10 dll pt6'>
+    <View className='prl10 dll'>
       <View className='pbt6 pr10 oo cccplh ml6'>更多服务敬请期待...</View>
       <View className='pbt6 pr10 oo cccplh ml6 fs06 fwl'>
         <View>
-          环境：{env?.envVersion} {env?.alias} {env?.version !== "" ? env?.version : "0.0.00"}
+          环境：{`${env?.envVersion} ${env?.alias} ${env?.version !== "" ? env?.version : "0.0.00"}`}
         </View>
       </View>
     </View>
