@@ -1,14 +1,13 @@
 import classNames from "classnames";
 import Taro, { useShareAppMessage } from "@tarojs/taro";
 
-import { View, Navigator, Image } from "@tarojs/components";
+import { View, Navigator } from "@tarojs/components";
 import { useHook_selfInfo_show } from "../utils/useHooks";
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import { Api_users_updateUserInfo } from "../api/user__users";
 import ComAdmin from "../components/ComAdmin";
 import ComRegimentQRCode from "../components/ComRegimentQRCode";
-import { utils_get_qrcode } from "../utils/utils";
 import share_logo from "../image/share_logo.jpeg";
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true });
