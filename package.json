@@ -3,6 +3,7 @@
   "version": "1.0.30",
   "scripts": {
     "start": "node ./run.mjs",
+    "pre": "npm start pre",
     "cz": "cz && git push",
     "czz": "git add . && cz && git push",
     "amend": "git commit --amend --no-edit && git push -f",

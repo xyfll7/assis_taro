@@ -69,6 +69,13 @@
       "problemMatcher": [],
       "label": "npm: amendd",
       "detail": "git add . && git commit --amend --no-edit && git push -f"
+    },
+    {
+      "type": "npm",
+      "script": "pre",
+      "problemMatcher": [],
+      "label": "npm: pre",
+      "detail": "npm start pre"
     }
   ]
 }

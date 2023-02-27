@@ -329,8 +329,8 @@ async function ___preview(desc) {
     setting: {
       es6: true,
     },
-    qrcodeFormat: "image",
-    qrcodeOutputDest: "./qrcode.jpg",
+    qrcodeFormat: "terminal",
+    qrcodeOutputDest: "./zqrcode.jpg",
     onProgressUpdate: () => console.log(`\u001b[1A预览ing... ${i++} ++`),
     pagePath: "pages/index/index", // 预览页面
     searchQuery: "", // 'a=1&b=2' 预览参数 [注意!]这里的`&`字符在命令行中应写成转义字符`\&`
