@@ -128,7 +128,7 @@ const Index_user_express = () => {
             {/* 寄件人信息 */}
             <ExpressSendMan onGoToAddressList={onGoToAddressList} expressForm={expressForm} refAddress={refAddress} formAddress={expressForm.sendMan}></ExpressSendMan>
             {/* 收件人信息 */}
-            <ExpressRecMan setExpressForm={setExpressForm} selfInfo_S={selfInfo_S} onGoToAddressList={onGoToAddressList} onSetExpressForm={onSetExpressForm} expressForm={expressForm} refAddress={refAddress}></ExpressRecMan>
+            <ExpressRecMan setExpressForm={setExpressForm} onGoToAddressList={onGoToAddressList} onSetExpressForm={onSetExpressForm} expressForm={expressForm} refAddress={refAddress}></ExpressRecMan>
             {/* 物品类型-备注-寄件方式 */}
             <ExpressInfo expressForm={expressForm} setExpressForm={setExpressForm}></ExpressInfo>
             {/* 提示信息 */}
@@ -204,12 +204,11 @@ const ExpressSendMan: FC<{
 //#region 收件人 地址薄
 const ExpressRecMan: FC<{
   expressForm: Product_Express;
-  selfInfo_S: BaseUserInfo | null;
   setExpressForm: React.Dispatch<React.SetStateAction<Product_Express>>;
   onGoToAddressList: (type: AddressManType) => void;
   onSetExpressForm: (manType: AddressManType, data: AddressInfo) => void;
   refAddress: React.RefObject<RefAddress>;
-}> = ({ refAddress, expressForm, onSetExpressForm, onGoToAddressList, setExpressForm, selfInfo_S }) => {
+}> = ({ refAddress, expressForm, onSetExpressForm, onGoToAddressList, setExpressForm, }) => {
   const [focus, setFocus] = useState(false);
 
   function ___change_address() {
@@ -237,7 +236,7 @@ const ExpressRecMan: FC<{
               onClick={async () => {
                 setExpressForm({
                   ...(await utils_init_product_express()),
-                  sendMan: selfInfo_S?.address_info,
+                  sendMan: expressForm.sendMan,
                 });
               }}>
               清空

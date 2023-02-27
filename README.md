@@ -7,9 +7,6 @@ https://coding.imooc.com/learn/workdetail/43694#
 
 ```md 任务列表？
 
-
-## 点击清空，bug
-
 ## 团长管理列表增加搜索功能
 
 ## 面单余额自动统计
@@ -18,6 +15,7 @@ https://coding.imooc.com/learn/workdetail/43694#
 ## 团长分身对账单
 ## 提交订单时加入团长分身身份信息
 
+🚀 快递打单页面，点击清空时，不要寄件人自动换为用户默认寄件地址bug
 🚀 首页团长地图展示
 🚀 所有页面使用ComAAPage组件
 🚀 根据坐标计算团长的距离
