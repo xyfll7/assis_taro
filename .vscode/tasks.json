@@ -75,7 +75,7 @@
       "script": "pre",
       "problemMatcher": [],
       "label": "npm: pre",
-      "detail": "npm start pre"
+      "detail": "./zbash.sh"
     }
   ]
 }
