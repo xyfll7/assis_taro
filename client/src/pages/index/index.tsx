@@ -2,9 +2,8 @@ import { FC, useEffect, useState } from "react";
 import Taro, { useShareAppMessage } from "@tarojs/taro";
 import { minutesToMilliseconds } from "date-fns";
 import { View, Navigator, Button, Label, Map } from "@tarojs/components";
-// 工具
+//
 import { useHook_getQuota_number, useHook_get_orderList, useHook_selfInfo_show } from "../../utils/useHooks";
-import { Api_orders_getOrderList } from "../../api/user__orders";
 import { useOrdersNotice } from "../../store/OrdersNoticeProvider";
 import { Api_users_getSelfInfo } from "../../api/user__users";
 import getEnv from "../../utils/env";
@@ -15,7 +14,6 @@ import ComAAPage from '../../components/ComAAPage';
 import ComAvatar from "../../components/ComAvatar";
 import ComNav from "../../components/ComNav";
 import ComLoading from "../../components/ComLoading";
-import ComRegimentList from "../../components/ComRegimentList";
 import ComOrderNotice from "../../components/ComOrderNotice";
 
 definePageConfig({ enableShareAppMessage: true, backgroundColor: "#ffffff", navigationStyle: "custom", disableScroll: true });
@@ -38,18 +36,32 @@ const Index = () => {
       imageUrl: share_logo,    // * 支持PNG及JPG * 显示图片长宽比是 5:4
     };
   });
+
+  async function ___get_selfInfo_S(e?: BaseUserInfo) {
+    if (e) {
+      setSelfInfo_S(e);
+    } else {
+      const res1 = await Api_users_getSelfInfo();
+      setSelfInfo_S(res1);
+    }
+  }
   return (
     <View>
       {selfInfo_S == null && <ComLoading isIndex></ComLoading>}
-      {selfInfo_S !== null && !selfInfo_S?.regiment_info && <ComRegimentList></ComRegimentList>}
-      {selfInfo_S && selfInfo_S.regiment_info && <Service selfInfo_S={selfInfo_S} setSelfInfo_S={setSelfInfo_S}></Service>}
+      {
+        selfInfo_S && selfInfo_S.regiment_info && (
+          selfInfo_S.regiment_is === 1 ?
+            <ServiceRegiment selfInfo_S={selfInfo_S} onRefresherRefresh_selfInfo_S={___get_selfInfo_S}></ServiceRegiment> :
+            <ServiceUser selfInfo_S={selfInfo_S} onRefresherRefresh_selfInfo_S={___get_selfInfo_S}></ServiceUser>
+        )
+      }
     </View>
   );
 };
 
 export default Index;
 
-const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispatch<BaseUserInfo | null>; }> = ({ selfInfo_S, setSelfInfo_S }) => {
+const ServiceUser: FC<{ selfInfo_S: BaseUserInfo | null; onRefresherRefresh_selfInfo_S: (selfInfo?: BaseUserInfo) => Promise<void>; }> = ({ selfInfo_S, onRefresherRefresh_selfInfo_S }) => {
   const [, setOrders_S] = useOrdersNotice();
   const [triggered, setTriggered] = useState(false);
   return (
@@ -62,12 +74,7 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
       onRefresherRefresh={async () => {
         setTriggered(true);
         setOrders_S(null);
-        const res1 = await Api_users_getSelfInfo();
-        setSelfInfo_S(res1);
-        if (res1.regiment_is !== 1) {
-          const res0 = await Api_orders_getOrderList({ self_OPENID: selfInfo_S!.OPENID, payStatus: [0] });
-          setOrders_S(res0);
-        }
+        await onRefresherRefresh_selfInfo_S();
         setTriggered(false);
       }}>
       <ComNav className='ds' isLeft isRight>
@@ -75,7 +82,7 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
           <View className='prl10 ww ds'>
             <ComAvatar src={selfInfo_S?.avatar} size={75} isSelf></ComAvatar>
             <View className='ww pr10'>
-              <View className='ml10  oo  dbtc ww ' style={{ background: "#ffffffcc" }}>
+              <View className='ml10 oo dbtc ww' style={{ background: "#ffffffcc" }}>
                 <View></View>
                 <View className='cccplh pr10 pbt6'>搜索</View>
               </View>
@@ -87,34 +94,17 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
                 <View className='mrl6 lh100'>🛵</View>
                 <View>快递服务</View>
               </Navigator>
-              {selfInfo_S?.regiment_is === 1 &&
-                <>
-                  <Label for='share_express'>
-                    <View className='prl10 cccgreen pbt10 oo nw ' hoverClass='bccbacktab'>
-                      <View className='prl4'>邀请</View>
-                    </View>
-                    <Button className='dsn' id='share_express' openType='share'></Button>
-                  </Label>
-                  <ComRegimentQRCode className='prl10 cccgreen pbt10 oo nw' hoverClass='bccbacktab'>
-                    二维码
-                  </ComRegimentQRCode>
-                </>
-              }
-
             </View>
-            {selfInfo_S?.regiment_is != 1 && <ComOrderNotice className='mr6 pbt8 bccwhite oo dxy' hoverClass='bccbacktab'></ComOrderNotice>}
-            <Regiment selfInfo_S={selfInfo_S}></Regiment>
-            {selfInfo_S?.regiment_is != 1 && (
-              <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_user/user_my'>
-                🐣 我的
-              </Navigator>
-            )}
+            <ComOrderNotice className='mr6 pbt8 bccwhite oo dxy' hoverClass='bccbacktab'></ComOrderNotice>
+          </View>
+          <View className='ds'>
+            <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_user/user_my'>
+              🐣 我的
+            </Navigator>
           </View>
         </View>
       </ComNav>
-      <View>
-        <MoreService selfInfo_S={selfInfo_S}></MoreService>
-      </View>
+      <MoreService selfInfo_S={selfInfo_S}></MoreService>
       <View className='safe-bottom'>
         <View className='mrl10 o15 ovh shadow'>
           <Map
@@ -156,14 +146,8 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
                 </View>
               </View>
             </View>
-            <View className='prl10 pbt6 oo bccyellow nw' hoverClass='bccbacktab' onClick={() => {
-              if (selfInfo_S?.regiment_replica_is) {
-                Taro.showToast({ title: "您是团队成员，无法切换到其他团长", icon: "none" });
-              } else if (selfInfo_S?.regiment_is === 1) {
-                Taro.showToast({ title: "您是团长，无法切换到其他团长", icon: "none" });
-              } else {
-                setSelfInfo_S({ ...selfInfo_S, regiment_info: null });
-              }
+            <View className='prl10 pbt6 oo bccyellow nw' hoverClass='bccbacktab' onClick={async () => {
+              await onRefresherRefresh_selfInfo_S({ ...selfInfo_S, regiment_info: null });
             }}>切换</View>
           </View>
         </View>
@@ -172,23 +156,64 @@ const Service: FC<{ selfInfo_S: BaseUserInfo | null; setSelfInfo_S: React.Dispat
     </ComAAPage >
   );
 };
-
-const Regiment: FC<{ selfInfo_S: BaseUserInfo | null; }> = ({ selfInfo_S }) => {
+const ServiceRegiment: FC<{ selfInfo_S: BaseUserInfo | null; onRefresherRefresh_selfInfo_S: (selfInfo?: BaseUserInfo) => Promise<void>; }> = ({ selfInfo_S, onRefresherRefresh_selfInfo_S }) => {
+  const [triggered, setTriggered] = useState(false);
   return (
-    <View className='ww ds dwp'>
-      {selfInfo_S?.regiment_is == 1 && (
-        <>{!selfInfo_S.regiment_replica_is &&
-          <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_setting'>
-            🌿 团长
-          </Navigator>}
-          <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_orders'>
-            🍒 团长订单
-          </Navigator>
-        </>
-      )}
-    </View>
+    <ComAAPage
+      className='index-back'
+      refresherBackground='transparent'
+      refresherDefaultStyle='none'
+      refresherTriggered={triggered}
+      refresherEnabled
+      onRefresherRefresh={async () => {
+        setTriggered(true);
+        await onRefresherRefresh_selfInfo_S();
+        setTriggered(false);
+      }}>
+      <ComNav className='ds' isLeft isRight>
+        <View>
+          <View className='prl10 ww ds'>
+            <View className='ds'>
+              <ComAvatar className='mt4' src={selfInfo_S?.avatar} size={75}></ComAvatar>
+              <View className='ml10'>
+                <View className='fwb'>{selfInfo_S?.name}</View>
+                <View className='fs08 cccplh nw2 lh100'>{selfInfo_S?.location_name}</View>
+              </View>
+            </View>
+          </View>
+          <View className='ds dwp pt10'>
+            <View className='oo bccwhite  mr6  dy' >
+              <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
+                <View className='mrl6 lh100'>🛵</View>
+                <View>快递服务</View>
+              </Navigator>
+              <Label for='share_express'>
+                <View className='prl10 cccgreen pbt10 oo nw ' hoverClass='bccbacktab'>
+                  <View className='prl4'>邀请</View>
+                </View>
+                <Button className='dsn' id='share_express' openType='share'></Button>
+              </Label>
+              <ComRegimentQRCode className='prl10 cccgreen pbt10 oo nw' hoverClass='bccbacktab'>
+                二维码
+              </ComRegimentQRCode>
+            </View>
+            <View className='ww ds dwp'>
+              {!selfInfo_S?.regiment_replica_is &&
+                <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_setting'>
+                  🌿 团长
+                </Navigator>}
+              <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_orders'>
+                🍒 团长订单
+              </Navigator>
+            </View>
+          </View>
+        </View>
+      </ComNav>
+      <MoreService selfInfo_S={selfInfo_S}></MoreService>
+    </ComAAPage >
   );
 };
+
 
 const MoreService: FC<{ selfInfo_S: BaseUserInfo | null; }> = ({ }) => {
   const [env, setEnv] = useState<Environment>();
