@@ -10,6 +10,12 @@ import { Api_orders_removeOrder } from "../api/user__orders";
 import { Api_wxpay_wxPay_express_refund } from "../api/a__wxpay";
 
 import wexinpay from "../image/wexinpay.svg";
+import { Api_logistics_cancelOrder } from '../api/a__logistics';
+
+
+
+
+
 
 
 //订单操作
@@ -24,35 +30,50 @@ const ComOrderExpressOperation: FC<{
   selfInfo_S: BaseUserInfo | null;
 
 }> = ({ time_limit, setQrCode, orderType, order, onClick_setOrders, selfInfo_S, setItem }) => {
-
+  function ___cancelOrder() {
+    Taro.showModal({
+      title: "您确定要回收该面单号吗？",
+      success: async (e) => {
+        if (e.confirm) {
+          Taro.showLoading({ title: "回收中...", mask: false });
+          const res = await Api_logistics_cancelOrder(order);
+          onClick_setOrders(res, "UPDATE");
+          Taro.hideLoading();
+        }
+      }
+    });
+  }
   return (
     <>
-      {(orderType == "待计重" || orderType == "待付款") && (<>
-        <View className='dbtc pbt4'>
-          <View className='pbt6 pr10 oo cccplh'
-            hoverClass='bccbacktab'
-            onClick={() => {
-              Taro.showModal({
-                content: "您确定要删除该订单吗？",
-                success: async (e) => {
-                  if (e.confirm) {
-                    Taro.showLoading({ title: "删除中...", mask: false });
-                    const res = await Api_orders_removeOrder(order);
-                    onClick_setOrders(res, "DELETE");
-                    Taro.hideLoading();
-                  }
-                },
-              });
-            }}>
-            删除
-          </View>
+      {(orderType == "待计重" || orderType == "待付款") && (
+        <View className='dbtc pbt4'>{
+          order.waybillId ?
+            <View className='pbt6 pr10 oo cccplh' hoverClass='bccbacktab'
+              onClick={() => ___cancelOrder()}>回收面单→删除</View> :
+            <View className='pbt6 pr10 oo cccplh' hoverClass='bccbacktab'
+              onClick={async () => {
+                Taro.showModal({
+                  content: "您确定要删除该订单吗？",
+                  success: async (e) => {
+                    if (e.confirm) {
+                      Taro.showLoading({ title: "删除中...", mask: false });
+                      const res = await Api_orders_removeOrder(order);
+                      onClick_setOrders(res, "DELETE");
+                      Taro.hideLoading();
+                    }
+                  },
+                });
+              }}>
+              删除
+            </View>
+        }
           <View
             className='cccgreen pbt6 pl10 oo'
             hoverClass='bccbacktab'
             onClick={() => { setItem(order); }}>
             修改信息
           </View>
-        </View></>
+        </View>
       )}
       {order.self_OPENID === order?.regiment_OPENID && orderType === "待付款" && (
         <View className='pb4 dbtc'>
@@ -127,26 +148,32 @@ const ComOrderExpressOperation: FC<{
       )}
       {orderType == "已付款" && (
         <View className='ww dbtc pb4'>
-          <View className='cccgreen pr10 pbt6 oo' hoverClass='bccbacktab'
-            onClick={() => {
-              Taro.showModal({
-                content: "您确定要退款?",
-                confirmText: "确认退款",
-                success: async (e) => {
-                  if (e.confirm) {
-                    Taro.showLoading({ title: "退款中...", mask: true });
-                    const [err0] = await to(Api_wxpay_wxPay_express_refund({ ...order, ...getEnvDevParam({ totalFee: 1 }) }));
-                    if (err0) {
-                      Taro.showToast({ title: `${err0.message}`, icon: "none" });
-                      return;
+          {order.waybillId ?
+            <View className='cccgreen pr10 pbt6 oo' hoverClass='bccbacktab'
+              onClick={() => ___cancelOrder()}>
+              回收面单→退款
+            </View> :
+            <View className='cccgreen pr10 pbt6 oo' hoverClass='bccbacktab'
+              onClick={() => {
+                Taro.showModal({
+                  content: "您确定要退款?",
+                  confirmText: "确认退款",
+                  success: async (e) => {
+                    if (e.confirm) {
+                      Taro.showLoading({ title: "退款中...", mask: true });
+                      const [err0] = await to(Api_wxpay_wxPay_express_refund({ ...order, ...getEnvDevParam({ totalFee: 1 }) }));
+                      if (err0) {
+                        Taro.showToast({ title: `${err0.message}`, icon: "none" });
+                        return;
+                      }
+                      onClick_setOrders(order, "DELETE");
+                      Taro.hideLoading();
+                      Taro.showModal({ title: "退款操作成功", content: `订单移入"已退款"`, showCancel: false, success: () => { } });
                     }
-                    onClick_setOrders(order, "DELETE");
-                    Taro.hideLoading();
-                    Taro.showModal({ title: "退款操作成功", content: `订单移入"已退款"`, showCancel: false, success: () => { } });
                   }
-                }
-              });
-            }}>退款</View>
+                });
+              }}>退款</View>
+          }
 
           {!time_limit ?
             (order.waybillId ?
