@@ -33,7 +33,7 @@ export async function Api_logistics_addOrder(params: Product_Express): Promise<P
 }
 //#endregion
 
-//#region  回收运单
+//#region  回收/取消运单
 export async function Api_logistics_cancelOrder(params: Product_Express): Promise<Product_Express> {
   try {
     const res = await wx_cloud_callFunctions<Product_Express>({

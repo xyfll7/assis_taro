@@ -77,31 +77,29 @@ const ServiceUser: FC<{ selfInfo_S: BaseUserInfo | null; onRefresherRefresh_self
         await onRefresherRefresh_selfInfo_S();
         setTriggered(false);
       }}>
-      <ComNav className='ds' isLeft isRight>
-        <View>
-          <View className='prl10 ww ds'>
-            <ComAvatar src={selfInfo_S?.avatar} size={75} isSelf></ComAvatar>
-            <View className='ww pr10'>
-              <View className='ml10 oo dbtc ww' style={{ background: "#ffffffcc" }}>
-                <View></View>
-                <View className='cccplh pr10 pbt6'>搜索</View>
-              </View>
+      <ComNav isLeft isRight>
+        <View className='prl10 ww ds'>
+          <ComAvatar src={selfInfo_S?.avatar} size={75} isSelf></ComAvatar>
+          <View className='ww pr10'>
+            <View className='ml10 oo dbtc ww' style={{ background: "#ffffffcc" }}>
+              <View></View>
+              <View className='cccplh pr10 pbt6'>搜索</View>
             </View>
           </View>
-          <View className='ds dwp pt10'>
-            <View className='oo bccwhite  mr6  dy' >
-              <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
-                <View className='mrl6 lh100'>🛵</View>
-                <View>快递服务</View>
-              </Navigator>
-            </View>
-            <ComOrderNotice className='mr6 pbt8 bccwhite oo dxy' hoverClass='bccbacktab'></ComOrderNotice>
-          </View>
-          <View className='ds'>
-            <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_user/user_my'>
-              🐣 我的
+        </View>
+        <View className='ds dwp pt10'>
+          <View className='oo bccwhite  mr6  dy' >
+            <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
+              <View className='mrl6 lh100'>🛵</View>
+              <View>快递服务</View>
             </Navigator>
           </View>
+          <ComOrderNotice className='mr6 pbt8 bccwhite oo dxy' hoverClass='bccbacktab'></ComOrderNotice>
+        </View>
+        <View className='ds'>
+          <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_user/user_my'>
+            🐣 我的
+          </Navigator>
         </View>
       </ComNav>
       <MoreService selfInfo_S={selfInfo_S}></MoreService>
@@ -170,42 +168,40 @@ const ServiceRegiment: FC<{ selfInfo_S: BaseUserInfo | null; onRefresherRefresh_
         await onRefresherRefresh_selfInfo_S();
         setTriggered(false);
       }}>
-      <ComNav className='ds' isLeft isRight>
-        <View>
-          <View className='prl10 ww ds'>
-            <View className='ds'>
-              <ComAvatar className='mt4' src={selfInfo_S?.avatar} size={75}></ComAvatar>
-              <View className='ml10'>
-                <View className='fwb'>{selfInfo_S?.name}</View>
-                <View className='fs08 cccplh nw2 lh100'>{selfInfo_S?.location_name}</View>
-              </View>
+      <ComNav isLeft isRight>
+        <View className='prl10 ww ds'>
+          <View className='ds'>
+            <ComAvatar className='mt4' src={selfInfo_S?.avatar} size={75}></ComAvatar>
+            <View className='ml10'>
+              <View className='fwb'>{selfInfo_S?.name}</View>
+              <View className='fs08 cccplh nw2 lh100'>{selfInfo_S?.location_name}</View>
             </View>
           </View>
-          <View className='ds dwp pt10'>
-            <View className='oo bccwhite  mr6  dy' >
-              <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
-                <View className='mrl6 lh100'>🛵</View>
-                <View>快递服务</View>
-              </Navigator>
-              <Label for='share_express'>
-                <View className='prl10 cccgreen pbt10 oo nw ' hoverClass='bccbacktab'>
-                  <View className='prl4'>邀请</View>
-                </View>
-                <Button className='dsn' id='share_express' openType='share'></Button>
-              </Label>
-              <ComRegimentQRCode className='prl10 cccgreen pbt10 oo nw' hoverClass='bccbacktab'>
-                二维码
-              </ComRegimentQRCode>
-            </View>
-            <View className='ww ds dwp'>
-              {!selfInfo_S?.regiment_replica_is &&
-                <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_setting'>
-                  🌿 团长
-                </Navigator>}
-              <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_orders'>
-                🍒 团长订单
-              </Navigator>
-            </View>
+        </View>
+        <View className='ds dwp pt10'>
+          <View className='oo bccwhite  mr6  dy' >
+            <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
+              <View className='mrl6 lh100'>🛵</View>
+              <View>快递服务</View>
+            </Navigator>
+            <Label for='share_express'>
+              <View className='prl10 cccgreen pbt10 oo nw ' hoverClass='bccbacktab'>
+                <View className='prl4'>邀请</View>
+              </View>
+              <Button className='dsn' id='share_express' openType='share'></Button>
+            </Label>
+            <ComRegimentQRCode className='prl10 cccgreen pbt10 oo nw' hoverClass='bccbacktab'>
+              二维码
+            </ComRegimentQRCode>
+          </View>
+          <View className='ww ds dwp'>
+            {!selfInfo_S?.regiment_replica_is &&
+              <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_setting'>
+                🌿 团长
+              </Navigator>}
+            <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_orders'>
+              🍒 团长订单
+            </Navigator>
           </View>
         </View>
       </ComNav>
