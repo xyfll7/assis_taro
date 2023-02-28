@@ -13,6 +13,7 @@ export async function addOrder_cloud(event: Events<Product_Express>): Promise<Re
     const _timestamp = Date.now();
     data.timestamp_init = _timestamp;
     data.timestamp_update = _timestamp;
+    data.outTradeNo = data.outTradeNo ?? `${data.self_OPENID!.slice(6)}${Date.now().toString(32)}`;
     let res = <cloud.DB.IAddResult>await db.collection("orders")
       .add({ data: { ...data } });
     if (res.errMsg === "collection.add:ok") {
