@@ -101,6 +101,7 @@ export function useHook_getQuota_number(_interval_time: number) {
 export function useHook_getTimeLimit(timeStr: string) {
   const [time, setTime] = useState<string | null>("");
   useEffect(() => {
+    if (!timeStr) { return; }
     const _timer = setInterval(() => {
       const _time = utils_get_time_limit(timeStr);
       setTime(_time);
@@ -109,8 +110,7 @@ export function useHook_getTimeLimit(timeStr: string) {
       }
     }, 1000);
     return () => clearInterval(_timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [timeStr]);
   return time;
 }
 
