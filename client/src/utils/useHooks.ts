@@ -107,9 +107,10 @@ export function useHook_getTimeLimit(timeStr: string) {
       if (!_time) {
         clearInterval(_timer);
       }
-    });
+    }, 1000);
     return () => clearInterval(_timer);
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return time;
 }
 
