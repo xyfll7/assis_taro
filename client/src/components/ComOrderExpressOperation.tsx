@@ -59,7 +59,7 @@ const ComOrderExpressOperation: FC<{
                       Taro.showLoading({ title: "删除中...", mask: false });
                       const res = await Api_orders_removeOrder(order);
                       onClick_setOrders(res, "DELETE");
-                      Taro.hideLoading();
+                      Taro.showToast({ title: "删除成功", icon: "success" });
                     }
                   },
                 });
