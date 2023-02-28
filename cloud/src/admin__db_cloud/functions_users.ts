@@ -23,17 +23,9 @@ export async function users_getRegimentList_cloud(): Promise<Result<BaseUserInfo
         res
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误`,
-        res,
-      };
+      throw new Error(`数据库执行错误`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误`,
-      err
-    };
+    throw err;
   }
 }

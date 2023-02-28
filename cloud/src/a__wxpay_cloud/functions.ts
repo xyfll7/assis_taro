@@ -25,18 +25,10 @@ export async function wxPay_express_cloud(event: Events<Product_Express>): Promi
         data: res,
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `微信支付错误，${res.errMsg}。`,
-        res
-      };
+      throw new Error(`微信支付错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 
@@ -151,25 +143,13 @@ export async function wxPay_express_refund_cloud(event: Events<Product_Express>)
           data: res0,
         };
       } else {
-        return {
-          code: Code.DATABASE_ERROR,
-          message: `更新支付状态错误，${res0.errMsg}。`,
-          res: res0
-        };
+        throw new Error(`更新支付状态错误，${res0.errMsg}`);
       }
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `微信支付错误，${res0.errMsg}。`,
-        res: res0
-      };
+      throw new Error(`微信支付错误，${res0.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `${err.errCodeDes ?? err.message}`,
-      err
-    };
+    throw err;
   }
 }
 

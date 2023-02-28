@@ -35,18 +35,10 @@ export async function getCollectionList_cloud(
         data: res.data,
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res,
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err,
-    };
+    throw err;
   }
 }
 
@@ -117,18 +109,10 @@ export async function getCollectionHistoryList_cloud(
           .reverse(),
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res,
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err,
-    };
+    throw err;
   }
 }
 
@@ -172,19 +156,7 @@ export async function getCollectionExcel_cloud(
       throw new Error(`数据库执行错误，${res0.errMsg}`);
     }
   } catch (err) {
-    if (err instanceof Error) {
-      return {
-        code: Code.SERVER_ERROR,
-        message: `${err.message}`,
-        err: err,
-      };
-    } else {
-      return {
-        code: Code.OTHER_ERROR,
-        message: `未知错误`,
-        err,
-      };
-    }
+    throw err;
   }
 }
 

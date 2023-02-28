@@ -19,18 +19,10 @@ export async function addAddress_cloud(event: Events<AddressInfo>): Promise<Resu
         data: { _id: res._id as string, ...data },
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res,
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err,
-    };
+    throw err;
   }
 }
 
@@ -53,18 +45,10 @@ export async function updateAddress_cloud(event: Events<AddressInfo>): Promise<R
         data: { _id: _id, ...data },
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res,
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err,
-    };
+    throw err;
   }
 }
 export async function removeAddress_cloud(event: Events<AddressInfo>): Promise<Result<AddressInfo>> {
@@ -80,18 +64,10 @@ export async function removeAddress_cloud(event: Events<AddressInfo>): Promise<R
         data: { _id: _id, ...data },
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res,
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err,
-    };
+    throw err;
   }
 }
 export async function getAddressList_cloud(
@@ -141,17 +117,9 @@ export async function getAddressList_cloud(
         data: res.data as AddressInfo[],
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}`,
-        res,
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err,
-    };
+    throw err;
   }
 }

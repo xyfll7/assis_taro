@@ -18,18 +18,10 @@ export async function getPhoneNumber_cloud(event: Events<{ code: string; }>): Pr
         data: res.phoneInfo.purePhoneNumber,
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 
@@ -51,19 +43,11 @@ export async function createQRCode_cloud(event: Events<{ page: string, scene: st
         data: res.buffer as ArrayBuffer,
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: res.errMsg,
-        res
-      };
+      throw new Error(`${res.errMsg}`);
     }
 
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `服务器内部错误！${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 
 }

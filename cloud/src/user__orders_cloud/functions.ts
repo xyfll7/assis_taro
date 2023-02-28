@@ -13,7 +13,6 @@ export async function addOrder_cloud(event: Events<Product_Express>): Promise<Re
     const _timestamp = Date.now();
     data.timestamp_init = _timestamp;
     data.timestamp_update = _timestamp;
-    data.outTradeNo = data.outTradeNo ?? `${data.self_OPENID!.slice(6)}${Date.now().toString(32)}`;
     let res = <cloud.DB.IAddResult>await db.collection("orders")
       .add({ data: { ...data } });
     if (res.errMsg === "collection.add:ok") {
@@ -24,18 +23,10 @@ export async function addOrder_cloud(event: Events<Product_Express>): Promise<Re
         res
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 export async function updateOrder_express_cloud(event: Events<Product_Express>): Promise<Result<Product_Express>> {
@@ -52,19 +43,11 @@ export async function updateOrder_express_cloud(event: Events<Product_Express>):
         res
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`,);
     }
 
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 export async function removeOrder_cloud(event: Events<Product_Express>): Promise<Result<Product_Express>> {
@@ -79,18 +62,10 @@ export async function removeOrder_cloud(event: Events<Product_Express>): Promise
         res
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 export async function getOrderList_cloud(event: Events<OrderList_Query, string>): Promise<Result<ProductBase[]>> {
@@ -156,18 +131,10 @@ export async function getOrderList_cloud(event: Events<OrderList_Query, string>)
         res
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误`,
-        res,
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误`,
-      err
-    };
+    throw err;
   }
 }
 export async function getOrderExpress_cloud(event: Events<string>): Promise<Result<Product_Express>> {
@@ -183,18 +150,10 @@ export async function getOrderExpress_cloud(event: Events<string>): Promise<Resu
         data: res.data as Product_Express,
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误`,
-        res,
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误`,
-      err
-    };
+    throw err;
   }
 }
 

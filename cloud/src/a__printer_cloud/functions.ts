@@ -24,11 +24,7 @@ export async function printExpress_cloud(
       res: res0
     };
   } catch (err) {
-    const errr = err as Error;
-    return {
-      code: Code.SERVER_ERROR,
-      message: errr.message,
-    };
+    throw err;
   }
 
 }

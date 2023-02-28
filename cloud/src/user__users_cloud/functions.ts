@@ -39,19 +39,7 @@ export async function getSelfInfo_cloud(event: Events<string>): Promise<Result<B
       throw new Error("数据库执行错误");
     }
   } catch (err: any) {
-    if (err instanceof Error) {
-      return {
-        code: Code.SERVER_ERROR,
-        message: err.message,
-        err
-      };
-    } else {
-      return {
-        code: Code.SERVER_ERROR,
-        message: `未知错误`,
-        err
-      };
-    }
+    throw err;
   }
 }
 export async function getUserInfo_cloud(event: Events<string>): Promise<Result<BaseUserInfo>> {
@@ -70,19 +58,7 @@ export async function getUserInfo_cloud(event: Events<string>): Promise<Result<B
       throw new Error("数据库执行错误");
     }
   } catch (err: any) {
-    if (err instanceof Error) {
-      return {
-        code: Code.SERVER_ERROR,
-        message: err.message,
-        err
-      };
-    } else {
-      return {
-        code: Code.SERVER_ERROR,
-        message: `未知错误`,
-        err
-      };
-    }
+    throw err;
   }
 }
 // 获取团队成员列表
@@ -108,19 +84,7 @@ export async function getTeamList_cloud(event: Events<string>): Promise<Result<B
       throw new Error("数据库执行错误");
     }
   } catch (err: any) {
-    if (err instanceof Error) {
-      return {
-        code: Code.SERVER_ERROR,
-        message: err.message,
-        err
-      };
-    } else {
-      return {
-        code: Code.SERVER_ERROR,
-        message: `未知错误`,
-        err
-      };
-    }
+    throw err;
   }
 }
 export async function getRegimentListNearby_cloud(event: Events<Taro.getLocation.SuccessCallbackResult>): Promise<Result<BaseUserInfo[]>> {
@@ -154,19 +118,7 @@ export async function getRegimentListNearby_cloud(event: Events<Taro.getLocation
       throw new Error(`数据库查询错误：${res.errMsg}`);
     }
   } catch (err: any) {
-    if (err instanceof Error) {
-      return {
-        code: Code.SERVER_ERROR,
-        message: `${err.message}`,
-        err: err,
-      };
-    } else {
-      return {
-        code: Code.OTHER_ERROR,
-        message: `未知错误`,
-        err,
-      };
-    }
+    throw err;
   }
 }
 export async function updateUserInfo_cloud(event: Events<BaseUserInfo, string>): Promise<Result<BaseUserInfo>> {
@@ -196,18 +148,6 @@ export async function updateUserInfo_cloud(event: Events<BaseUserInfo, string>):
       throw new Error("数据库执行错误");
     }
   } catch (err: any) {
-    if (err instanceof Error) {
-      return {
-        code: Code.SERVER_ERROR,
-        message: err.message,
-        err
-      };
-    } else {
-      return {
-        code: Code.SERVER_ERROR,
-        message: `未知错误`,
-        err
-      };
-    }
+    throw err;
   }
 }

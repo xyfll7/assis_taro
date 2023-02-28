@@ -17,18 +17,10 @@ export async function init_cloud(event: Events<any>): Promise<Result<any>> {
         data: res.data,
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `数据库执行错误，${res.errMsg}。`,
-        res
-      };
+      throw new Error(`数据库执行错误，${res.errMsg}`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 

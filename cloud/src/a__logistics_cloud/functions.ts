@@ -28,18 +28,10 @@ export async function addOrder_cloud(event: Events<Product_Express>): Promise<Re
         res: { res0, res1 }
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `接口调用错误，${res0.errMsg}。`,
-        res: res0
-      };
+      throw new Error(`接口调用错误，${res0.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 
@@ -54,18 +46,10 @@ export async function getAllAccount_cloud(event: Events<{}>): Promise<Result<any
         data: res.list,
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `接口调用错误，${res.errMsg}。`,
-        res
-      };
+      throw new Error(`接口调用错误，${res.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 
@@ -88,18 +72,10 @@ export async function getOrder_cloud(event: Events<Product_Express>): Promise<Re
         res: res0
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `接口调用错误，${res0.errMsg}。`,
-        res: res0
-      };
+      throw new Error(`接口调用错误，${res0.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 
@@ -119,18 +95,10 @@ export async function getPath_cloud(event: Events<Product_Express>): Promise<Res
         data: res0,
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `接口调用错误，${res0.errMsg}。`,
-        res: res0
-      };
+      throw new Error(`接口调用错误，${res0.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 
@@ -162,18 +130,10 @@ export async function bindAccount_cloud(event: Events<BaseUserInfo, Logistics_Ac
         res: res0
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `接口调用错误，${res0.errMsg}。`,
-        res: res0
-      };
+      throw new Error(`接口调用错误，${res0.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 // 获取支持的快递公司列表
@@ -187,21 +147,34 @@ export async function getAllDelivery_cloud(): Promise<Result<any>> {
         data: res0.data,
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `接口调用错误，${res0.errMsg}。`,
-        res: res0
-      };
+      throw new Error(`接口调用错误，${res0.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 
+async function ___cancelOrder(data: Product_Express): Promise<Product_Express> {
+  const { _id, } = data;
+  try {
+    const res = <cloud.DB.IUpdateResult>await db.collection("orders").doc(_id!).update({
+      data: {
+        bizId: _.remove(),
+        deliveryId: _.remove(),
+        deliveryName: _.remove(),
+        waybillData: _.remove(),
+        waybillId: _.remove(),
+      }
+    });
+    if (res.errMsg === "document.update:ok" && res.stats.updated === 1) {
+      return data;
+    } else {
+      throw new Error("更新订单失败");
+    }
+  } catch (err) {
+    throw err;
+  }
+}
 export async function cancelOrder_cloud(event: Events<Product_Express>): Promise<Result<Product_Express>> {
   try {
     const { data } = event;
@@ -211,28 +184,20 @@ export async function cancelOrder_cloud(event: Events<Product_Express>): Promise
       deliveryId: data.deliveryId,
       waybillId: data.waybillId,
     });
-    if (res0.errMsg == "openapi.logistics.cancelOrder:ok") {
-      const { bizId, deliveryId, deliveryName, waybillData, waybillId, ..._data } = data;
-      const res1 = await ___updateOrder(_data);
+    console.log("取消运单：", res0);
+    if (res0.errMsg == "openapi.logistics.cancelOrder:ok" && res0.errCode === 0) {
+      const { bizId, deliveryId, deliveryName, waybillData, waybillId, outTradeNo, ..._data } = data;
+      await ___cancelOrder(data);
       return {
         code: Code.SUCCESS,
         message: res0.errMsg,
         data: _data,
-        res: { res0, res1 }
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `接口调用错误，${res0.errMsg}。`,
-        res: res0
-      };
+      throw new Error(`接口调用错误，${res0.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 // 获取电子面单余额
@@ -250,18 +215,10 @@ export async function getQuota_cloud(event: Events<Logistics_Account>): Promise<
         data: res0.quotaNum as number,
       };
     } else {
-      return {
-        code: Code.DATABASE_ERROR,
-        message: `接口调用错误，${res0.errMsg}。`,
-        res: res0
-      };
+      throw new Error(`接口调用错误，${res0.errMsg}。`);
     }
   } catch (err: any) {
-    return {
-      code: Code.SERVER_ERROR,
-      message: `未知错误，${err.errMsg}`,
-      err
-    };
+    throw err;
   }
 }
 
@@ -285,7 +242,7 @@ async function ___addOrder(data: Product_Express): Promise<Product_Express> {
       data._id = res._id;
       return data;
     } else {
-      throw "新增订单失败";
+      throw new Error("新增订单失败");
     }
   } catch (err) {
     throw err;
@@ -300,12 +257,13 @@ async function ___updateOrder(data: Product_Express): Promise<Product_Express> {
     if (res.errMsg === "document.update:ok" && res.stats.updated === 1) {
       return data;
     } else {
-      throw "更新订单失败";
+      throw new Error("取消订单失败");
     }
   } catch (err) {
     throw err;
   }
 }
+
 function ___makeParam(data: Product_Express) {
   const param = {
     "add_source": 0,
@@ -354,9 +312,8 @@ async function ___updateUserInfo(event: Events<BaseUserInfo, Logistics_Account>)
     if (res.errMsg === "document.update:ok" && res.stats.updated === 1) {
       return { ...data };
     } else {
-      throw "更新个人信息错误";
+      throw new Error("更新个人信息错误");
     }
-
   } catch (err) {
     throw err;
   }
