@@ -612,12 +612,9 @@ const OrderPayRegiment: FC<{
       regiment_sub_mchId: selfInfo_S?.regiment_info?.regiment_sub_mchId,
 
       payStatus: PayStatus.PAY1,
+
       weight: _weight,
       totalFee: _price,
-
-      deliveryId: logistic.deliveryId,
-      bizId: logistic.bizId,
-      deliveryName: logistic.deliveryName,
 
       ...(() => {
         if (selfInfo_S?.regiment_is && selfInfo_S.regiment_replica_regiment_OPENID === selfInfo_S.regiment_OPENID) {
@@ -628,7 +625,12 @@ const OrderPayRegiment: FC<{
       })(),
     };
     const [err3, res3] = !time_limit
-      ? await to(utils_generate_order(_params))
+      ? await to(utils_generate_order({
+        ..._params,
+        deliveryId: logistic.deliveryId,
+        bizId: logistic.bizId,
+        deliveryName: logistic.deliveryName,
+      }))
       : await to(Api_orders_addOrder(_params));
 
     if (err3) {
