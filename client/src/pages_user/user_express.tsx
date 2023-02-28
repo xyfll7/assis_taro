@@ -123,18 +123,17 @@ const Index_user_express = () => {
       </ComNav>
       <>
         {selfInfo_S === null && <ComLoading></ComLoading>}
-        {selfInfo_S && (
-          <>
-            {/* 寄件人信息 */}
-            <ExpressSendMan onGoToAddressList={onGoToAddressList} expressForm={expressForm} refAddress={refAddress} formAddress={expressForm.sendMan}></ExpressSendMan>
-            {/* 收件人信息 */}
-            <ExpressRecMan setExpressForm={setExpressForm} onGoToAddressList={onGoToAddressList} onSetExpressForm={onSetExpressForm} expressForm={expressForm} refAddress={refAddress}></ExpressRecMan>
-            {/* 物品类型-备注-寄件方式 */}
-            <ExpressInfo expressForm={expressForm} setExpressForm={setExpressForm}></ExpressInfo>
-            {/* 提示信息 */}
-            <PromptInformation></PromptInformation>
-          </>
-        )}
+        {selfInfo_S && <>
+          {/* 寄件人信息 */}
+          <ExpressSendMan onGoToAddressList={onGoToAddressList} expressForm={expressForm} refAddress={refAddress} formAddress={expressForm.sendMan}></ExpressSendMan>
+          {/* 收件人信息 */}
+          <ExpressRecMan setExpressForm={setExpressForm} onGoToAddressList={onGoToAddressList} onSetExpressForm={onSetExpressForm} expressForm={expressForm} refAddress={refAddress}></ExpressRecMan>
+          {/* 物品类型-备注-寄件方式 */}
+          <ExpressInfo expressForm={expressForm} setExpressForm={setExpressForm}></ExpressInfo>
+          {/* 提示信息 */}
+          <View className='pl10 pbt6 cccplh'>首重6元起，上门取件+2元</View>
+        </>
+        }
       </>
       {/* 底部tab栏 */}
 
@@ -771,16 +770,6 @@ const PaySuccessPopup: FC<{ showPopup: boolean, orderState: Product_Express | nu
       </VPopup>
     </RootPortal>;
   };
-//#endregion
-
-//#region 提示信息
-const PromptInformation = () => {
-  return (
-    <View className='pl10'>
-      <View className='pbt6 cccplh'>首重6元起，上门取件+2元</View>
-    </View>
-  );
-};
 //#endregion
 
 
