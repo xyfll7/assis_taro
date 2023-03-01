@@ -184,9 +184,8 @@ export async function cancelOrder_cloud(event: Events<Product_Express>): Promise
       deliveryId: data.deliveryId,
       waybillId: data.waybillId,
     });
-    console.log("取消运单：", res0);
     if (res0.errMsg == "openapi.logistics.cancelOrder:ok" && res0.errCode === 0) {
-      const { bizId, deliveryId, deliveryName, waybillData, waybillId, outTradeNo, ..._data } = data;
+      const { bizId, deliveryId, deliveryName, waybillData, waybillId, ..._data } = data;
       await ___cancelOrder(data);
       return {
         code: Code.SUCCESS,
