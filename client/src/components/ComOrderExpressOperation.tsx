@@ -24,18 +24,23 @@ const ComOrderExpressOperation: FC<{
   selfInfo_S: BaseUserInfo | null;
 
 }> = ({ time_limit, setQrCode, orderType, order, onClick_setOrders, selfInfo_S, setItem }) => {
-  function ___cancelOrder() {
-    Taro.showModal({
-      title: "您确定要回收该面单号吗？",
-      success: async (e) => {
-        if (e.confirm) {
-          Taro.showLoading({ title: "回收中...", mask: false });
-          const res = await Api_logistics_cancelOrder(order);
-          onClick_setOrders(res, "UPDATE");
-          Taro.hideLoading();
-        }
+
+  async function ___cancelOrder(title: string) {
+    try {
+      const res0 = await Taro.showModal({
+        title: title,
+      });
+      if (res0.confirm) {
+        Taro.showLoading({ title: "回收中...", mask: false });
+        const res1 = await Api_logistics_cancelOrder(order);
+        Taro.showToast({ title: "回收成功", icon: "none" });
+        return res1;
+      } else {
+        throw new Error("取消面单回收");
       }
-    });
+    } catch (err: any) {
+      throw err;
+    }
   }
   return (
     <>
@@ -43,7 +48,11 @@ const ComOrderExpressOperation: FC<{
         <View className='dbtc pbt4'>{
           order.waybillId ?
             <View className='pbt6 pr10 oo cccplh' hoverClass='bccbacktab'
-              onClick={() => ___cancelOrder()}>回收面单→删除</View> :
+              onClick={async () => {
+                const res = await ___cancelOrder("您确定要回收该面单号吗？");
+                onClick_setOrders(res, "UPDATE");
+                // 删除
+              }}>回收面单→删除</View> :
             <View className='pbt6 pr10 oo cccplh' hoverClass='bccbacktab'
               onClick={async () => {
                 Taro.showModal({
@@ -144,7 +153,19 @@ const ComOrderExpressOperation: FC<{
         <View className='ww dbtc pb4'>
           {order.waybillId ?
             <View className='cccplh pr10 pbt6 oo' hoverClass='bccbacktab'
-              onClick={() => ___cancelOrder()}>
+              onClick={async () => {
+                const res = await ___cancelOrder("您确定要回收该面单号并退款吗？");
+                onClick_setOrders(res, "UPDATE");
+                Taro.showLoading({ title: "退款中...", mask: true });
+                const [err0] = await to(Api_wxpay_wxPay_express_refund({ ...res, ...getEnvDevParam({ totalFee: 1 }) }));
+                if (err0) {
+                  Taro.showToast({ title: `${err0.message}`, icon: "none" });
+                  return;
+                }
+                onClick_setOrders(res, "DELETE");
+                Taro.hideLoading();
+                Taro.showModal({ title: "退款操作成功", content: `订单移入"已退款"`, showCancel: false, success: () => { } });
+              }}>
               回收面单→退款
             </View> :
             <View className='cccplh pr10 pbt6 oo' hoverClass='bccbacktab'
