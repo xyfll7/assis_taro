@@ -65,7 +65,31 @@ declare global {
     timestamp_print?: number;  // 打印时间
     printer?: Printer_Info;
     print_direct_user?: boolean;  // 是否自动打印
+    is_cancel_order?: boolean;
     // kuaidicom?: string // 快递公司
+  }
+  interface ProductBase {
+    _id?: cloud.DB.DocumentId;
+    outTradeNo?: string; // 订单id
+    self_OPENID?: string;
+    regiment_OPENID?: string;
+    regiment_sub_mchId?: string; // 子商户号?: string; // 商户号
+
+    regiment_replica_OPENID?: string; // 团长分身OPENID
+
+    regiment_name?: string;
+    regiment_avatar?: string;
+    product_type?: Product_type;
+    totalFee?: number;
+    describe?: string; // String(128)  腾讯充值中心 -QQ 会员充值
+    payStatus?: PayStatus; // 0 未支付 1 待付款 2 完成支付
+
+    timestamp_init?: number;
+    timestamp_update?: number;
+    timestamp_pay?: number;
+    timestamp_pay_callback?: number;
+    timestamp_pay_callback_refund?: _timestamp;
+    order_refund?: RefundEvent_sub;
   }
   interface Object {
     logr(string, number?): any;
@@ -109,29 +133,6 @@ declare global {
     data: T;
     params?: P;
     environment: Environment;
-  }
-  interface ProductBase {
-    _id?: cloud.DB.DocumentId;
-    outTradeNo?: string; // 订单id
-    self_OPENID?: string;
-    regiment_OPENID?: string;
-    regiment_sub_mchId?: string; // 子商户号?: string; // 商户号
-
-    regiment_replica_OPENID?: string; // 团长分身OPENID
-
-    regiment_name?: string;
-    regiment_avatar?: string;
-    product_type?: Product_type;
-    totalFee?: number;
-    describe?: string; // String(128)  腾讯充值中心 -QQ 会员充值
-    payStatus?: PayStatus; // 0 未支付 1 待付款 2 完成支付
-
-    timestamp_init?: number;
-    timestamp_update?: number;
-    timestamp_pay?: number;
-    timestamp_pay_callback?: number;
-    timestamp_pay_callback_refund?: _timestamp;
-    order_refund?: RefundEvent_sub;
   }
   interface Product_Publish extends ProductBase {
     publish_description: string;

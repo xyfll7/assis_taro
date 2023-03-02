@@ -12,12 +12,6 @@ import { Api_wxpay_wxPay_express_refund } from "../api/a__wxpay";
 import wexinpay from "../image/wexinpay.svg";
 import { Api_logistics_cancelOrder } from '../api/a__logistics';
 
-
-
-
-
-
-
 //订单操作
 const ComOrderExpressOperation: FC<{
   time_limit: string | null;
@@ -149,11 +143,11 @@ const ComOrderExpressOperation: FC<{
       {orderType == "已付款" && (
         <View className='ww dbtc pb4'>
           {order.waybillId ?
-            <View className='cccgreen pr10 pbt6 oo' hoverClass='bccbacktab'
+            <View className='cccplh pr10 pbt6 oo' hoverClass='bccbacktab'
               onClick={() => ___cancelOrder()}>
               回收面单→退款
             </View> :
-            <View className='cccgreen pr10 pbt6 oo' hoverClass='bccbacktab'
+            <View className='cccplh pr10 pbt6 oo' hoverClass='bccbacktab'
               onClick={() => {
                 Taro.showModal({
                   content: "您确定要退款?",
@@ -174,31 +168,31 @@ const ComOrderExpressOperation: FC<{
                 });
               }}>退款</View>
           }
-
-          {!time_limit ?
-            (order.waybillId ?
-              <View className='cccgreen pl10 pbt6 oo' hoverClass='bccbacktab'
-                onClick={async () => {
-                  const [err0, res0] = await to(utils_print_express(order, selfInfo_S!));
+          {order.is_cancel_order ? <View className='pbt6 cccprice'>已付款面单已经回收只能进行退款操作</View> : (
+            !time_limit ?
+              (order.waybillId ?
+                <View className='cccgreen pl10 pbt6 oo' hoverClass='bccbacktab'
+                  onClick={async () => {
+                    const [err0, res0] = await to(utils_print_express(order, selfInfo_S!));
+                    if (!err0) {
+                      onClick_setOrders(res0, "UPDATE");
+                    }
+                  }}>
+                  打印{order.print_times}次
+                </View> :
+                <View className='cccgreen pl10 pbt6 oo' hoverClass='bccbacktab' onClick={async () => {
+                  const [err0, res0] = await to(utils_get_electronic_face_sheet(selfInfo_S!, order));
                   if (!err0) {
                     onClick_setOrders(res0, "UPDATE");
                   }
                 }}>
-                打印{order.print_times}次
-              </View> :
-              <View className='cccgreen pl10 pbt6 oo' hoverClass='bccbacktab' onClick={async () => {
-                const [err0, res0] = await to(utils_get_electronic_face_sheet(selfInfo_S!, order));
-                if (!err0) {
-                  onClick_setOrders(res0, "UPDATE");
-                }
-              }}>
-                获取电子面单
+                  获取电子面单
+                </View>
+              ) : <View className='dy'>
+                <View className='mr4 cccplh'>已打印{order.print_times}次</View>
+                <View className='cccprice'>暂不可打印</View>
               </View>
-            ) : <View className='dy'>
-              <View className='mr4 cccplh'>已打印{order.print_times}次</View>
-              <View className='cccprice'>暂不可打印</View>
-            </View>
-          }
+          )}
         </View>
       )}
     </>

@@ -14,7 +14,12 @@ export async function addOrder_cloud(event: Events<Product_Express>): Promise<Re
       data.timestamp_init = _timestamp;
     }
     data.timestamp_update = _timestamp;
-    data.outTradeNo = data.outTradeNo ?? `${data.self_OPENID!.slice(6)}${Date.now().toString(32)}`;
+
+    if (data.is_cancel_order) {  // 如果是取消电子面单的订单重新获取订单号
+      data.outTradeNo = `${data.self_OPENID!.slice(6)}${Date.now().toString(32)}`;
+    } else {
+      data.outTradeNo = data.outTradeNo ?? `${data.self_OPENID!.slice(6)}${Date.now().toString(32)}`;
+    }
 
     const res0 = await cloud.openapi.logistics.addOrder(___makeParam(data));
     if (res0.errMsg == "openapi.logistics.addOrder:ok") {
@@ -164,10 +169,11 @@ async function ___cancelOrder(data: Product_Express): Promise<Product_Express> {
         deliveryName: _.remove(),
         waybillData: _.remove(),
         waybillId: _.remove(),
+        is_cancel_order: true
       }
     });
     if (res.errMsg === "document.update:ok" && res.stats.updated === 1) {
-      return data;
+      return { ...data, is_cancel_order: true };
     } else {
       throw new Error("更新订单失败");
     }
@@ -185,8 +191,7 @@ export async function cancelOrder_cloud(event: Events<Product_Express>): Promise
       waybillId: data.waybillId,
     });
     if (res0.errMsg == "openapi.logistics.cancelOrder:ok" && res0.errCode === 0) {
-      const { bizId, deliveryId, deliveryName, waybillData, waybillId, ..._data } = data;
-      await ___cancelOrder(data);
+      const { bizId, deliveryId, deliveryName, waybillData, waybillId, ..._data } = await ___cancelOrder(data);
       return {
         code: Code.SUCCESS,
         message: res0.errMsg,

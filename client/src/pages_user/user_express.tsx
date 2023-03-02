@@ -24,6 +24,7 @@ import ComAddress, { RefAddress } from "../components/ComAddress";
 import ComLoading from "../components/ComLoading";
 import ComWeightPrice from "../components/ComWeightPrice";
 import ComAAPage from "../components/ComAAPage";
+import ComFooter from '../components/ComFooter';
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true, disableScroll: true });
 const Index_user_express = () => {
@@ -132,6 +133,7 @@ const Index_user_express = () => {
           <ExpressInfo expressForm={expressForm} setExpressForm={setExpressForm}></ExpressInfo>
           {/* 提示信息 */}
           <View className='pl10 pbt6 cccplh'>首重6元起，上门取件+2元</View>
+          <ComFooter></ComFooter>
         </>
         }
       </>
