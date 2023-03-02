@@ -178,7 +178,7 @@ const ServiceRegiment: FC<{ selfInfo_S: BaseUserInfo | null; onRefresherRefresh_
             </View>
           </View>
         </View>
-        <View className='ds dwp pt10'>
+        <View className='dll pt10'>
           <View className='oo bccwhite  mr6  dy' >
             <Navigator className='dy pbt10 oo prl10' hoverClass='bccbacktab' url='/pages_user/user_express'>
               <View className='mrl6 lh100'>🛵</View>
@@ -194,15 +194,14 @@ const ServiceRegiment: FC<{ selfInfo_S: BaseUserInfo | null; onRefresherRefresh_
               二维码
             </ComRegimentQRCode>
           </View>
-          <View className='ww ds dwp'>
-            {!selfInfo_S?.regiment_replica_is &&
-              <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_setting'>
-                🌿 团长
-              </Navigator>}
-            <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_orders'>
-              🍒 团长订单
+          <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_orders'>
+            🍒 团长订单
+          </Navigator>
+          {!selfInfo_S?.regiment_replica_is &&
+            <Navigator className='prl10 pbt8 oo bccwhite  mr6 mt6' hoverClass='bccbacktab' url='/pages_regiment/regiment_setting'>
+              🌿 团长
             </Navigator>
-          </View>
+          }
         </View>
       </ComNav>
       <MoreService selfInfo_S={selfInfo_S}></MoreService>
