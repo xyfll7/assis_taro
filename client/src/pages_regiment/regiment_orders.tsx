@@ -219,7 +219,7 @@ const OrderInfoSetting: FC<{
             </View>
           </View>
 
-          <View className='fixed-bottom  safe-bottom dxy www100 '>
+          <View className='mt10 dxy www100 '>
             <View
               className='pbt6 prl20 bccyellow oo mbt10'
               hoverClass='bccyellowtab'
@@ -315,6 +315,7 @@ const OrderInfoSetting: FC<{
               确认
             </View>
           </View>
+          <ComFooter></ComFooter>
         </>
       }
     </View>
