@@ -31,8 +31,8 @@ export async function wx_cloud_callFunctions<OUT>(params: RQ<Taro.cloud.CallFunc
     if (err instanceof Error) {
       throw err;
     } else {
-      console.error("未知错误：", err);
-      throw new Error("未知错误");
+      console.error("云函数调用错误，未知错误", err);
+      throw new Error("云函数调用错误，未知错误");
     }
   }
 }
