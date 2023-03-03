@@ -21,6 +21,8 @@ import request from 'superagent';
 import { fileURLToPath } from 'url';
 import { readFile } from 'fs/promises';
 import concurrently from 'concurrently';
+import { format } from 'date-fns';
+
 
 const packageConfig = JSON.parse(
   await readFile(
@@ -29,6 +31,8 @@ const packageConfig = JSON.parse(
 );
 const filename = fileURLToPath(import.meta.url); // 这里不能声明__filename,因为已经有内部的__filename了，重复声明会报错
 const __dirname = path.dirname(filename);
+
+
 
 //#region 配置
 const github = "github";
@@ -45,7 +49,9 @@ const cfg = {
 };
 //#endregion
 
-const __UPV = "⇡⇡ 更新版本";
+const DATE_NOW = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+
+const __UPV = "⇡⇡ 更新版本_tag";
 const __PRE = "⦿  预览小程序";
 const __UPL = "⦿  构建-上传小程序体验版";
 const __DEV = "〄 云函数-开发环境 ";
@@ -109,7 +115,7 @@ async function runner_inquirer() {
     switch (answer.action) {
       case __UPV:
         console.log(chalk.green(`${__UPV}中...`));
-        shell.exec("npm version patch -m");
+        shell.exec(`npm run release`);
         break;
       case __PRE:
         console.log(chalk.green(`${__PRE}中...`));
