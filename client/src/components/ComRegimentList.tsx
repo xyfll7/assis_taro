@@ -4,11 +4,12 @@ import { FC } from 'react';
 import { Api_users_updateUserInfo } from '../api/user__users';
 import ComLoading from './ComLoading';
 import ComAvatar from './ComAvatar';
-import { useHook_getLocation, useHook_selfInfo_show, useHook_getRegimentListNearby } from '../utils/useHooks';
+import { useHook_getLocation, useHook_getRegimentListNearby } from '../utils/useHooks';
 import ComEmpty from './ComEmpty';
+import { useSelfInfo } from '../store/SelfInfoProvider';
 
 const ComRegimentList: FC<{ className?: string; }> = ({ className }) => {
-  const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
+  const [selfInfo_S, setSelfInfo_S] = useSelfInfo();
   const { locate } = useHook_getLocation();
   const { regiment_list } = useHook_getRegimentListNearby(locate);
 
