@@ -6,6 +6,7 @@ export enum Code {
   SERVER_ERROR = 500, // 服务器错误
   OTHER_ERROR = 501, // 其他错误
 }
+
 export enum PayStatus {
   /**
    * 待计重

@@ -3,6 +3,8 @@ import { Code } from "../../../client/src/a_config";
 import cloud from "wx-server-sdk";
 import Taro from "@tarojs/taro";
 
+import { version } from "../../../package.json";
+
 // @ts-ignore
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
@@ -26,13 +28,20 @@ export async function getSelfInfo_cloud(event: Events<string>): Promise<Result<B
       return {
         code: Code.SUCCESS,
         message: res.errMsg,
-        data: { ...userInfo, regiment_info: regiment_info ?? null },
+        data: {
+          ...userInfo,
+          regiment_info: regiment_info ?? null,
+          serveVersion: version
+        },
       };
     } else if (res.errMsg === "collection.aggregate:ok" && res.list.length === 0) {
       return {
         code: Code.SUCCESS,
         message: res.errMsg,
-        data: { OPENID },
+        data: {
+          OPENID,
+          serveVersion: version
+        },
       };
     } else {
       console.log(res);

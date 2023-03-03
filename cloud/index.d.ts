@@ -3,7 +3,7 @@ import cloud from "wx-server-sdk";
 declare global {
   interface BaseUserInfo {
     _id?: string;
-
+    serveVersion?: string; // 服务版本
     timestamp_update?: number; // 更新时间
 
     OPENID?: string;
