@@ -27,12 +27,15 @@ const ComAAPage: FC<{
       }}>
         {(children instanceof Array) ? children[0] : children}
         <ScrollView style={{ flex: 1, overflow: "hidden" }}
+          refresherThreshold={0}
+          enhanced
+          showScrollbar={false}
           refresherBackground={refresherBackground}
           refresherDefaultStyle={refresherDefaultStyle}
           refresherTriggered={refresherTriggered}
           refresherEnabled={refresherEnabled}
-          onRefresherRefresh={onRefresherRefresh}
-          onScrollToLower={onScrollToLower}
+          onRefresherRefresh={onRefresherRefresh} // 下拉刷新被触发
+          onScrollToLower={onScrollToLower} // 上拉加载
           scrollY>
           <View className='p10'>
             {(children instanceof Array) ? children[1] : null}
