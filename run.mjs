@@ -51,18 +51,17 @@ const cfg = {
 
 const DATE_NOW = format(new Date(), "yyyy-MM-dd HH:mm:ss");
 
-const __UPV = "⇡⇡ 更新版本_tag";
-const __PRE = "⦿  预览小程序";
-const __UPL = "⦿  构建-上传小程序体验版";
+const __PRE = "🫧  预览小程序";
+const __UPL = "🚀 构建-上传小程序体验版";
 const __DEV = "〄 云函数-开发环境 ";
 const __PRO = "〄 云函数-生产环境 ";
 const __PRO_DEV = "〄 云函数-开发环境/生产环境 ";
 const __STATIC_DEV = "☡  静态资源-开发环境 ";
 const __STATIC_PRO = "☡  静态资源-生产环境 ";
-const __GIT_ACTIONS_DOCS_DEV = "§  GIT_ACTIONS_DOCS_DEV ";
-const __GIT_ACTIONS_DOCS_PRO = "§  GIT_ACTIONS_DOCS_PRO ";
-const __GIT_ACTIONS_CLOUD = "§  GIT_ACTIONS_CLOUD ";
-const __GIT_ACTIONS_CLIENT = "§  GIT_ACTIONS_CLIENT ";
+const __GIT_ACTIONS_DOCS_DEV = "GIT_ACTIONS_DOCS_DEV ";
+const __GIT_ACTIONS_DOCS_PRO = "GIT_ACTIONS_DOCS_PRO ";
+const __GIT_ACTIONS_CLOUD = "GIT_ACTIONS_CLOUD ";
+const __GIT_ACTIONS_CLIENT = "GIT_ACTIONS_CLIENT ";
 
 const { _: [arg0] } = yargs(hideBin(process.argv)).argv;
 if (!arg0) {
@@ -77,7 +76,6 @@ async function runner_inquirer() {
   ui.log.write('⚒ 欢迎来到小象团长助手👏👏👏');
   ui.log.write('⚒ 请用上下箭头↑↓选择要执行的任务 🎉🎉🎉');
   const ACTION_LIST = [
-    __UPV,
     __PRE,
     __UPL,
     __DEV,
@@ -95,9 +93,9 @@ async function runner_inquirer() {
   inquirer.prompt([
     {
       type: "list",
-      message: "想干撒？",
+      message: "你想干撒？请选择：",
       name: "action",
-      default: __UPV,
+      default: __PRE,
       prefix: "⚒",
       choices: ACTION_LIST,
       pageSize: ACTION_LIST.length,
@@ -113,10 +111,6 @@ async function runner_inquirer() {
     },
   ]).then(async answer => {
     switch (answer.action) {
-      case __UPV:
-        console.log(chalk.green(`${__UPV}中...`));
-        shell.exec(`npm run release`);
-        break;
       case __PRE:
         console.log(chalk.green(`${__PRE}中...`));
         ___build_miniprogram();
