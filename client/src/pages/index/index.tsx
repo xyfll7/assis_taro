@@ -1,13 +1,14 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import Taro, { useShareAppMessage } from "@tarojs/taro";
 import { minutesToMilliseconds } from "date-fns";
-import { View, Navigator, Button, Label, Map } from "@tarojs/components";
+import { View, Navigator, Button, Label, Map, Image } from "@tarojs/components";
 //
 import { useHook_getQuota_number, useHook_get_orderList, useHook_selfInfo_show } from "../../utils/useHooks";
 import { useOrdersNotice } from "../../store/OrdersNoticeProvider";
 import { Api_users_getSelfInfo } from "../../api/user__users";
 import getEnv from "../../utils/env";
 import share_logo from "../../image/share_logo.jpeg";
+import logo from "../../image/logo.svg";
 // 组件
 import ComRegimentQRCode from '../../components/ComRegimentQRCode';
 import ComAAPage from '../../components/ComAAPage';
@@ -19,6 +20,7 @@ import ComRegimentList from '../../components/ComRegimentList';
 
 definePageConfig({ enableShareAppMessage: true, backgroundColor: "#ffffff", navigationStyle: "custom", disableScroll: true });
 const Index = () => {
+  const env = getEnv();
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
   useHook_get_orderList();
   useHook_getQuota_number(minutesToMilliseconds(60));
@@ -46,15 +48,24 @@ const Index = () => {
       setSelfInfo_S(res1);
     }
   }
+
   return (
     <View>
       {selfInfo_S == null && <ComLoading isIndex></ComLoading>}
-      {
-        selfInfo_S && selfInfo_S.regiment_info ? (
-          selfInfo_S.regiment_is === 1 ?
-            <ServiceRegiment selfInfo_S={selfInfo_S} onRefresherRefresh_selfInfo_S={___get_selfInfo_S}></ServiceRegiment> :
-            <ServiceUser selfInfo_S={selfInfo_S} onRefresherRefresh_selfInfo_S={___get_selfInfo_S}></ServiceUser>
-        ) : <ComRegimentList></ComRegimentList>
+      {selfInfo_S && (env.version === selfInfo_S.serveVersion || env.version === "") ?
+        <>
+          {selfInfo_S && selfInfo_S.regiment_info && (
+            selfInfo_S.regiment_is === 1 ?
+              <ServiceRegiment selfInfo_S={selfInfo_S} onRefresherRefresh_selfInfo_S={___get_selfInfo_S}></ServiceRegiment> :
+              <ServiceUser selfInfo_S={selfInfo_S} onRefresherRefresh_selfInfo_S={___get_selfInfo_S}></ServiceUser>
+          )}
+          {selfInfo_S && !selfInfo_S.regiment_info &&
+            <ComRegimentList></ComRegimentList>
+          }
+        </> : <View className='dcl pt20vh cccplh'>
+          <Image className='cccplh wwhh10 mb10' src={logo} ></Image>
+          <View>系统升级中</View>
+        </View>
       }
     </View>
   );
@@ -212,8 +223,7 @@ const ServiceRegiment: FC<{ selfInfo_S: BaseUserInfo | null; onRefresherRefresh_
 
 
 const MoreService: FC<{ selfInfo_S: BaseUserInfo | null; }> = ({ }) => {
-  const [env, setEnv] = useState<Environment>();
-  useEffect(() => setEnv(getEnv()), []);
+  const env = getEnv();
   return (
     <View className='dll'>
       <View className='pbt6 pr10 oo cccplh ml6'>更多服务敬请期待...</View>
