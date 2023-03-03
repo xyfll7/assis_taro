@@ -17,6 +17,7 @@ export async function addOrder_cloud(event: Events<Product_Express>): Promise<Re
 
     if (data.is_cancel_order) {  // 如果是取消电子面单的订单重新获取订单号
       data.outTradeNo = `${data.self_OPENID!.slice(6)}${Date.now().toString(32)}`;
+      data.is_cancel_order = false;
     } else {
       data.outTradeNo = data.outTradeNo ?? `${data.self_OPENID!.slice(6)}${Date.now().toString(32)}`;
     }
