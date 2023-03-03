@@ -30,27 +30,6 @@ export async function addOrder_cloud(event: Events<Product_Express>): Promise<Re
     throw err;
   }
 }
-export async function updateOrder_express_cloud(event: Events<Product_Express>): Promise<Result<Product_Express>> {
-  try {
-    const { _id, ...data } = event.data;
-    data.timestamp_update = Date.now();
-    let res = <cloud.DB.IUpdateResult>await db.collection("orders")
-      .doc(_id!).update({ data: data });
-    if (res.errMsg === "document.update:ok") {
-      return {
-        code: Code.SUCCESS,
-        message: res.errMsg,
-        data: { _id, ...data },
-        res
-      };
-    } else {
-      throw new Error(`数据库执行错误，${res.errMsg}`,);
-    }
-
-  } catch (err: any) {
-    throw err;
-  }
-}
 export async function removeOrder_cloud(event: Events<Product_Express>): Promise<Result<Product_Express>> {
   try {
     const { data } = event;

@@ -45,37 +45,42 @@ const ComOrderExpressOperation: FC<{
   return (
     <>
       {(orderType == "待计重" || orderType == "待付款") && (
-        <View className='dbtc pbt4'>{
-          order.waybillId ?
-            <View className='pbt6 pr10 oo cccplh' hoverClass='bccbacktab'
-              onClick={async () => {
-                const res = await ___cancelOrder("您确定要回收该面单号吗？");
-                onClick_setOrders(res, "UPDATE");
-                // 删除
-              }}>回收面单→删除</View> :
-            <View className='pbt6 pr10 oo cccplh' hoverClass='bccbacktab'
-              onClick={async () => {
-                Taro.showModal({
-                  content: "您确定要删除该订单吗？",
-                  success: async (e) => {
-                    if (e.confirm) {
-                      Taro.showLoading({ title: "删除中...", mask: false });
-                      const res = await Api_orders_removeOrder(order);
-                      onClick_setOrders(res, "DELETE");
-                      Taro.showToast({ title: "删除成功", icon: "success" });
-                    }
-                  },
-                });
-              }}>
-              删除
-            </View>
-        }
-          <View
-            className='cccgreen pbt6 pl10 oo'
-            hoverClass='bccbacktab'
-            onClick={() => { setItem(order); }}>
-            修改信息
-          </View>
+        <View className='pbt4'>
+          {
+            order.waybillId ?
+              <View className='pbt6 pr10 oo cccplh' hoverClass='bccbacktab'
+                onClick={async () => {
+                  const res = await ___cancelOrder("您确定要回收该面单号吗？");
+                  onClick_setOrders(res, "UPDATE");
+                  // 删除
+                }}>回收面单→删除/修改信息</View> :
+              <View className='dbtc'>
+                <View className='pbt6 pr10 oo cccplh' hoverClass='bccbacktab'
+                  onClick={async () => {
+                    Taro.showModal({
+                      content: "您确定要删除该订单吗？",
+                      success: async (e) => {
+                        if (e.confirm) {
+                          Taro.showLoading({ title: "删除中...", mask: false });
+                          const res = await Api_orders_removeOrder(order);
+                          onClick_setOrders(res, "DELETE");
+                          Taro.showToast({ title: "删除成功", icon: "success" });
+                        }
+                      },
+                    });
+                  }}>
+                  删除
+                </View>
+                <View
+                  className='cccgreen pbt6 pl10 oo'
+                  hoverClass='bccbacktab'
+                  onClick={() => { setItem(order); }}>
+                  修改信息
+                </View>
+              </View>
+          }
+
+
         </View>
       )}
       {order.self_OPENID === order?.regiment_OPENID && orderType === "待付款" && (

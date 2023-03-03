@@ -66,18 +66,4 @@ export async function Api_orders_getOrderExpress(data: string): Promise<Product_
 }
 
 
-export async function Api_orders_updateOrder_express(params: Product_Express): Promise<Product_Express> {
-  try {
-    const res = await wx_cloud_callFunctions<Product_Express>({
-      name: "user__orders_cloud",
-      data: {
-        func: "updateOrder_express_cloud",
-        data: { ...params }
-      }
-    });
-    return res;
-  } catch (err) {
-    throw err;
-  }
-}
-// updateOrder_cloud
+

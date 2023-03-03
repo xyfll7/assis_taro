@@ -10,7 +10,7 @@ import { PayStatus } from "../a_config";
 import { utils_generate_order, utils_get_logistics, utils_get_printer } from "../utils/utils";
 import { useHook_effect_update, useHook_getTimeLimit, useHook_selfInfo_show } from "../utils/useHooks";
 
-import { Api_orders_getOrderList, Api_orders_updateOrder_express } from "../api/user__orders";
+import { Api_orders_getOrderList } from "../api/user__orders";
 import { Api_local_reachable } from "../api/aa__local";
 // 组件
 import ComNav from "../components/ComNav";
@@ -271,22 +271,6 @@ const OrderInfoSetting: FC<{
                     return;
                   }
                   ___order_update_success(res3);
-                } else {
-                  // 有电子面单号
-                  Taro.showLoading({ title: "更新中...", mask: true });
-                  const [err4, res4] = await to(Api_orders_updateOrder_express({
-                    ...order,
-                    printer: res0,
-
-                    payStatus: PayStatus.PAY1,
-                    weight: Number(weight),
-                    totalFee: Number(price),
-                  }));
-                  if (err4) {
-                    Taro.showToast({ title: "订单更新失败", icon: "none" });
-                    return;
-                  }
-                  ___order_update_success(res4);
                 }
                 function ___order_update_success(_order: Product_Express) {
                   Taro.hideLoading();
