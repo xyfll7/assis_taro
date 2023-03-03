@@ -15,6 +15,7 @@ import ComAvatar from "../../components/ComAvatar";
 import ComNav from "../../components/ComNav";
 import ComLoading from "../../components/ComLoading";
 import ComOrderNotice from "../../components/ComOrderNotice";
+import ComRegimentList from '../../components/ComRegimentList';
 
 definePageConfig({ enableShareAppMessage: true, backgroundColor: "#ffffff", navigationStyle: "custom", disableScroll: true });
 const Index = () => {
@@ -49,11 +50,11 @@ const Index = () => {
     <View>
       {selfInfo_S == null && <ComLoading isIndex></ComLoading>}
       {
-        selfInfo_S && selfInfo_S.regiment_info && (
+        selfInfo_S && selfInfo_S.regiment_info ? (
           selfInfo_S.regiment_is === 1 ?
             <ServiceRegiment selfInfo_S={selfInfo_S} onRefresherRefresh_selfInfo_S={___get_selfInfo_S}></ServiceRegiment> :
             <ServiceUser selfInfo_S={selfInfo_S} onRefresherRefresh_selfInfo_S={___get_selfInfo_S}></ServiceUser>
-        )
+        ) : <ComRegimentList></ComRegimentList>
       }
     </View>
   );
