@@ -1,5 +1,5 @@
 import { CommonEventFunction, ScrollView, View } from '@tarojs/components';
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 
 const ComAAPage: FC<{
   children?: JSX.Element | JSX.Element[];
@@ -8,7 +8,7 @@ const ComAAPage: FC<{
   refresherTriggered?: boolean;
   refresherEnabled?: boolean;
   onRefresherRefresh?: CommonEventFunction;
-  onScrollToLower?: CommonEventFunction;
+  onScrollToLower?: () => Promise<void>;
   className?: string;
 }> = ({
   children,
@@ -21,12 +21,13 @@ const ComAAPage: FC<{
   onRefresherRefresh
 }) => {
     const height = "100vh";
+    const isScrolling = useRef(false);
     return (
       <View className={className} style={{
         display: "flex", flexDirection: "column", height: height, minHeight: height, maxHeight: height, overflow: 'hidden'
       }}>
         {(children instanceof Array) ? children[0] : children}
-        <ScrollView style={{ flex: 1, overflow: "hidden" }}
+        <ScrollView style={{ flex: 1, overflow: "hidden", height: "100%" }}
           refresherThreshold={0}
           enhanced
           showScrollbar={false}
@@ -35,7 +36,14 @@ const ComAAPage: FC<{
           refresherTriggered={refresherTriggered}
           refresherEnabled={refresherEnabled}
           onRefresherRefresh={onRefresherRefresh} // 下拉刷新被触发
-          onScrollToLower={onScrollToLower} // 上拉加载
+          onScrollToLower={async () => {
+            if (isScrolling.current === true) {
+              return;
+            }
+            isScrolling.current = true;
+            onScrollToLower && await onScrollToLower();
+            isScrolling.current = false;
+          }} // 上拉加载
           scrollY>
           <View className='p10'>
             {(children instanceof Array) ? children[1] : null}
