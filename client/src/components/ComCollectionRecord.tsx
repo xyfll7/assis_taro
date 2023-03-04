@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { PageContainer, ScrollView, View } from "@tarojs/components";
-import { useReachBottom } from "@tarojs/taro";
+import Taro, { useReachBottom } from "@tarojs/taro";
 import { FC, useEffect, useState } from "react";
 import { Api_regiment_collections_getCollectionHistoryList, Api_regiment_collections_getCollectionList } from "../api/regiment__collections";
 import { utils_get_timestamp } from "../utils/utils";
@@ -48,19 +48,22 @@ const ComCollectionRecord: FC<{ OPENID: string; }> = ({ OPENID }) => {
   return (
     <>
       {(collectionHistory === null || collectionRecord === null) && <ComLoading></ComLoading>}
-      {
-        (collectionHistory !== null && collectionRecord !== null) && <>
-          <TodayCollectionRecord collectionRecord={collectionRecord} collectionHistory={collectionHistory}></TodayCollectionRecord>
-          <HistoryCollectionRecord OPENID={OPENID} setCollectionRecordOneDay={setCollectionRecordOneDay} setShow={setShow} collectionHistory={collectionHistory}></HistoryCollectionRecord>
-          {collectionHistory?.length !== 0 && <ComNoMore isLoadMore={isLoadMore}></ComNoMore>}
-          <ComFooter></ComFooter>
-        </>
+      {(collectionHistory !== null && collectionRecord !== null) && <>
+        <TodayCollectionRecord collectionRecord={collectionRecord} collectionHistory={collectionHistory}></TodayCollectionRecord>
+        <HistoryCollectionRecord OPENID={OPENID} setCollectionRecordOneDay={setCollectionRecordOneDay} setShow={setShow} collectionHistory={collectionHistory}></HistoryCollectionRecord>
+        {collectionHistory?.length !== 0 && <ComNoMore isLoadMore={isLoadMore}></ComNoMore>}
+        <ComFooter></ComFooter>
+      </>
       }
       <PageContainer show={show} onLeave={() => { setShow(false); }} round>
         <ScrollView className=' hhh70 ' scrollY>
           <View className='mrl10 prl10'>
-            {collectionHistory === null && <ComLoading></ComLoading>}
-            {collectionRecordOneDay && <View className='dxy pbt10 sticky-top bccwhite'>{format(new Date(collectionRecordOneDay[0].timestamp_pay_callback!), "MM月dd日")}明细</View>}
+            {collectionRecordOneDay === null && <ComLoading></ComLoading>}
+            {collectionRecordOneDay &&
+              <View className='dxy pbt10 sticky-top bccwhite'>
+                {format(new Date(collectionRecordOneDay[0]?.timestamp_pay_callback ?? ""), "MM月dd日")}明细
+              </View>
+            }
             {collectionRecordOneDay?.map(e => {
               return <View className='o10 lit' key={e._id}>
                 <View className='dbtc pbt10'>
@@ -138,12 +141,18 @@ const HistoryCollectionRecord: FC<{
                 <View className='cccplh'>收款{e.count}笔</View>
               </View>
               <View className='cccgreen' onClick={async () => {
-                setShow(true);
-                const res = await Api_regiment_collections_getCollectionList({
-                  OPENID: OPENID,
-                  timestamp: e._id
-                });
-                setCollectionRecordOneDay(res);
+                setCollectionRecordOneDay(null);
+                if (e.count) {
+                  setShow(true);
+                  const res = await Api_regiment_collections_getCollectionList({
+                    OPENID: OPENID,
+                    timestamp: e._id
+                  });
+                  setCollectionRecordOneDay(res);
+                } else {
+                  Taro.showToast({ title: "没有明细记录", icon: "none" });
+                }
+
               }}>查看明细</View>
             </View>
           </View>

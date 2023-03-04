@@ -10,7 +10,6 @@ import ComLoading from "../components/ComLoading";
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import ComLogisticsBindAccount from "../components/ComLogisticsBindAccount";
-import ComEmpty from "../components/ComEmpty";
 import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true, disableScroll: true });
@@ -38,17 +37,18 @@ const Index_regiment_bind_account = () => {
 
 
   const [show, setShow] = useState(false);
-  return <ComAAPage>
-    <ComNav className='bccback dy' isHeight isSticky>
-      <ComNavBar className='prl10' title='电子面单账号管理'></ComNavBar>
-    </ComNav>
-    <BindAccountList></BindAccountList>
-    <View className='ww dxy safe-bottom'>
-      <View className='prl10 pbt6 oo bccyellow' hoverClass='bccyellowtab'
-        onClick={() => setShow(!show)}>添加电子面单账号1</View>
-    </View>
-    <ComLogisticsBindAccount show={show} onAfterLeave={() => { setShow(!show); }}></ComLogisticsBindAccount>
-  </ComAAPage>;
+  return (
+    <ComAAPage selfInfo_S={selfInfo_S}>
+      <ComNav className='bccback dy' isHeight isSticky>
+        <ComNavBar className='prl10' title='电子面单账号管理'></ComNavBar>
+      </ComNav>
+      <BindAccountList></BindAccountList>
+      <View className='ww dxy safe-bottom'>
+        <View className='prl10 pbt6 oo bccyellow' hoverClass='bccyellowtab'
+          onClick={() => setShow(!show)}>添加电子面单账号1</View>
+      </View>
+      <ComLogisticsBindAccount show={show} onAfterLeave={() => { setShow(!show); }}></ComLogisticsBindAccount>
+    </ComAAPage>);
 
 };
 export default Index_regiment_bind_account;
@@ -57,7 +57,7 @@ const BindAccountList = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
   return <>
     {!selfInfo_S && <ComLoading></ComLoading>}
-    {!selfInfo_S?.logistics || selfInfo_S?.logistics?.length == 0 && <ComEmpty msg='您没还有绑定电子面单账号'></ComEmpty>}
+    {!selfInfo_S?.logistics || selfInfo_S?.logistics?.length == 0 && <ComLoading isEmpty msg='您没还有绑定电子面单账号'></ComLoading>}
     {selfInfo_S && selfInfo_S?.logistics?.sort(e => e.selected ? -1 : 0).map(logistic =>
       <View className=' prl10 o10 bccwhite' key={logistic.bizId}>
         <View className='dbtc pbt4'>

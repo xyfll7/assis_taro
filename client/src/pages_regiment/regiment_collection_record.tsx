@@ -20,7 +20,7 @@ const Index_regiment_collection_record = () => {
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
   if (!selfInfo_S?.OPENID) { return null; }
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='收款记录(团长)'></ComNavBar>
         <View className='mrl10 prl10 pbt4 dbtc'>

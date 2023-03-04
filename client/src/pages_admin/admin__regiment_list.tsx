@@ -7,16 +7,17 @@ import { Api_logistics_getQuota } from "../api/a__logistics";
 import { Api_users_updateUserInfo } from "../api/user__users";
 import { Api_admin_price_getPriceSchemeList, Api_admin_users_getRegimentList, } from "../api/admin__db";
 // 组件
-import ComEmpty from "../components/ComEmpty";
 import ComNavBar from "../components/ComNavBar";
 import ComNav from "../components/ComNav";
 import ComHeaderBar from "../components/ComHeaderBar";
 import ComLoading from "../components/ComLoading";
 import ComAAPage from "../components/ComAAPage";
 import ComFooter from '../components/ComFooter';
+import { useHook_selfInfo_show } from '../utils/useHooks';
 
 definePageConfig({ navigationStyle: "custom", disableScroll: true, });
 const Index_admin__regiment_list = () => {
+  const [selfInfo_S] = useHook_selfInfo_show({});
   const [regimentList, setRegimentList] = useState<BaseUserInfo[] | null>(null);
   useLoad(async () => {
     const res0 = await Api_admin_users_getRegimentList();
@@ -24,7 +25,7 @@ const Index_admin__regiment_list = () => {
   });
 
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='团长管理(超管)'></ComNavBar>
       </ComNav>
@@ -52,7 +53,7 @@ const RegimentListINCOM: FC<{
     </PageContainer>
     <View >
       {regimentList === null && <ComLoading></ComLoading>}
-      {regimentList?.length === 0 && <ComEmpty msg='团长列表为空'></ComEmpty>}
+      {regimentList?.length === 0 && <ComLoading isEmpty msg='团长列表为空'></ComLoading>}
       {regimentList?.map((e) => {
         return (
           <View key={e._id} className='mb10  prl10 pt10 o10 bccwhite'>
@@ -251,7 +252,7 @@ const PriceSchemeListINCOM: FC<{
     <View className='bccback prl10'>
       <ComHeaderBar className='sticky-top bccback' title={`${regiment?.name}`} desc='价格方案' onClick={() => onClick_close()}></ComHeaderBar>
       {priceSchemeList === null && <ComLoading></ComLoading>}
-      {priceSchemeList?.length === 0 && <ComEmpty msg='团长列表为空'></ComEmpty>}
+      {priceSchemeList?.length === 0 && <ComLoading isEmpty msg='团长列表为空'></ComLoading>}
       {priceSchemeList?.map(e =>
         <View key={e._id} className='o10 prl10 bccwhite mt10'>
           <View className='pbt6 dbtc'>

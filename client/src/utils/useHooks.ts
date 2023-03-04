@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { Api_users_getRegimentListNearby, Api_users_getSelfInfo, Api_users_updateUserInfo } from "../api/user__users";
 import { useSelfInfo } from "../store/SelfInfoProvider";
 import { utils_urlToObj, utils_get_time_limit } from "./utils";
-import { Api_logistics_getQuota } from "../api/a__logistics";
 import { useOrdersNotice } from '../store/OrdersNoticeProvider';
 import { Api_orders_getOrderList } from '../api/user__orders';
 
@@ -91,7 +90,6 @@ export function useHook_getTimeLimit(timeStr: string) {
   }, [timeStr]);
   return time;
 }
-
 
 export function useHook_getLocation() {
   const [locate, setLocate] = useState<Taro.getLocation.SuccessCallbackResult | null>(null);

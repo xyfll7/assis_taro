@@ -8,7 +8,6 @@ import { utils_get_scan_code_team_member_OPENID } from "../utils/utils";
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import ComLoading from "../components/ComLoading";
-import ComEmpty from "../components/ComEmpty";
 import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({
@@ -27,7 +26,7 @@ const Index_regiment_my_team = () => {
     }
   }, [selfInfo_S]);
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='我的团队(团长)'></ComNavBar>
       </ComNav>
@@ -58,7 +57,7 @@ const Index_regiment_my_team = () => {
             </View>
           );
         })}
-        {teamList?.length === 0 && <ComEmpty msg='您还没有团队成员'></ComEmpty>}
+        {teamList?.length === 0 && <ComLoading isEmpty msg='您还没有团队成员'></ComLoading>}
       </>
       {/* 添加团队成员 */}
       <View className='safe-bottom ww dxy'>

@@ -8,14 +8,13 @@ import { Api_users_updateUserInfo } from "../api/user__users";
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import ComLoading from "../components/ComLoading";
-import ComEmpty from "../components/ComEmpty";
 import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({ navigationStyle: "custom", disableScroll: true });
 const Index_regiment_bind_printer_cloud = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback dy' isHeight isSticky>
         <ComNavBar className='prl10' title='云打印机管理'></ComNavBar>
       </ComNav>
@@ -56,7 +55,7 @@ const BindAccountList: FC<{
 }> = ({ selfInfo_S, setSelfInfo_S }) => {
   return <>
     {!selfInfo_S && <ComLoading></ComLoading>}
-    {!selfInfo_S?.printers || (selfInfo_S?.printers?.length == 0 && <ComEmpty msg='您没还有添加打印机'></ComEmpty>)}
+    {!selfInfo_S?.printers || (selfInfo_S?.printers?.length == 0 && <ComLoading isEmpty msg='您没还有添加打印机'></ComLoading>)}
     {selfInfo_S?.printers?.map((printer) => (
       <View className='prl10  o10 bccwhite' key={printer.siid}>
         <View className='pbt10'>打印机ID {printer.siid}</View>

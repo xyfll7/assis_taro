@@ -19,7 +19,7 @@ const Index_user_my = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
   const [qrCode, setQrCode] = useState<string>("");
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback'>
         <ComNavBar className='prl10' title='我的'></ComNavBar>
       </ComNav>

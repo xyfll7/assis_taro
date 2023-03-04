@@ -18,7 +18,6 @@ import ComListTypeSelector from "../components/ComListTypeSelector";
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import ComLoading from "../components/ComLoading";
-import ComEmpty from "../components/ComEmpty";
 import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({
@@ -74,14 +73,14 @@ const Index_user_orders = () => {
     setOrders(res);
   };
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback'>
         <ComNavBar className='prl10' title='我的订单'></ComNavBar>
         <ComListTypeSelector typeList={["待付款", "已付款"]} orderType={orderType} setOrderType={(e) => setOrderType(e)}></ComListTypeSelector>
       </ComNav>
       <View >
         {orders == null ? <ComLoading></ComLoading> : null}
-        {orders?.length == 0 ? <ComEmpty msg='没有数据'></ComEmpty> : null}
+        {orders?.length == 0 ? <ComLoading isEmpty msg='没有数据'></ComLoading> : null}
         {orders?.map((e) => {
           switch (e.product_type) {
             case "express":

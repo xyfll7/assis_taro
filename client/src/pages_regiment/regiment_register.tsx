@@ -16,7 +16,7 @@ const Index_regiment_register = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
 
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav>
         <ComNavBar className='prl10' title='注册团长'></ComNavBar>
       </ComNav>

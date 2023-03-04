@@ -11,7 +11,6 @@ import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import ComAddress, { RefAddress } from "../components/ComAddress";
 import ComLoading from "../components/ComLoading";
-import ComEmpty from "../components/ComEmpty";
 import ComNoMore from "../components/ComNoMore";
 import ComSearcher from "../components/ComSearcher";
 import ComListTypeSelector from "../components/ComListTypeSelector";
@@ -57,8 +56,8 @@ const Index_user_address_list = () => {
     getOrderList_Callback(searchValue);
   }, [searchValue]);
   return (
-    <ComAAPage onScrollToLower={onScrollToLower}>
-
+    <ComAAPage selfInfo_S={selfInfo_S}
+      onScrollToLower={async () => onScrollToLower()}>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar key={0} className='prl10' title='地址薄'></ComNavBar>
         <ComListTypeSelector typeList={["收件地址", "寄件地址", "全部"]} orderType={addressType} setOrderType={(e) => setAddressType(e)}></ComListTypeSelector>
@@ -136,7 +135,7 @@ const AddressList = forwardRef(
     return (
       <>
         {addressList === null && <ComLoading></ComLoading>}
-        {addressList?.length === 0 && <ComEmpty></ComEmpty>}
+        {addressList?.length === 0 && <ComLoading isEmpty></ComLoading>}
         {addressList && (
           <View>
             {addressList.map((e) => {

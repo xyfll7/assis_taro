@@ -11,13 +11,13 @@ import ComLoading from "../components/ComLoading";
 import ComOrderExpress from "../components/ComOrderExpress";
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
-import ComEmpty from "../components/ComEmpty";
 import ComAAPage from "../components/ComAAPage";
+import { useHook_selfInfo_show } from '../utils/useHooks';
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true, disableScroll: true });
 
 const Index_user_express_path = () => {
-
+  const [selfInfo_S] = useHook_selfInfo_show({});
   useShareAppMessage(res => {
     if (res.from === 'button') {
       return {
@@ -50,18 +50,18 @@ const Index_user_express_path = () => {
     }
   });
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='运单详情'></ComNavBar>
       </ComNav>
       <>
         {express && <ComOrderExpress className=' ' item={express!} isHidePath></ComOrderExpress>}
-        {path === null && <ComLoading className=''></ComLoading>}
+        {path === null && <ComLoading className='pbt10 mt10'></ComLoading>}
         {path !== null && (
           <>
-            <View className='bccwhite pt10 prl10 o10'>
+            <View className='bccwhite prl10 o10'>
               {path.pathItemList?.length === 0 &&
-                <ComEmpty className='pbt10' msg='待揽件'></ComEmpty>
+                <ComLoading className='pbt10' isEmpty msg='待揽件'></ComLoading>
               }
               {path.pathItemList.map((e, i) => {
                 return (

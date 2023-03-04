@@ -31,7 +31,7 @@ const Index_regiment_setting = () => {
     };
   });
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='设置(团长)'></ComNavBar>
       </ComNav>

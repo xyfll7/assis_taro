@@ -24,7 +24,7 @@ export async function getCollectionList_cloud(
       .orderBy("timestamp_pay_callback", "desc")
       .where({
         regiment_OPENID: data.OPENID,
-        timestamp_pay_callback: _.gt(data.timestamp),
+        timestamp_pay_callback: _.and(_.gt(data.timestamp), _.lt(data.timestamp + 86400000)),
         payStatus: 2,
       })
       .get();

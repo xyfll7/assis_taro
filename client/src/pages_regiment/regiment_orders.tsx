@@ -20,7 +20,6 @@ import ComFooter from "../components/ComFooter";
 import ComListTypeSelector from "../components/ComListTypeSelector";
 import ComPrintNotice from '../components/ComPrintNotice';
 import ComLoading from "../components/ComLoading";
-import ComEmpty from "../components/ComEmpty";
 import ComOrderExpress from "../components/ComOrderExpress";
 import ComHeaderBar from '../components/ComHeaderBar';
 import ComWeightPrice from "../components/ComWeightPrice";
@@ -101,14 +100,17 @@ const Index_regiment_orders = () => {
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getOrderList_Callback = useCallback(
-    debounce((str: string) => getOrderList___(str), 1000),
+
+    debounce((str: string) => {
+      return getOrderList___(str);
+    }, 1000),
     [orderType]);
   useHook_effect_update(() => {
     getOrderList_Callback(searchValue);
   }, [searchValue]);
   //#endregion
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='订单管理(团长)'></ComNavBar>
         <ComListTypeSelector typeList={["待计重", "待付款", "已付款", "已退款"]} orderType={orderType} setOrderType={(e) => setOrderType(e)}>
@@ -119,7 +121,7 @@ const Index_regiment_orders = () => {
       </ComNav>
       <View>
         {orders == null ? <ComLoading></ComLoading> : null}
-        {orders?.length == 0 ? <ComEmpty msg='没有数据'></ComEmpty> : null}
+        {orders?.length == 0 ? <ComLoading isEmpty msg='没有数据'></ComLoading> : null}
         {orders?.map((e) => {
           switch (e.product_type) {
             case "express":

@@ -32,128 +32,9 @@
           "scene": null
         },
         {
-          "name": "团长-订单",
-          "pathName": "pages_regiment/regiment_orders",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "团长-打印机搜索蓝牙",
-          "pathName": "pages_regiment/regiment_printer",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "团长-设置",
-          "pathName": "pages_regiment/regiment_setting",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "团长-收款记录",
-          "pathName": "pages_regiment/regiment_collection_record",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "团长-注册",
-          "pathName": "pages_regiment/regiment_register",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "团长-我的团队",
-          "pathName": "pages_regiment/regiment_my_team",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "团长-绑定面单账号",
-          "pathName": "pages_regiment/regiment_bind_account",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "团长-批量打单",
-          "pathName": "pages_regiment/regiment_batch_printing",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "用户-个人中心",
-          "pathName": "pages_user/my/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "用户-发快递",
-          "pathName": "pages_user/user_express",
-          "query": "R_D=oGwbL5CEoFe5T1fqyAQUu0ohSLSM",
-          "launchMode": "default",
-          "scene": 1011
-        },
-        {
-          "name": "用户-订单",
-          "pathName": "pages_user/user_orders",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "用户-地址",
-          "pathName": "pages_user/user_address",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "用户-地址薄",
-          "pathName": "pages_user/user_address_list",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "用户-物流轨迹",
+          "name": "用户-快递轨迹",
           "pathName": "pages_user/user_express_path",
-          "query": "express=%7B%22_id%22%3A%228740f5ad6373b83400b3bc110d423d36%22%2C%22describe%22%3A%22%E5%BF%AB%E9%80%92-%E5%8F%91%E5%BE%80%E9%99%95%E8%A5%BF%E7%9C%81%E5%BB%B6%E5%AE%89%E5%B8%82%22%2C%22itemNotes%22%3A%22%22%2C%22itemType%22%3A%22%E6%96%87%E4%BB%B6%22%2C%22payStatus%22%3A2%2C%22pickUpType%22%3A%22%E5%88%B0%E5%BA%97%E5%AF%84%E4%BB%B6%22%2C%22print_times%22%3A0%2C%22product_type%22%3A%22express%22%2C%22recMan%22%3A%7B%22_id%22%3A%22b8bddf3b636c670b00a10c1f38ca6cf7%22%2C%22address%22%3A%22%E9%A9%AC%E5%AE%B6%E6%B9%BE%E5%98%89%E4%B8%B0%E4%B8%8A%E5%9F%8E%22%2C%22area%22%3A%22%E5%AE%9D%E5%A1%94%E5%8C%BA%22%2C%22city%22%3A%22%E5%BB%B6%E5%AE%89%E5%B8%82%22%2C%22code%22%3A%22%22%2C%22company%22%3A%22%22%2C%22country%22%3A%22%E4%B8%AD%E5%9B%BD%22%2C%22from%22%3A%22CP%22%2C%22mobile%22%3A%2217709205216%22%2C%22name%22%3A%22%E6%9D%A8%E7%90%AA%22%2C%22post_code%22%3A%22610602%22%2C%22province%22%3A%22%E9%99%95%E8%A5%BF%E7%9C%81%22%2C%22self_OPENID%22%3A%22oGwbL5MUeSNxxA4o0oOmb_FUjE7g%22%2C%22tel%22%3A%22%22%7D%2C%22regiment_OPENID%22%3A%22oGwbL5CEoFe5T1fqyAQUu0ohSLSM%22%2C%22self_OPENID%22%3A%22oGwbL5MUeSNxxA4o0oOmb_FUjE7g%22%2C%22sendMan%22%3A%7B%22_id%22%3A%22bf0fecc5636bbd620091733b74dcae81%22%2C%22address%22%3A%22%E4%BA%8C%E7%8E%AF%E5%8D%97%E8%B7%AF%E4%B8%9C%E6%AE%B5%20%E5%A4%AA%E4%B9%99%E5%98%89%E5%9B%AD%20B%E5%BA%A71602%22%2C%22area%22%3A%22%E7%A2%91%E6%9E%97%E5%8C%BA%22%2C%22city%22%3A%22%E8%A5%BF%E5%AE%89%E5%B8%82%22%2C%22code%22%3A%22%22%2C%22company%22%3A%22%22%2C%22country%22%3A%22%E4%B8%AD%E5%9B%BD%22%2C%22from%22%3A%22CP%22%2C%22mobile%22%3A%2217709205217%22%2C%22name%22%3A%22%E7%8E%8B%E8%82%87%22%2C%22post_code%22%3A%22610103%22%2C%22province%22%3A%22%E9%99%95%E8%A5%BF%E7%9C%81%22%2C%22self_OPENID%22%3A%22oGwbL5MUeSNxxA4o0oOmb_FUjE7g%22%2C%22tel%22%3A%22%22%7D%2C%22totalFee%22%3A3000%2C%22weight%22%3A12%2C%22timestamp_init%22%3A1668528180655%2C%22outTradeNo%22%3A%22MUeSNxxA4o0oOmb_FUjE7g1ghu0f4cd%22%2C%22timestamp_pay_callback%22%3A1668528189969%2C%22bizId%22%3A%22J00862994876%22%2C%22deliveryId%22%3A%22JTSD%22%2C%22deliveryName%22%3A%22%E6%9E%81%E5%85%94%E5%BF%AB%E9%80%92%22%2C%22waybillData%22%3A%5B%7B%22key%22%3A%22JTSD_bagAddr%22%2C%22value%22%3A%22802901%22%7D%2C%7B%22key%22%3A%22JTSD_mark%22%2C%22value%22%3A%22820%20B700-61%20085%22%7D%5D%2C%22waybillId%22%3A%22JT0006925926053%22%7D",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "用户-物流轨迹-分享",
-          "pathName": "pages_user/user_express_path",
-          "query": "express_share_id=7f1acdb7636a08e9008838e444103d17",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "用户-图片裁剪",
-          "pathName": "pages_user/user_image_cropper",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "用户-我的",
-          "pathName": "pages_user/user_my",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "超管-所有面单账号",
-          "pathName": "pages_admin/admin__logistics",
-          "query": "",
+          "query": "express_share_id=987a453764013fb202acba8c7cfd617e",
           "launchMode": "default",
           "scene": null
         },
@@ -165,29 +46,8 @@
           "scene": null
         },
         {
-          "name": "超管-对账单(带参/王红霞)",
-          "pathName": "pages_admin/admin__collection_record",
-          "query": "OPENID=oGwbL5CEoFe5T1fqyAQUu0ohSLSM&regiment_name=王红霞",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "团长-批量打印",
-          "pathName": "pages_regiment/regiment_batch_printing",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "团长-云打印机管理",
-          "pathName": "pages_regiment/regiment_bind_printer_cloud",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "团长-蓝牙",
-          "pathName": "pages_regiment/regiment_printer",
+          "name": "团长-订单",
+          "pathName": "pages_regiment/regiment_orders",
           "query": "",
           "launchMode": "default",
           "scene": null

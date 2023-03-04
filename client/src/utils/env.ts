@@ -3,7 +3,7 @@ import Taro from "@tarojs/taro";
 // cSpell: ignore gfby eglqz SLSM Srcu
 
 const OPENID =
-  // "oGwbL5MUeSNxxA4o0oOmb_FUjE7g" || // 王肇
+  "oGwbL5MUeSNxxA4o0oOmb_FUjE7g" || // 王肇
   // "oGwbL5CEoFe5T1fqyAQUu0ohSLSM" ||  // 王红霞
   // "oGwbL5P_IBh9s4s8-JFdPrQhDHoA" ||  // 御城国际
   // "oGwbL5IZEq-8Op4CvUTNodRKdOB0" ||  // 冯强

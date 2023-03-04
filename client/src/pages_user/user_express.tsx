@@ -118,7 +118,7 @@ const Index_user_express = () => {
     });
   }
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback pb6' isHeight isSticky>
         <ComNavBar className='prl10 ' title='快递服务'></ComNavBar>
       </ComNav>
@@ -138,7 +138,6 @@ const Index_user_express = () => {
         }
       </>
       {/* 底部tab栏 */}
-
       {(selfInfo_S
         && (selfInfo_S.regiment_is === 1)
         && selfInfo_S.print_direct_regiment === true)

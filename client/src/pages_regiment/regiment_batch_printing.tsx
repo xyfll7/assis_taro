@@ -30,7 +30,7 @@ const Index_regiment_batch_printing = () => {
     });
   }
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
         <ComNavBar className='prl10' title='批量打单'></ComNavBar>
       </ComNav>

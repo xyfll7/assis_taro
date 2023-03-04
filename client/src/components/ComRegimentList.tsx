@@ -5,7 +5,6 @@ import { Api_users_updateUserInfo } from '../api/user__users';
 import ComLoading from './ComLoading';
 import ComAvatar from './ComAvatar';
 import { useHook_getLocation, useHook_getRegimentListNearby } from '../utils/useHooks';
-import ComEmpty from './ComEmpty';
 import { useSelfInfo } from '../store/SelfInfoProvider';
 
 const ComRegimentList: FC<{ className?: string; }> = ({ className }) => {
@@ -16,7 +15,7 @@ const ComRegimentList: FC<{ className?: string; }> = ({ className }) => {
   return <View>
     {!locate && <EmpowerCom></EmpowerCom>}
     {locate && !regiment_list && <ComLoading></ComLoading>}
-    {locate && regiment_list && regiment_list.length === 0 && <ComEmpty msg='没有找到附近的团长'></ComEmpty>}
+    {locate && regiment_list && regiment_list.length === 0 && <ComLoading isEmpty msg='没有找到附近的团长'></ComLoading>}
     {locate && regiment_list &&
       <View className={className} >
         <View className='dbc hhh15'>

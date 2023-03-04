@@ -6,6 +6,7 @@ import { utils_ocr } from '../utils/utils';
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
 import ComAAPage from "../components/ComAAPage";
+import { useHook_selfInfo_show } from '../utils/useHooks';
 
 definePageConfig({
   navigationBarTitleText: "裁剪图片",
@@ -16,6 +17,7 @@ definePageConfig({
   disableScroll: true,
 });
 const Index_user_image_cropper = () => {
+  const [selfInfo_S] = useHook_selfInfo_show({});
   const { safeArea } = Taro.getSystemInfoSync();
   const router = useRouter();
   const cfg = {
@@ -35,7 +37,7 @@ const Index_user_image_cropper = () => {
     return cropper;
   };
   return (
-    <ComAAPage>
+    <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback pb6' isHeight isSticky>
         <ComNavBar className='prl10 ' title='裁剪图片'></ComNavBar>
       </ComNav>
