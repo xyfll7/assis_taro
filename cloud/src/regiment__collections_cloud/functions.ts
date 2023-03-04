@@ -140,7 +140,7 @@ export async function getCollectionExcel_cloud(
     if (res0.errMsg === "collection.get:ok") {
       const excleRes = make_excle(res0.data as Product_Express[], data.firstDateOfMonth);
       const res1 = await cloud.uploadFile({
-        cloudPath: `account_statement/${data.OPENID}.xlsx`,
+        cloudPath: `account_statement/${data.OPENID}_${new Date().getTime()}.xlsx`,
         fileContent: excleRes
       });
       if (res1.errMsg === "uploadFile:ok") {
