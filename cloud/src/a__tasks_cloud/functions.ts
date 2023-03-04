@@ -68,20 +68,17 @@ export function utils_calc_express_totalFee(data: Product_Express): number {
   const province = data.recMan!.province.trim();
 
   // 新疆：首重15（12）+续重10（8）
-
   // 海南：首重12（8）+续重5（3）
-
   // 西藏：首重18（15）+续重12（10）
 
-  switch (province) {
-    case "新疆维吾尔自治区":
-      return price_1(weight, 15, 10);
-    case "海南省":
-      return price_1(weight, 12, 5);
-    case "西藏自治区":
-      return price_1(weight, 15, 12);
-    default:
-      return price_0(weight);
+  if (province.includes('新疆')) {
+    return price_1(weight, 15, 10);
+  } else if (province.includes("海南")) {
+    return price_1(weight, 12, 5);
+  } else if (province.includes("西藏")) {
+    return price_1(weight, 15, 12);
+  } else {
+    return price_0(weight);
   }
 
   function price_1(_weight: number, first: number, plus: number) {

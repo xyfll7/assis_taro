@@ -140,7 +140,7 @@ export async function getCollectionExcel_cloud(
     if (res0.errMsg === "collection.get:ok") {
       const excleRes = make_excle(res0.data as Product_Express[], data.firstDateOfMonth);
       const res1 = await cloud.uploadFile({
-        cloudPath: `account_statement/${data.OPENID}_${new Date().getTime()}.xlsx`,
+        cloudPath: `account_statement/${data.OPENID}_${format(new Date(), "yyyy_MM_dd_HH_mm_ss")}.xlsx`,
         fileContent: excleRes
       });
       if (res1.errMsg === "uploadFile:ok") {
@@ -167,7 +167,7 @@ function make_excle(params: Product_Express[], date: string): Buffer {
   let count_profit = 0; // 利润合计
   let count_payable = 0; // 应付合计
   let count_receivable = 0; // 应收合计
-  let count_refund = 0; // 退款合计
+
   const dataArr = params.map((e, i) => {
     function get_rate(e: Product_Express) {
       if (e.deliveryId === "JTSD") {
@@ -185,26 +185,42 @@ function make_excle(params: Product_Express[], date: string): Buffer {
         return 0;
       }
     }
+    const _province = e.recMan?.province;
     const _totalFee: number = (e.totalFee! / 100);
-    const profit: number = get_rate(e) * _totalFee;
-    const refund = e.waybillId ? 0 : _totalFee;
+    const profit: number = (() => {
+      // 新疆：首重15（12）+续重10（8）
+      // 海南：首重12（8）+续重5（3）
+      // 西藏：首重18（15）+续重12（10）
+      if (_province?.includes("新疆") || _province?.includes("西藏")) {
+        return e.weight * 2 + 1;
+      } else if (_province?.includes("海南")) {
+        return e.weight * 2 + 2;
+      } else {
+        return get_rate(e) * _totalFee;
+      }
+    })(); // 利润额
     count_totalFee += _totalFee;
     count_weight += e.weight;
-    count_refund += refund;
     count_profit += profit; // 利润合计
-    count_payable += e.regiment_sub_mchId ? 0 : profit + refund; // 应付合计
+    count_payable += e.regiment_sub_mchId ? 0 : profit; // 应付合计
     count_receivable += e.regiment_sub_mchId ? _totalFee - profit : 0; // 应收合计
     return [
-      format(new Date(e.timestamp_pay_callback!), "yyyy/MM/dd"),
+      format(new Date(e.timestamp_pay_callback!), "yyyy-MM-dd"),
       format(new Date(e.timestamp_pay_callback!), "HH:mm:ss"),
       { express: "快递", publish: "商品" }[e.product_type!],
-      e.deliveryName,
-      e.waybillId,
+      e.deliveryName,     // 快递公司
+      e.waybillId,        // 快递单号
+      _province, // 目的地
       _totalFee,  // 金额
       e.weight,
-      `${get_rate(e) * 100}%`,
+      (() => {
+        if (_province?.includes('新疆') || _province?.includes("西藏") || _province?.includes("海南")) {
+          return `${(profit / _totalFee) * 100}%`;
+        } else {
+          return `${get_rate(e) * 100}%`;
+        }
+      })(),
       profit, // 利润额
-      refund, // 退款
       e.regiment_sub_mchId ? "" : profit, // 应收
       e.regiment_sub_mchId ? _totalFee - profit : "", // 应付
       e.regiment_sub_mchId ? `商户：${e.regiment_sub_mchId}` : "总账号"
@@ -213,8 +229,34 @@ function make_excle(params: Product_Express[], date: string): Buffer {
   var buffer = xlsx.build([{
     name: format(new Date(date), "yyyy年MM月"),
     data: [
-      ["日期", "时间", "账单类型", "快递公司", "快递单号", "金额", "重量", "利润率", "利润额", "退款", "应付", "应收", "资金流向"],
-      ["合计", "", "", "", "", count_totalFee, count_weight, "", count_profit, count_refund, count_payable, count_receivable, "",],
+      ["日期",
+        "时间",
+        "账单类型",
+        "快递公司",
+        "快递单号",
+        "目的地",
+        "金额",
+        "重量",
+        "利润率",
+        "利润额",
+        "应付",
+        "应收",
+        "资金流向"
+      ],
+      ["合计",
+        "",    //时间
+        "",    //账单类型
+        "",    //快递公司
+        "",    //快递单号
+        "",    //目的地
+        count_totalFee,  //金额
+        count_weight,    //重量
+        "",              //利润率
+        count_profit,    //利润额
+        count_payable,   //应付
+        count_receivable,//应收
+        "",              //资金流向
+      ],
       ...dataArr,
     ],
     options: {
@@ -224,11 +266,11 @@ function make_excle(params: Product_Express[], date: string): Buffer {
         { wch: 6 }, // 账单类型
         { wch: 12 }, // 快递公司
         { wch: 20 },  // 快递单号
+        { wch: 20 },  // 目的地
         { wch: 5 },  // 金额
         { wch: 5 },  // 重量
         { wch: 8 },  // 利润率
         { wch: 8 },  // 利润额
-        { wch: 8 },  // 退款
         { wch: 8 },  // 应付
         { wch: 8 },  // 应收
         { wch: 15 } // 资金流向
