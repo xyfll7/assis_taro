@@ -42,7 +42,7 @@ module.exports = {
   list: [...Object.keys(_types)],
   maxMessageLength: 64,
   minMessageLength: 3,
-  questions: ['type', 'scope', 'subject',],
+  questions: ['type', 'scope', 'subject', 'issues'],
   scopes: ['project', 'client', 'cloud', 'docs', 'files'],
   types: {
     ..._types,
