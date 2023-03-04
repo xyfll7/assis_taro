@@ -76,28 +76,6 @@ export function useHook_effect_update(effect: React.EffectCallback, deps?: React
   }, deps);
 }
 
-export function useHook_getQuota_number(_interval_time: number) {
-  const [selfInfo_S] = useSelfInfo();
-  useEffect(() => {
-    (async () => {
-      if (selfInfo_S && selfInfo_S?.regiment_is === 1 && selfInfo_S.logistics) {
-        const _time = Taro.getStorageSync("QUOTA_NUMBER") ?? 0;
-        if (Date.now() - Number(_time) > _interval_time) {
-          Taro.setStorageSync("QUOTA_NUMBER", String(Date.now()));
-          let _str = "";
-          for (let item of selfInfo_S.logistics) {
-            const res = await Api_logistics_getQuota(item);
-            _str += `${item.deliveryName} ${res} 个 `;
-          }
-
-          Taro.showModal({ title: "面单余额提示", confirmText: "确认", showCancel: false, content: _str });
-        }
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selfInfo_S]);
-}
-
 export function useHook_getTimeLimit(timeStr: string) {
   const [time, setTime] = useState<string | null>("");
   useEffect(() => {

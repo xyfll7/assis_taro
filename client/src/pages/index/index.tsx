@@ -1,9 +1,8 @@
 import { FC, useState } from "react";
 import Taro, { useShareAppMessage } from "@tarojs/taro";
-import { minutesToMilliseconds } from "date-fns";
 import { View, Navigator, Button, Label, Map, Image } from "@tarojs/components";
 //
-import { useHook_getQuota_number, useHook_get_orderList, useHook_selfInfo_show } from "../../utils/useHooks";
+import { useHook_get_orderList, useHook_selfInfo_show } from "../../utils/useHooks";
 import { useOrdersNotice } from "../../store/OrdersNoticeProvider";
 import { Api_users_getSelfInfo } from "../../api/user__users";
 import getEnv from "../../utils/env";
@@ -23,7 +22,6 @@ const Index = () => {
   const env = getEnv();
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
   useHook_get_orderList();
-  useHook_getQuota_number(minutesToMilliseconds(60));
   useShareAppMessage((res) => {
     if (res.from === "button") {
       // 来自页面内转发按钮
