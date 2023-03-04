@@ -5,3 +5,10 @@
 // 云函数优缺点
 https://coding.imooc.com/learn/workdetail/43694#
 
+
+git如何删除远程tag？
+
+1. 删除本地tag
+　　git tag -d tag-name
+2. 删除远程tag
+　　git push origin --delete tag tag-name
