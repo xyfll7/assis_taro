@@ -8,7 +8,7 @@ import share_logo from "../image/share_logo.jpeg";
 // 组件
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
-import ComAdmin from "../components/ComAdmin";
+import ComAgent from "../components/ComAgent";
 import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true, disableScroll: true });
@@ -86,7 +86,7 @@ const Index_regiment_setting = () => {
           <Navigator className='pbt6 pr10 oo cccplh ml6' hoverClass='bccbacktab' url='/pages_regiment/regiment_bind_printer_cloud'>
             云打印机管理
           </Navigator>
-          <ComAdmin></ComAdmin>
+          <ComAgent></ComAgent>
         </View>
       </View>
     </ComAAPage>

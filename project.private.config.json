@@ -40,7 +40,7 @@
         },
         {
           "name": "代理-团长列表",
-          "pathName": "pages_admin/admin__regiment_list",
+          "pathName": "pages_agent/agent__regiment_list",
           "query": "",
           "launchMode": "default",
           "scene": null

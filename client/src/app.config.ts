@@ -32,10 +32,10 @@ export default defineAppConfig({
       ]
     },
     {
-      root: "pages_admin",
+      root: "pages_agent",
       pages: [
-        "admin__collection_record",
-        "admin__regiment_list",
+        "agent__collection_record",
+        "agent__regiment_list",
       ]
     }
   ],
