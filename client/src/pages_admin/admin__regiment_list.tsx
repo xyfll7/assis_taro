@@ -27,7 +27,7 @@ const Index_admin__regiment_list = () => {
   return (
     <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
-        <ComNavBar className='prl10' title='团长管理(超管)'></ComNavBar>
+        <ComNavBar className='prl10' title='团长管理(代理)'></ComNavBar>
       </ComNav>
       <RegimentListINCOM regimentList={regimentList}
         onClick_setRegimentList={(param) => {

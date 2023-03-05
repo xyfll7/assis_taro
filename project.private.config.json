@@ -39,7 +39,7 @@
           "scene": null
         },
         {
-          "name": "超管-团长列表",
+          "name": "代理-团长列表",
           "pathName": "pages_admin/admin__regiment_list",
           "query": "",
           "launchMode": "default",

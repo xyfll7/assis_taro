@@ -10,10 +10,10 @@ const ComAdmin = () => {
   ].includes(selfInfo_S?.OPENID!)) {
     return <View className='dll'>
       <Navigator className='pbt6 pr10 oo cccplh ml6' hoverClass='bccbacktab' url='/pages_admin/admin__regiment_list'>
-        团长列表(超管)</Navigator>
+        团长列表(代理)</Navigator>
       <Label for='invite' >
         <View className='pr10 pbt6 oo cccplh ml6' hoverClass='bccbacktab'>
-          邀请团长(超管)
+          邀请团长(代理)
           <Button id='invite' className='dsn' openType='share'></Button>
         </View>
       </Label>

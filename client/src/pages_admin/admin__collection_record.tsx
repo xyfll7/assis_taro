@@ -20,7 +20,7 @@ const Index_admin_collection_record = () => {
   return (
     <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
-        <ComNavBar className='prl10' title='对账单(超管)'></ComNavBar>
+        <ComNavBar className='prl10' title='对账单(代理)'></ComNavBar>
         <View className='mrl10 prl10 pbt4 dbtc'>
           <View className='pbt6'>{router.params.regiment_name}(团长)</View>
           <Picker
