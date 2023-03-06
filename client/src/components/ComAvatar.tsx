@@ -40,11 +40,11 @@ const ComAvatar: FC<{
                   min-width: ${size ? size : 90}rpx;
                   min-height: ${size ? size : 90}rpx;
                   border-radius: ${radius ? radius : '1000rpx'};
-                  background-color: ${isShowBack ? '#ffffff99;' : ''}`;
+                  background-color: ${isShowBack ? '#ffffff;' : ''}`;
   return (
     <Image
       className={className}
-      src={imageUrl ?? ""}
+      src={imageUrl ?? logo}
       style={_style}
       onClick={onClick}
       mode='aspectFill'></Image>
