@@ -1,6 +1,6 @@
 import Taro from "@tarojs/taro";
 
-// cSpell: ignore gfby eglqz SLSM Srcu
+// cSpell: ignore gfby eglqz SLSM Srcu mzjx Unufh
 
 const _OPENID =
   // "oGwbL5MUeSNxxA4o0oOmb_FUjE7g" || // 王肇
@@ -10,6 +10,7 @@ const _OPENID =
   // "oGwbL5O6owNRHLtGFSrcuXUu0v1s" ||  // 马智宝
   // "oGwbL5Ik6N77gAnLvNFh1BXP3lqc" ||  // 杨宝宝
   // "oGwbL5O_FBTl9622gKF8ZraYSiPA" ||  // 杨杰-石佛沟
+  // "oGwbL5A5mzjxHC-XtRUnufhCL4ck" ||  // 徐迎春-兴延小区
   "";
 const envObj: Record<EnvVersion, Environment> = {
   ...(!_OPENID ?
