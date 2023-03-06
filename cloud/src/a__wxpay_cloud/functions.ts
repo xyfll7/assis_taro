@@ -14,6 +14,17 @@ const cfg = {
   pro_url: "https://production-8g1eglqz3d606693-1306790653.ap-shanghai.app.tcloudbase.com"
 };
 
+
+
+const wxPay = new WxPay({
+  sp_mchid: '1635060558',
+  sp_appid: 'wxc6ff511796ec714a',
+  publicKey: fs.readFileSync('./apiclient_cert.pem'), // 公钥
+  privateKey: fs.readFileSync('./apiclient_key.pem'), // 秘钥
+  serial_no: "197A9803A1B80005AED3AC68A3957E2EBB774177", // 申请API证书 证书序列号
+  key: "91610602MA6YF6FK6C17709205217000", // APIv3密钥
+});
+// 收款
 export async function wxPay_express_cloud(event: Events<Product_Express>): Promise<Result<PayRes>> {
   const { data } = event;
   try {
@@ -31,16 +42,7 @@ export async function wxPay_express_cloud(event: Events<Product_Express>): Promi
     throw err;
   }
 }
-
-const wxPay = new WxPay({
-  sp_mchid: '1635060558',
-  sp_appid: 'wxc6ff511796ec714a',
-  publicKey: fs.readFileSync('./apiclient_cert.pem'), // 公钥
-  privateKey: fs.readFileSync('./apiclient_key.pem'), // 秘钥
-  serial_no: "197A9803A1B80005AED3AC68A3957E2EBB774177", // 申请API证书 证书序列号
-  key: "91610602MA6YF6FK6C17709205217000", // APIv3密钥
-});
-
+// 收款-总账商户
 async function ___wxpay_headquarters_account(event: Events<Product_Express>): Promise<PayRes> {
   try {
     const { data, environment } = event;
@@ -86,6 +88,7 @@ async function ___wxpay_headquarters_account(event: Events<Product_Express>): Pr
     throw err;
   }
 }
+// 收款-独立商户
 async function ___wxpay_sub(event: Events<Product_Express>): Promise<PayRes> {
   try {
     const { data, environment } = event;
@@ -131,11 +134,12 @@ async function ___wxpay_sub(event: Events<Product_Express>): Promise<PayRes> {
     throw err;
   }
 }
+
 // 退款
 export async function wxPay_express_refund_cloud(event: Events<Product_Express>): Promise<Result<PayRes>> {
   const { data } = event;
   try {
-    const res0 = data.regiment_sub_mchId ? await ___wxpay_refund_sub(event) : await ___wxpay_refund(event);
+    const res0 = data.regiment_sub_mchId ? await ___wxpay_refund_sub(event) : await ___wxpay_refund_headquarters_account(event);
     if (res0.errMsg == "cloudPay.refund:ok") {
       const res1 = <DB.IUpdateResult>await db.collection("orders").doc(data._id!).update({
         data: {
@@ -159,35 +163,36 @@ export async function wxPay_express_refund_cloud(event: Events<Product_Express>)
     throw err;
   }
 }
-
-async function ___wxpay_refund(event: Events<Product_Express>): Promise<PayRes> {
+// 退款-总账商户
+async function ___wxpay_refund_headquarters_account(event: Events<Product_Express>): Promise<PayRes> {
   try {
     const { data, environment } = event;
-    const res = await cloud.cloudPay.refund({
-      functionName: "a__wxpay_callback_cloud_refund", // 回调函数名称
-      envId: environment.envId, // 结果通知回调云函数环境
-      sub_mch_id: "1612524003", // String(32) 子商户号
-      nonce_str: data._id,// String(32) 随机字符串
-      // transaction_id:"", // String(32)	 微信订单号。与商户订单号二选一填入。
-      out_trade_no: data.outTradeNo,  // String(32) 商户订单号，不能重复
-      out_refund_no: data._id, // String(64) 商户系统内部的退款单号，商户系统内部唯一，只能是数字、大小写字母_-
-      total_fee: data.totalFee, // 订单总金额，单位为分，只能为整数，详见支付金额
-      refund_fee: data.totalFee, // 退款总金额，单位为分，只能为整数，可部分退款。详见支付金额
-      refund_fee_type: "CNY", // String(8) 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY，其他值列表详见货
-      refund_desc: "测试啊", // String(80) 退款原因 注意：若订单退款金额≤1元，且属于部分退款，则不会在退款消息中体现退款原因
-      // refund_account: "", // String(30)  仅针对老资金流商户使用 REFUND_SOURCE_UNSETTLED_FUNDS---未结算资金退款（默认使用未结算资金退款）REFUND_SOURCE_RECHARGE_FUNDS---可用余额退款  返回值说明
+    const res = await wxPay.refunds({
+      sub_mchid: "1639331479",
+      out_trade_no: data.outTradeNo!,
+      out_refund_no: String(data._id!), // 退款单号
+      reason: "测试", // 退款原因
+      notify_url: environment.envVersion === "release" ?
+        `${cfg.pro_url}/a__wxpay_callback_sub_cloud_refund` :
+        `${cfg.dev_url}/a__wxpay_callback_sub_cloud_refund`,
+      // funds_account: "string",// 退款资金来源 若传递此参数则使用对应的资金账户退款，否则默认使用未结算资金退款（仅对老资金流商户适用）枚举值：AVAILABLE：可用余额账户示例值：AVAILABLE
+      amount: {
+        total: data.totalFee!,
+        currency: "CNY",
+        refund: data.totalFee!,
+      },
     });
-    console.log("退款返回结果:", res);
-    if (res.returnCode === "SUCCESS" && res.resultCode === "SUCCESS") {
-      return res as PayRes;
+    if (res.status === "PROCESSING") {
+      return { ...res, errMsg: "cloudPay.refund:ok" } as any as PayRes;
     } else {
       throw res;
     }
+
   } catch (err: any) {
     throw err;
   }
 }
-
+// 退款-独立商户
 async function ___wxpay_refund_sub(event: Events<Product_Express>): Promise<PayRes> {
   try {
     const { data, environment } = event;
@@ -212,6 +217,40 @@ async function ___wxpay_refund_sub(event: Events<Product_Express>): Promise<PayR
       throw res;
     }
 
+  } catch (err: any) {
+    throw err;
+  }
+}
+
+
+
+
+/**
+ * @deprecated  云函数统一下单退款接口，今已弃用，以做纪念
+ */
+async function ___wxpay_refund(event: Events<Product_Express>): Promise<PayRes> {
+  try {
+    const { data, environment } = event;
+    const res = await cloud.cloudPay.refund({
+      functionName: "a__wxpay_callback_cloud_refund", // 回调函数名称
+      envId: environment.envId, // 结果通知回调云函数环境
+      sub_mch_id: "1612524003", // String(32) 子商户号
+      nonce_str: data._id,// String(32) 随机字符串
+      // transaction_id:"", // String(32)	 微信订单号。与商户订单号二选一填入。
+      out_trade_no: data.outTradeNo,  // String(32) 商户订单号，不能重复
+      out_refund_no: data._id, // String(64) 商户系统内部的退款单号，商户系统内部唯一，只能是数字、大小写字母_-
+      total_fee: data.totalFee, // 订单总金额，单位为分，只能为整数，详见支付金额
+      refund_fee: data.totalFee, // 退款总金额，单位为分，只能为整数，可部分退款。详见支付金额
+      refund_fee_type: "CNY", // String(8) 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY，其他值列表详见货
+      refund_desc: "测试啊", // String(80) 退款原因 注意：若订单退款金额≤1元，且属于部分退款，则不会在退款消息中体现退款原因
+      // refund_account: "", // String(30)  仅针对老资金流商户使用 REFUND_SOURCE_UNSETTLED_FUNDS---未结算资金退款（默认使用未结算资金退款）REFUND_SOURCE_RECHARGE_FUNDS---可用余额退款  返回值说明
+    });
+    console.log("退款返回结果:", res);
+    if (res.returnCode === "SUCCESS" && res.resultCode === "SUCCESS") {
+      return res as PayRes;
+    } else {
+      throw res;
+    }
   } catch (err: any) {
     throw err;
   }
