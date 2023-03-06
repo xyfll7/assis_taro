@@ -5,7 +5,7 @@ import { format, subDays } from "date-fns";
 import { utils_get_time_limit } from '../utils/utils';
 import { Api_logistics_getQuota } from "../api/a__logistics";
 import { Api_users_updateUserInfo } from "../api/user__users";
-import { Api_admin_price_getPriceSchemeList, Api_admin_users_getRegimentList, } from "../api/admin__db";
+import { Api_agent_price_getPriceSchemeList, Api_agent_users_getRegimentList, } from "../api/agent__db";
 // 组件
 import ComNavBar from "../components/ComNavBar";
 import ComNav from "../components/ComNav";
@@ -16,18 +16,18 @@ import ComFooter from '../components/ComFooter';
 import { useHook_selfInfo_show } from '../utils/useHooks';
 
 definePageConfig({ navigationStyle: "custom", disableScroll: true, });
-const Index_admin__regiment_list = () => {
+const Index_agent__regiment_list = () => {
   const [selfInfo_S] = useHook_selfInfo_show({});
   const [regimentList, setRegimentList] = useState<BaseUserInfo[] | null>(null);
   useLoad(async () => {
-    const res0 = await Api_admin_users_getRegimentList();
+    const res0 = await Api_agent_users_getRegimentList();
     setRegimentList(res0);
   });
 
   return (
     <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
-        <ComNavBar className='prl10' title='团长管理(超管)'></ComNavBar>
+        <ComNavBar className='prl10' title='团长管理(代理)'></ComNavBar>
       </ComNav>
       <RegimentListINCOM regimentList={regimentList}
         onClick_setRegimentList={(param) => {
@@ -37,7 +37,7 @@ const Index_admin__regiment_list = () => {
     </ComAAPage>
   );
 };
-export default Index_admin__regiment_list;
+export default Index_agent__regiment_list;
 
 const RegimentListINCOM: FC<{
   regimentList: BaseUserInfo[] | null;
@@ -112,7 +112,7 @@ const RegimentReconciliationINCOM: FC<{
               <Navigator className='cccgreen pbt6 pl10 oo' hoverClass='bccbacktab' url='~' onClick={() => onClick_setRegiment()}>
                 价格方案
               </Navigator>
-              <Navigator className='cccgreen pbt6 pl10 oo' hoverClass='bccbacktab' url={`/pages_admin/admin__collection_record?OPENID=${regiment.OPENID}&regiment_name=${regiment.name}`}>
+              <Navigator className='cccgreen pbt6 pl10 oo' hoverClass='bccbacktab' url={`/pages_agent/agent__collection_record?OPENID=${regiment.OPENID}&regiment_name=${regiment.name}`}>
                 对账单
               </Navigator>
             </View>
@@ -244,7 +244,7 @@ const PriceSchemeListINCOM: FC<{
 }> = ({ regiment, onClick_close, onClick_setRegimentList }) => {
   const [priceSchemeList, setPriceSchemeList] = useState<PriceScheme_Type[] | null>(null);
   useLoad(async () => {
-    const res0 = await Api_admin_price_getPriceSchemeList();
+    const res0 = await Api_agent_price_getPriceSchemeList();
     setPriceSchemeList(res0);
   });
   return (

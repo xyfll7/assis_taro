@@ -1,35 +1,20 @@
 import classNames from "classnames";
-import Taro, { useShareAppMessage } from "@tarojs/taro";
+import Taro from "@tarojs/taro";
 
 import { View, Navigator } from "@tarojs/components";
 import { useHook_selfInfo_show } from "../utils/useHooks";
 import { Api_users_updateUserInfo } from "../api/user__users";
-import share_logo from "../image/share_logo.jpeg";
+
 // 组件
 import ComNav from "../components/ComNav";
 import ComNavBar from "../components/ComNavBar";
-import ComAdmin from "../components/ComAdmin";
+import ComAgent from "../components/ComAgent";
 import ComAAPage from "../components/ComAAPage";
 
 definePageConfig({ navigationStyle: "custom", enableShareAppMessage: true, disableScroll: true });
 const Index_regiment_setting = () => {
   const [selfInfo_S, setSelfInfo_S] = useHook_selfInfo_show({});
 
-  useShareAppMessage((res) => {
-    if (res.from === "button") {
-      // 来自页面内转发按钮
-      return {
-        title: `${selfInfo_S?.name ?? "管理员"} 邀请您注册团长`,
-        path: `/pages_regiment/regiment_register?inviter_OPENID=${selfInfo_S?.OPENID}`,
-        imageUrl: share_logo,    // * 支持PNG及JPG * 显示图片长宽比是 5:4
-      };
-    }
-    return {
-      title: "小象团长助手",
-      path: "/pages/index/index",
-      imageUrl: share_logo,    // * 支持PNG及JPG * 显示图片长宽比是 5:4
-    };
-  });
   return (
     <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
@@ -38,8 +23,12 @@ const Index_regiment_setting = () => {
       <View >
         <View className='bccwhite o10 prl10'>
           {/* 团长信息 */}
-          <View className='pbt10'>
-            <View>{selfInfo_S?.name}</View>
+          <View className='pbt4'>
+            <View className='dbtc'>
+              <View className='w9rem nw1'>{selfInfo_S?.name}</View>
+              <Navigator className='cccgreen pbt6 pl10 oo' hoverClass='bccbacktab'
+                url='/pages_regiment/regiment_register'>修改个人信息</Navigator>
+            </View>
             <View className='cccplh'>{selfInfo_S?.location_name}</View>
           </View>
           <View className='pbt4 lit dbtc'>
@@ -86,7 +75,7 @@ const Index_regiment_setting = () => {
           <Navigator className='pbt6 pr10 oo cccplh ml6' hoverClass='bccbacktab' url='/pages_regiment/regiment_bind_printer_cloud'>
             云打印机管理
           </Navigator>
-          <ComAdmin></ComAdmin>
+          <ComAgent></ComAgent>
         </View>
       </View>
     </ComAAPage>

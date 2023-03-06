@@ -63,7 +63,7 @@ const Index = () => {
       {selfInfo_S && selfInfo_S.regiment_info && selfInfo_S.regiment_is !== 1 &&
         <ComNav isLeft isRight>
           <View className='prl10 ww ds'>
-            <ComAvatar src={selfInfo_S?.avatar} size={75} isSelf></ComAvatar>
+            <ComAvatar src={selfInfo_S?.avatar} size={75} isSelf timestamp={String(selfInfo_S.timestamp_update)}></ComAvatar>
             <View className='ww pr10'>
               <View className='ml10 oo dbtc ww' style={{ background: "#ffffffcc" }}>
                 <View></View>
@@ -148,7 +148,7 @@ const Index = () => {
         <ComNav isLeft isRight>
           <View className='prl10 ww ds'>
             <View className='ds'>
-              <ComAvatar className='mt4' src={selfInfo_S?.avatar} size={75}></ComAvatar>
+              <ComAvatar className='mt4' src={selfInfo_S?.avatar} size={75} timestamp={String(selfInfo_S.timestamp_update)}></ComAvatar>
               <View className='ml10'>
                 <View className='fwb'>{selfInfo_S?.name}</View>
                 <View className='fs08 cccplh nw2 lh100'>{selfInfo_S?.location_name}</View>

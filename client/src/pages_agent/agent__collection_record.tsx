@@ -13,14 +13,14 @@ import { useHook_selfInfo_show } from '../utils/useHooks';
 
 definePageConfig({ navigationStyle: "custom", disableScroll: true, });
 
-const Index_admin_collection_record = () => {
+const Index_agent_collection_record = () => {
   const [selfInfo_S] = useHook_selfInfo_show({});
   const router = useRouter<{ OPENID?: string; regiment_name: string; }>();
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
   return (
     <ComAAPage selfInfo_S={selfInfo_S}>
       <ComNav className='bccback' isHeight isSticky>
-        <ComNavBar className='prl10' title='对账单(超管)'></ComNavBar>
+        <ComNavBar className='prl10' title='对账单(代理)'></ComNavBar>
         <View className='mrl10 prl10 pbt4 dbtc'>
           <View className='pbt6'>{router.params.regiment_name}(团长)</View>
           <Picker
@@ -62,4 +62,4 @@ const Index_admin_collection_record = () => {
     </ComAAPage>
   );
 };
-export default Index_admin_collection_record;
+export default Index_agent_collection_record;

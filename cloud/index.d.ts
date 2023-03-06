@@ -30,7 +30,10 @@ declare global {
     regiment_replica_is?: boolean; // 是否团长分身
     regiment_replica_selfInfo?: BaseUserInfo; // 团长分身个人信息
     regiment_price_scheme?: PriceScheme_Type; // 价格方案
+    regiment_agent_OPENID?: string;
 
+    agent_OPENID?: string;  // 存在即是代理
+    agent_name?: string;
 
     logistics?: Logistics_Account[]; // 绑定的快递账号列表
     printers?: Printer_Info[]; // 绑定的打印机

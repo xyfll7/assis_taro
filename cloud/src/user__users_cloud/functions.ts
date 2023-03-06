@@ -2,13 +2,28 @@ import { Code } from "../../../client/src/a_config";
 // 云函数代码
 import cloud from "wx-server-sdk";
 import Taro from "@tarojs/taro";
-
 import { version } from "../../../package.json";
 
 // @ts-ignore
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 const db = cloud.database();
 const _ = db.command;
+
+
+const _OPENID =
+  // "oGwbL5MUeSNxxA4o0oOmb_FUjE7g" || // 王肇
+  // "oGwbL5CEoFe5T1fqyAQUu0ohSLSM" ||  // 王红霞
+  // "oGwbL5P_IBh9s4s8-JFdPrQhDHoA" ||  // 御城国际
+  // "oGwbL5IZEq-8Op4CvUTNodRKdOB0" ||  // 冯强
+  // "oGwbL5O6owNRHLtGFSrcuXUu0v1s" ||  // 马智宝
+  "";
+function ___get_version(OPENID?: string) {
+  if (OPENID === _OPENID) {
+    return "1.0.33";
+  } else {
+    return version;
+  }
+}
 
 export async function getSelfInfo_cloud(event: Events<string>): Promise<Result<BaseUserInfo>> {
   let { OPENID } = cloud.getWXContext();
@@ -31,7 +46,7 @@ export async function getSelfInfo_cloud(event: Events<string>): Promise<Result<B
         data: {
           ...userInfo,
           regiment_info: regiment_info ?? null,
-          serveVersion: version
+          serveVersion: ___get_version(OPENID)
         },
       };
     } else if (res.errMsg === "collection.aggregate:ok" && res.list.length === 0) {
@@ -40,7 +55,7 @@ export async function getSelfInfo_cloud(event: Events<string>): Promise<Result<B
         message: res.errMsg,
         data: {
           OPENID,
-          serveVersion: version
+          serveVersion: ___get_version(OPENID)
         },
       };
     } else {
@@ -135,6 +150,9 @@ export async function updateUserInfo_cloud(event: Events<BaseUserInfo, string>):
     let { _id, regiment_info, ...data } = event.data;
     let { params } = event;
     if (params) {
+      // 更新用户团长信息，
+      // 检查regiment_OPENID 是否为团长
+      // 如果是则更新团长信息，并返回最新团长给用户
       const res0 = <cloud.DB.IQuerySingleResult>await db.collection("users").doc(params!).get();
       if (res0.errMsg == "document.get:ok" && res0.data?.regiment_is === 1) {
         regiment_info = res0.data as BaseUserInfo;

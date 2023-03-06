@@ -39,8 +39,8 @@
           "scene": null
         },
         {
-          "name": "超管-团长列表",
-          "pathName": "pages_admin/admin__regiment_list",
+          "name": "代理-团长列表",
+          "pathName": "pages_agent/agent__regiment_list",
           "query": "",
           "launchMode": "default",
           "scene": null
@@ -48,6 +48,20 @@
         {
           "name": "团长-订单",
           "pathName": "pages_regiment/regiment_orders",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "团长-注册",
+          "pathName": "pages_regiment/regiment_register",
+          "query": "agent_OPENID=oGwbL5MUeSNxxA4o0oOmb_FUjE7g",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "团长-设置",
+          "pathName": "pages_regiment/regiment_setting",
           "query": "",
           "launchMode": "default",
           "scene": null
