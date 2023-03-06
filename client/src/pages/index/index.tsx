@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Taro, { useShareAppMessage } from "@tarojs/taro";
-import { View, Navigator, Button, Label, Map, } from "@tarojs/components";
+import { useShareAppMessage } from "@tarojs/taro";
+import { View, Navigator, Button, Label } from "@tarojs/components";
 //
 import { useHook_get_orderList, useHook_selfInfo_show } from "../../utils/useHooks";
 import { useOrdersNotice } from "../../store/OrdersNoticeProvider";
@@ -15,6 +15,7 @@ import ComNav from "../../components/ComNav";
 import ComOrderNotice from "../../components/ComOrderNotice";
 import ComRegimentList from '../../components/ComRegimentList';
 import ComMoreService from '../../components/ComMoreService';
+import ComRegimentMap from '../../components/ComRegimentMap';
 
 definePageConfig({ enableShareAppMessage: true, backgroundColor: "#ffffff", navigationStyle: "custom", disableScroll: true });
 const Index = () => {
@@ -91,54 +92,7 @@ const Index = () => {
         <ComMoreService></ComMoreService>
       }
       {selfInfo_S && selfInfo_S.regiment_info && selfInfo_S.regiment_is !== 1 &&
-        <View className='safe-bottom'>
-          <View className='mrl10 o15 ovh shadow'>
-            <Map
-              id='my_map'
-              className='ww'
-              customMapStyle='light'
-              skew={40}
-              enableOverlooking
-              enableZoom={false}
-              markers={[{
-                id: 0,
-                width: "",
-                height: "",
-                longitude: selfInfo_S?.regiment_info?.location?.coordinates[0]!,
-                latitude: selfInfo_S?.regiment_info?.location?.coordinates[1]!,
-                iconPath: ""
-              }]}
-              longitude={selfInfo_S?.regiment_info?.location?.coordinates[0]!}
-              latitude={selfInfo_S?.regiment_info?.location?.coordinates[1]!}>
-              <View className='dr p10'>
-                <View className='prl10 pbt6 oo bccyellow' hoverClass='bccbacktab' onClick={() => {
-                  Taro.createMapContext("my_map").openMapApp({
-                    longitude: selfInfo_S?.regiment_info?.location?.coordinates[0]!,
-                    latitude: selfInfo_S?.regiment_info?.location?.coordinates[1]!,
-                    destination: `${selfInfo_S?.regiment_info?.name!} 团长`
-                  });
-                }}>到这去</View>
-              </View>
-            </Map>
-            <View className='dbtt  o10 prl10 pbt4'>
-              <View className='ds pbt6'>
-                <ComAvatar className='mr6 ' src={selfInfo_S?.regiment_info?.avatar}></ComAvatar>
-                <View className='ww'>
-                  <View className='dbtc'>
-                    <View className='fwb'>{selfInfo_S?.regiment_info?.name} 团长为您服务</View>
-                  </View>
-                  <View className='dbtc'>
-                    <View className='mr4 nw2 fs08 cccblacktab'>{selfInfo_S?.regiment_info?.location_name?.split("-")}</View>
-                  </View>
-                </View>
-              </View>
-              <View className='prl10 pbt6 oo bccyellow nw' hoverClass='bccbacktab' onClick={async () => {
-                await ___get_selfInfo_S({ ...selfInfo_S, regiment_info: null });
-              }}>切换</View>
-            </View>
-          </View>
-          <View className='cccplh dxy fs pbt10 fs07'>小象心选</View>
-        </View>
+        <ComRegimentMap selfInfo_S={selfInfo_S} onClick={async () => await ___get_selfInfo_S({ ...selfInfo_S, regiment_info: null })}></ComRegimentMap>
       }
       {selfInfo_S && !selfInfo_S.regiment_info && selfInfo_S.regiment_is !== 1 &&
         <ComRegimentList></ComRegimentList>
@@ -182,9 +136,11 @@ const Index = () => {
           </View>
         </ComNav>
       }
-      {selfInfo_S && selfInfo_S.regiment_info &&
-        selfInfo_S.regiment_is === 1 &&
+      {selfInfo_S && selfInfo_S.regiment_info && selfInfo_S.regiment_is === 1 &&
         <ComMoreService></ComMoreService>
+      }
+      {selfInfo_S && selfInfo_S.regiment_info && selfInfo_S.regiment_is === 1 &&
+        <ComRegimentMap selfInfo_S={selfInfo_S}></ComRegimentMap>
       }
     </ComAAPage>
   </>;
