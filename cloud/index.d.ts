@@ -77,6 +77,7 @@ declare global {
     self_OPENID?: string;
     regiment_OPENID?: string;
     regiment_sub_mchId?: string; // 子商户号?: string; // 商户号
+    x_regiment_sub_mchId?: string;
 
     regiment_replica_OPENID?: string; // 团长分身OPENID
 
