@@ -10,7 +10,7 @@ import { Api_orders_removeOrder } from "../api/user__orders";
 import { Api_wxpay_wxPay_express_refund } from "../api/a__wxpay";
 
 import wexinpay from "../image/wexinpay.svg";
-import { Api_logistics_cancelOrder } from '../api/a__logistics';
+import { Api_logistics_cancelOrder, Api_logistics_getPath } from '../api/a__logistics';
 
 //订单操作
 const ComOrderExpressOperation: FC<{
@@ -25,23 +25,6 @@ const ComOrderExpressOperation: FC<{
 
 }> = ({ time_limit, setQrCode, orderType, order, onClick_setOrders, selfInfo_S, setItem }) => {
 
-  async function ___cancelOrder(title: string) {
-    try {
-      const res0 = await Taro.showModal({
-        title: title,
-      });
-      if (res0.confirm) {
-        Taro.showLoading({ title: "回收中...", mask: false });
-        const res1 = await Api_logistics_cancelOrder(order);
-        Taro.showToast({ title: "回收成功", icon: "none" });
-        return res1;
-      } else {
-        throw new Error("取消面单回收");
-      }
-    } catch (err: any) {
-      throw err;
-    }
-  }
   return (
     <>
       {(orderType == "待计重" || orderType == "待付款") && (
@@ -50,8 +33,17 @@ const ComOrderExpressOperation: FC<{
             order.waybillId ?
               <View className='pbt6 pr10 oo cccplh' hoverClass='bccbacktab'
                 onClick={async () => {
-                  const res = await ___cancelOrder("您确定要回收该面单号吗？");
-                  onClick_setOrders(res, "UPDATE");
+                  const res0 = await Taro.showModal({
+                    title: "您确定要回收该面单号吗？",
+                  });
+                  if (res0.confirm) {
+                    Taro.showLoading({ title: "回收中...", mask: false });
+                    const res1 = await Api_logistics_cancelOrder(order);
+                    Taro.showToast({ title: "回收成功", icon: "none" });
+                    onClick_setOrders(res1, "UPDATE");
+                  } else {
+                    Taro.showToast({ title: "取消", icon: "none" });
+                  }
                   // 删除
                 }}>回收面单→删除/修改信息</View> :
               <View className='dbtc'>
@@ -79,8 +71,6 @@ const ComOrderExpressOperation: FC<{
                 </View>
               </View>
           }
-
-
         </View>
       )}
       {order.self_OPENID === order?.regiment_OPENID && orderType === "待付款" && (
@@ -159,17 +149,33 @@ const ComOrderExpressOperation: FC<{
           {order.waybillId ?
             <View className='cccplh pr10 pbt6 oo' hoverClass='bccbacktab'
               onClick={async () => {
-                const res = await ___cancelOrder("您确定要回收该面单号并退款吗？");
-                onClick_setOrders(res, "UPDATE");
-                Taro.showLoading({ title: "退款中...", mask: true });
-                const [err0] = await to(Api_wxpay_wxPay_express_refund({ ...res, ...getEnvDevParam({ totalFee: 1 }) }));
-                if (err0) {
-                  Taro.showToast({ title: `${err0.message}`, icon: "none" });
-                  return;
+                const res0 = await Taro.showModal({
+                  title: "您确定要回收该面单号并退款吗？",
+                });
+                if (res0.confirm) {
+                  Taro.showLoading({ title: "检查物流轨迹" });
+                  const res1 = await Api_logistics_getPath(order);
+                  console.log("物流轨迹", res0);
+                  if (!(res1 && res1.pathItemList && res1.pathItemList.length === 0)) {
+                    Taro.showToast({ title: "该订单已揽件无法取消面单，不能退款，如需退款请联系代理商", icon: "none" });
+                    return;
+                  }
+                  Taro.showLoading({ title: "回收中...", mask: false });
+                  const res2 = await Api_logistics_cancelOrder(order);
+                  Taro.showToast({ title: "回收成功", icon: "none" });
+                  onClick_setOrders(res2, "UPDATE");
+                  Taro.showLoading({ title: "退款中...", mask: true });
+                  const [err0] = await to(Api_wxpay_wxPay_express_refund({ ...res2, ...getEnvDevParam({ totalFee: 1 }) }));
+                  if (err0) {
+                    Taro.showToast({ title: `${err0.message}`, icon: "none" });
+                    return;
+                  }
+                  onClick_setOrders(res2, "DELETE");
+                  Taro.hideLoading();
+                  Taro.showModal({ title: "退款操作成功", content: `订单移入"已退款"`, showCancel: false, success: () => { } });
+                } else {
+                  Taro.showToast({ title: "取消", icon: "none" });
                 }
-                onClick_setOrders(res, "DELETE");
-                Taro.hideLoading();
-                Taro.showModal({ title: "退款操作成功", content: `订单移入"已退款"`, showCancel: false, success: () => { } });
               }}>
               回收面单→退款
             </View> :
