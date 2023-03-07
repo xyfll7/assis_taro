@@ -133,3 +133,20 @@ export function useHook_getRegimentListNearby(locate: Taro.getLocation.SuccessCa
   }, [locate]);
   return { regiment_list };
 }
+
+export function useHook_newVersionChecker(isCheck: boolean = false): [number, () => void] {
+  const [newVersion, setNewVersion] = useState<0 | 1 | 2 | 3>(0);
+  const updateManager = Taro.getUpdateManager();
+  useEffect(() => {
+    if (isCheck) {
+      updateManager.onCheckForUpdate(() => setNewVersion(1));
+      updateManager.onUpdateReady(() => setNewVersion(2));
+      updateManager.onUpdateFailed(() => setNewVersion(3));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  function applyUpdateNewVersion() {
+    updateManager.applyUpdate();
+  }
+  return [newVersion, applyUpdateNewVersion];
+}
