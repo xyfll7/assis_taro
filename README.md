@@ -5,3 +5,5 @@
 git删除本地+远程tag？
 
 git tag -d 1.0.33 && git push origin --delete tag 1.0.33
+
+测试看看会发生什么
