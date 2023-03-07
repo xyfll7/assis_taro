@@ -52,7 +52,7 @@ const ComRegimentMap: FC<{ selfInfo_S: BaseUserInfo; onClick?: () => void; }> = 
           }
         </View>
       </View>
-      <View className='cccplh dxy fs pbt10 fs07'>小象心选</View>
+      <View className='cccplh dxy fs pbt10 fs07'> {selfInfo_S.regiment_is === 1 ? "小象团长助手" : "小象心选"} </View>
     </View>
   );
 };
