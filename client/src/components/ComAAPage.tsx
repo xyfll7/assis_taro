@@ -31,8 +31,6 @@ const ComAAPage: FC<{
     if (children instanceof Array) {
       _children = children.filter(e => e);
     }
-    console.log(selfInfo_S?.serveVersion, env.version);
-    console.log(Number(selfInfo_S?.serveVersion?.replaceAll(".", "")), Number(env.version.replaceAll(".", "")));
     const isSystemUpdate = (
       Number(env.version.replaceAll(".", "")) >= Number(selfInfo_S?.serveVersion?.replaceAll(".", ""))
       || env.version === ""
