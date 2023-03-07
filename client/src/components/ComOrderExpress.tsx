@@ -21,7 +21,7 @@ const ComOrderExpress: FC<{
     <View className={classNames("bccwhite prl10 o10 mb10", className)}>
       {selfInfo_S && selfInfo_S.OPENID !== item.regiment_OPENID &&
         <View className='pt10 dy'>
-          <ComAvatar size={48} src={item.regiment_avatar ?? ""}></ComAvatar>
+          <ComAvatar size={48} src={item.regiment_avatar}></ComAvatar>
           <View className='ml6 dy'>
             <View>{item.regiment_name}</View>
             <View className='ml6 cccplh'>(团长) 为您服务</View>

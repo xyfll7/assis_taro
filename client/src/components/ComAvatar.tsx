@@ -27,9 +27,9 @@ const ComAvatar: FC<{
         }
       });
     } else if (isSelf) {
-      setImageUrl(src ?? user_avatar);
+      setImageUrl(src ? src : user_avatar);
     } else {
-      setImageUrl(src ?? logo);
+      setImageUrl(src ? src : logo);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src, timestamp]);
@@ -44,7 +44,7 @@ const ComAvatar: FC<{
   return (
     <Image
       className={className}
-      src={imageUrl ?? logo}
+      src={imageUrl ? imageUrl : logo}
       style={_style}
       onClick={onClick}
       mode='aspectFill'></Image>
