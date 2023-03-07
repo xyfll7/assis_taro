@@ -59,7 +59,7 @@ const Index_user_express_path = () => {
         {path === null && <ComLoading className='pbt10 mt10'></ComLoading>}
         {path !== null && (
           <>
-            <View className='bccwhite prl10 o10'>
+            <View className='bccwhite prl10 o10 pt10'>
               {path.pathItemList?.length === 0 &&
                 <ComLoading className='pbt10' isEmpty msg='待揽件'></ComLoading>
               }

@@ -1713,6 +1713,9 @@
 .z99 {
   z-index: 99;
 }
+.tac {
+  text-align: center;
+}
 .fwb {
   font-weight: bold;
 }
@@ -1863,9 +1866,6 @@
     -webkit-transform: rotate3d(0, 0, 1, 360deg) scale(1);
     transform: rotate3d(0, 0, 1, 360deg) scale(1);
   }
-}
-.tac {
-  text-align: center;
 }
 .image-loading {
   background-color: #f6f6f6;
