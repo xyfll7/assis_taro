@@ -6,6 +6,7 @@ import { utils_get_time_limit } from '../utils/utils';
 import { Api_logistics_getQuota } from "../api/a__logistics";
 import { Api_users_updateUserInfo } from "../api/user__users";
 import { Api_agent_price_getPriceSchemeList, Api_agent_users_getRegimentList, } from "../api/agent__db";
+import { useHook_selfInfo_show } from '../utils/useHooks';
 // 组件
 import ComNavBar from "../components/ComNavBar";
 import ComNav from "../components/ComNav";
@@ -13,7 +14,7 @@ import ComHeaderBar from "../components/ComHeaderBar";
 import ComLoading from "../components/ComLoading";
 import ComAAPage from "../components/ComAAPage";
 import ComFooter from '../components/ComFooter';
-import { useHook_selfInfo_show } from '../utils/useHooks';
+import ComAvatar from '../components/ComAvatar';
 
 definePageConfig({ navigationStyle: "custom", disableScroll: true, });
 const Index_agent__regiment_list = () => {
@@ -56,8 +57,11 @@ const RegimentListINCOM: FC<{
       {regimentList?.length === 0 && <ComLoading isEmpty msg='团长列表为空'></ComLoading>}
       {regimentList?.map((e) => {
         return (
-          <View key={e._id} className='mb10  prl10 pt10 o10 bccwhite'>
-            <View className=''>{e.name} {e.regiment_price_scheme?.name}</View>
+          <View key={e._id} className='mb10  prl10 pt4 o10 bccwhite'>
+            <View className='dy'>
+              <ComAvatar className='mbt6' size={50} src={e.avatar}></ComAvatar>
+              <View className='ml10'>{e.name} {e.regiment_price_scheme?.name}</View>
+            </View>
             <View className='cccplh pb10 '>{e.location_name}</View>
             <View className='dr'>
               <RegimentReconciliationINCOM regiment={e}
