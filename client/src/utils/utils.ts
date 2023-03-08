@@ -467,10 +467,10 @@ export function utils_duplicates(arr: any[]) {
 //#endregion
 
 //#region 微信支付-快递订单
-export async function utils_wx_pay(item: Product_Express): Promise<Product_Express> {
+export async function utils_wx_pay(order: Product_Express): Promise<Product_Express> {
   Taro.showLoading({ mask: true, title: "支付..." });
   // 获取支付参数
-  const [err0, res0] = await to(Api_wxpay_wxPay_express({ ...item, ...getEnvDevParam({ totalFee: 1 }) }));
+  const [err0, res0] = await to(Api_wxpay_wxPay_express({ ...order, ...getEnvDevParam({ totalFee: 1 }) }));
   if (err0) {
     throw new Error("获取支付参数失败");
   }
@@ -481,7 +481,7 @@ export async function utils_wx_pay(item: Product_Express): Promise<Product_Expre
   }
   // 支付成功后...
   if (res1.errMsg === "requestPayment:ok") {
-    return item;
+    return order;
   } else {
     throw new Error("吊起微信支付异常");
   }

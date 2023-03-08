@@ -43,7 +43,7 @@ module.exports = {
   maxMessageLength: 64,
   minMessageLength: 3,
   questions: ['type', 'scope', 'subject', 'issues'],
-  scopes: ['project', 'client', 'cloud', 'docs'],
+  scopes: ['project', 'client', 'cloud'],
   types: {
     ..._types,
     messages: {
