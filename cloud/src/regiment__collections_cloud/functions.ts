@@ -59,6 +59,7 @@ export async function getCollectionHistoryList_cloud(
       return timestamp;
     };
     const boundaries = [
+      getTimestamp(6),
       getTimestamp(5),
       getTimestamp(4),
       getTimestamp(3),
@@ -73,7 +74,7 @@ export async function getCollectionHistoryList_cloud(
       .match({
         regiment_OPENID: data.OPENID,
         timestamp_pay_callback: _.and(
-          _.gte(getTimestamp(5)),
+          _.gte(getTimestamp(6)),
           _.lt(getTimestamp(-1))
         ),
         payStatus: 2,

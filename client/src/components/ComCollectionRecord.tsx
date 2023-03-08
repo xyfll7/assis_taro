@@ -52,6 +52,10 @@ const ComCollectionRecord: FC<{ OPENID: string; }> = ({ OPENID }) => {
         <TodayCollectionRecord collectionRecord={collectionRecord} collectionHistory={collectionHistory}></TodayCollectionRecord>
         <HistoryCollectionRecord OPENID={OPENID} setCollectionRecordOneDay={setCollectionRecordOneDay} setShow={setShow} collectionHistory={collectionHistory}></HistoryCollectionRecord>
         {collectionHistory?.length !== 0 && <ComNoMore isLoadMore={isLoadMore}></ComNoMore>}
+        <View className='dcl fs08 cccplh'>
+          <View>支持查看近7天收款情况，更多记录请下载对账单</View>
+          <View></View>
+        </View>
         <ComFooter></ComFooter>
       </>
       }
