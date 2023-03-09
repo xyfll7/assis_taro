@@ -1,9 +1,9 @@
 
 import { wx_cloud_callFunctions } from "./wx_cloud_callFunctions";
 
-export async function Api_wxpay_wxPay_express(params: Product_Express): Promise<PayRes> {
+export async function Api_wxpay_wxPay_express(params: Product_Express): Promise<ResPay> {
   try {
-    const res = await wx_cloud_callFunctions<PayRes>({
+    const res = await wx_cloud_callFunctions<ResPay>({
       name: "a__wxpay_cloud",
       data: {
         func: "wxPay_express_cloud",

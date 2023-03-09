@@ -141,7 +141,7 @@ export class WxPay extends Base {
    * JSAPI支付 或者 小程序支付
    * @param params 请求参数 object 参数介绍 请看文档https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_5_1.shtml
    */
-  public async transactions_jsapi(params: IJsapi): Promise<PayRes> {
+  public async transactions_jsapi(params: IJsapi): Promise<ResPay> {
     this.sub_appid = this.sp_appid;
     this.sub_mchid = params.sub_mchid;
     // 请求参数

@@ -160,7 +160,7 @@ declare global {
     timestamp_update?: number;
   };
   type WaybillData = { key: string; value: string; };
-  interface PayRes {
+  interface ResPay {
     appid: string; // "wxd2d16a504f24665e"
     errCode: number; // 0
     errCodeDes: string; // "201 商户订单号重复"

@@ -25,7 +25,7 @@ const wxPay = new WxPay({
   key: "91610602MA6YF6FK6C17709205217000", // APIv3密钥
 });
 // 收款
-export async function wxPay_express_cloud(event: Events<Product_Express>): Promise<Result<PayRes>> {
+export async function wxPay_express_cloud(event: Events<Product_Express>): Promise<Result<ResPay>> {
   const { data } = event;
   try {
     const res = data.regiment_sub_mchId ? await ___wxpay_sub(event) : await ___wxpay_headquarters_account(event);
@@ -43,7 +43,7 @@ export async function wxPay_express_cloud(event: Events<Product_Express>): Promi
   }
 }
 // 收款-总账商户
-async function ___wxpay_headquarters_account(event: Events<Product_Express>): Promise<PayRes> {
+async function ___wxpay_headquarters_account(event: Events<Product_Express>): Promise<ResPay> {
   try {
     const { data, environment } = event;
 
@@ -83,13 +83,13 @@ async function ___wxpay_headquarters_account(event: Events<Product_Express>): Pr
       //   store_info: [], // 商户门店信息		object	否	商户门店信息
       // }, // 场景信息		object	否	body 支付场景描述
     });
-    return res as any as PayRes;
+    return res as any as ResPay;
   } catch (err: any) {
     throw err;
   }
 }
 // 收款-独立商户
-async function ___wxpay_sub(event: Events<Product_Express>): Promise<PayRes> {
+async function ___wxpay_sub(event: Events<Product_Express>): Promise<ResPay> {
   try {
     const { data, environment } = event;
 
@@ -129,14 +129,14 @@ async function ___wxpay_sub(event: Events<Product_Express>): Promise<PayRes> {
       //   store_info: [], // 商户门店信息		object	否	商户门店信息
       // }, // 场景信息		object	否	body 支付场景描述
     });
-    return res as any as PayRes;
+    return res as any as ResPay;
   } catch (err: any) {
     throw err;
   }
 }
 
 // 退款
-export async function wxPay_express_refund_cloud(event: Events<Product_Express>): Promise<Result<PayRes>> {
+export async function wxPay_express_refund_cloud(event: Events<Product_Express>): Promise<Result<ResPay>> {
   const { data } = event;
   try {
     const res0 = data.regiment_sub_mchId ? await ___wxpay_refund_sub(event) : await ___wxpay_refund_headquarters_account(event);
@@ -164,7 +164,7 @@ export async function wxPay_express_refund_cloud(event: Events<Product_Express>)
   }
 }
 // 退款-总账商户
-async function ___wxpay_refund_headquarters_account(event: Events<Product_Express>): Promise<PayRes> {
+async function ___wxpay_refund_headquarters_account(event: Events<Product_Express>): Promise<ResPay> {
   try {
     const { data, environment } = event;
     const res = await wxPay.refunds({
@@ -183,7 +183,7 @@ async function ___wxpay_refund_headquarters_account(event: Events<Product_Expres
       },
     });
     if (res.status === "PROCESSING") {
-      return { ...res, errMsg: "cloudPay.refund:ok" } as any as PayRes;
+      return { ...res, errMsg: "cloudPay.refund:ok" } as any as ResPay;
     } else {
       throw res;
     }
@@ -193,7 +193,7 @@ async function ___wxpay_refund_headquarters_account(event: Events<Product_Expres
   }
 }
 // 退款-独立商户
-async function ___wxpay_refund_sub(event: Events<Product_Express>): Promise<PayRes> {
+async function ___wxpay_refund_sub(event: Events<Product_Express>): Promise<ResPay> {
   try {
     const { data, environment } = event;
     const res = await wxPay.refunds({
@@ -212,7 +212,7 @@ async function ___wxpay_refund_sub(event: Events<Product_Express>): Promise<PayR
       },
     });
     if (res.status === "PROCESSING") {
-      return { ...res, errMsg: "cloudPay.refund:ok" } as any as PayRes;
+      return { ...res, errMsg: "cloudPay.refund:ok" } as any as ResPay;
     } else {
       throw res;
     }
